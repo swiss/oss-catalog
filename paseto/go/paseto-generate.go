@@ -22,7 +22,6 @@ func main() {
 		panic(fmt.Sprintf("Length of the base64 decoded PASETO_KEY is %v, not 32", len(decodedKey)))
 	}
 
-	symmetricKey := []byte("YELLOW SUBMARINE, BLACK WIZARDRY") // Must be 32 bytes
 	now := time.Now()
 	exp := now.Add(24 * time.Hour)
 	nbt := now
@@ -42,17 +41,17 @@ func main() {
 	footer := ""
 
 	// Encrypt data
-	token, err := paseto.NewV2().Encrypt(symmetricKey, jsonToken, footer)
+	token, err := paseto.NewV2().Encrypt(decodedKey, jsonToken, footer)
 	if err != nil {
 		panic(err)
 	}
 	fmt.Println(token)
 
 	// Decrypt data
-	// var newJsonToken paseto.JSONToken
-	// var newFooter string
-	// err = paseto.NewV2().Decrypt(token, symmetricKey, &newJsonToken, &newFooter)
-	// if err != nil {
-	// 	panic(err)
-	// }
+	var newJsonToken paseto.JSONToken
+	var newFooter string
+	err = paseto.NewV2().Decrypt(token, decodedKey, &newJsonToken, &newFooter)
+	if err != nil {
+		panic(err)
+	}
 }
