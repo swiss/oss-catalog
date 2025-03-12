@@ -4,6 +4,8 @@ services:
       file: developers-italia-api/docker-compose.yml
       service: api
     env_file: ".env" # Must define PASETO_KEY
+    environment:
+      - GOFLAGS=-buildvcs=false
 
   db:
     extends:

@@ -1,3 +1,6 @@
 [submodule "publiccode-crawler"]
 	path = publiccode-crawler
 	url = git@github.com:italia/publiccode-crawler.git
+[submodule "developers-italia-api"]
+	path = developers-italia-api
+	url = git@github.com:italia/developers-italia-api.git
