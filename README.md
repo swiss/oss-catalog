@@ -122,11 +122,18 @@ Run crawler:
 
 ## Notes
 
+### General
+
 - Italy's solution uses PASETO v2 auth tokens. There must be a way to "login" and fetch a token, either as part of the web app, or via an auth provider that supports this.
 - The web app displaying the softwares to the users could also be implemented with static site generator (as Italy does). In this case, the site has to be re-generated after every crawling.
 - The publishers could either be statically managed (file) or in a (separate) web app. In the latter case, there must be a way to identify (or authorize) administrators that are curating these publishers.
 - The crawler seems to be very strict and only accepts publiccode.yml files that are fully correct.
 - The crawler has to be triggered after a change to the publishers and also at regular intervals (to catch repository updates).
+- The crawler seems to be supporting GitHub, GitLab and BitBucket.
+- The log of a software (`/software/{softwareId}/logs`) contains its crawling activity.
+- The API supports webhooks (see https://developers.italia.it/en/api/developers-italia.html). This would probably make it possible to create a crawler service that registers a webhook which will be called whenever the publishers are updated. It could then start the crawling.
+- To ensure quality, there is also [a bot](https://github.com/italia/publiccode-issueopener) that fetches the GitHub repositories from the developers-italia-api, then validates the publiccode.yml of these repos and creates GitHub issues if something is not right.
+- Projects using GitHub Actions or GitLab CI could use https://github.com/italia/publiccode-parser-gitlab-ci resp. https://github.com/italia/publiccode-parser-action to validate the publiccode.yml in the repository.
 
 ### Known Issues
 
