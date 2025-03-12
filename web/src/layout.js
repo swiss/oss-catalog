@@ -34,7 +34,7 @@ export function withLayout(content) {
         </style>
       </head>
       <body>
-        <h1>Open Source Catalog POC</h1>
+        <h1>Open Source Software Catalog POC</h1>
         <main>
           ${content}
         </main>

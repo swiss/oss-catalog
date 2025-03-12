@@ -1,6 +1,6 @@
-# OSS Catalog POC
+# Open Source Software Catalog POC
 
-Proof-of-concept for an Open Source catalog based on the [Publiccode](https://github.com/publiccodeyml) standard.
+Proof-of-concept for an Open Source software catalog based on the [Publiccode](https://github.com/publiccodeyml) standard.
 
 ## Context
 

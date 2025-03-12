@@ -10,9 +10,11 @@ developmentStatus: concept
 softwareType: standalone/web
 description:
   en:
-    shortDescription: Proof-of-concept for an Open Source catalog based on the
+    shortDescription:
+      Proof-of-concept for an Open Source software catalog based on the
       Publiccode standard.
-    longDescription: Proof-of-concept for an Open Source catalog based on the
+    longDescription:
+      Proof-of-concept for an Open Source software catalog based on the
       Publiccode standard that tries to integrate the various services of
       Developers Italia and adds a web app to display/manage the catalog.
     features:

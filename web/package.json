@@ -1,7 +1,7 @@
 {
   "name": "oss-catalog",
   "version": "1.0.0",
-  "description": "Proof-of-concept for an Open Source catalog based on the [Publiccode](https://github.com/publiccodeyml) standard.",
+  "description": "Proof-of-concept for an Open Source software catalog based on the [Publiccode](https://github.com/publiccodeyml) standard.",
   "main": "index.js",
   "type": "module",
   "scripts": {
