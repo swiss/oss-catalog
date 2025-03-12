@@ -1,0 +1,28 @@
+publiccodeYmlVersion: "0.4"
+name: OSS Catalog POC
+applicationSuite: ""
+url: https://github.com/puzzle/oss-catalog
+platforms:
+  - web
+categories:
+  - data-collection
+developmentStatus: concept
+softwareType: standalone/web
+description:
+  en:
+    shortDescription: Proof-of-concept for an Open Source catalog based on the
+      Publiccode standard.
+    longDescription: Proof-of-concept for an Open Source catalog based on the
+      Publiccode standard that tries to integrate the various services of
+      Developers Italia and adds a web app to display/manage the catalog.
+    features:
+      - Manage publishers
+      - List softwares
+legal:
+  license: AGPL-3.0-or-later
+maintenance:
+  type: none
+localisation:
+  localisationReady: false
+  availableLanguages:
+    - en
