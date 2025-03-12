@@ -1,8 +1,9 @@
 import { withLayout } from "../layout.js";
 
-export function newPublisherRoute(req, res) {
-  return res.send(
-    withLayout(`
+export function newPublisherRoute(req, res, next) {
+  try {
+    return res.send(
+      withLayout(`
       <style>
         .form-actions {
           xmargin-top: 2rem;
@@ -40,5 +41,8 @@ export function newPublisherRoute(req, res) {
         </div>
       </form>
     `)
-  );
+    );
+  } catch (error) {
+    next(error);
+  }
 }

@@ -114,6 +114,10 @@ Run crawler:
 - The crawler seems to be very strict and only accepts publiccode.yml files that are fully correct.
 - The crawler has to be triggered after a change to the publishers and also at regular intervals (to catch repository updates).
 
+### Known Issues
+
+- The actual deletion of a publisher or software in the database takes a while (as if it is done asynchronously in the API).
+
 ## Resources
 
 - [publiccode.yml Standard](https://github.com/publiccodeyml/publiccode.yml)
