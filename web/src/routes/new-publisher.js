@@ -26,7 +26,7 @@ export function newPublisherRoute(req, res) {
 
         <div class="form-control">
           <label for="url">URL:</label>
-          <input id="url" name="url" type="url">
+          <input id="url" name="url" type="url" required>
         </div>
 
         <div class="form-control">
