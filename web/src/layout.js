@@ -26,6 +26,11 @@ export function withLayout(content) {
           button:hover {
             background-color: #ddd;
           }
+
+          input[type="text"], input[type="url"] {
+            font-size: 1rem;
+            padding: 0.25rem 0.75rem;
+          }
         </style>
       </head>
       <body>
