@@ -11,10 +11,10 @@ export function apiPost(path, body) {
 }
 
 export function apiDelete(path) {
-  return apiFetch("DELETE", path);
+  return apiFetch("DELETE", path, undefined, { ignoreResponse: true });
 }
 
-async function apiFetch(method, path, body) {
+async function apiFetch(method, path, body, options = {}) {
   const token = await getPasetoV2Token();
   const res = await fetch(`${API_BASEURL}${path}`, {
     method,
@@ -24,5 +24,7 @@ async function apiFetch(method, path, body) {
       "Content-Type": "application/json",
     },
   });
-  return res.json();
+  if (!options.ignoreResponse) {
+    return res.json();
+  }
 }
