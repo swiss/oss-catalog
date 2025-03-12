@@ -2,6 +2,31 @@
 
 Proof-of-concept for an Open Source catalog based on the [Publiccode](https://github.com/publiccodeyml) standard.
 
+## Context
+
+```mermaid
+flowchart TB
+  subgraph OSS_CATALOG[OSS Catalog]
+    direction LR
+    db[(PostgreSQL)]
+    api[Developers Italia API]
+    crawler[Publiccode Crawler]
+    web[OSS Catalog Web App]
+
+    api --> db
+    crawler -- "Read publishers<br>Create softwares<br>(REST)" --> api
+    web -- "CRUD publishers<br>Read softwares<br>(REST)" --> api
+    web -. "Trigger crawling after publisher update?" .-> crawler
+  end
+
+  user((User))
+  admin((Admin))
+  github[GitHub]
+  user -- "Read softwares<br>(HTTP)" --> web
+  crawler -- "Scan repositories<br>Parse publiccode.yml" --> github
+  admin -- "CRUD publishers<br>(HTTP)" --> web
+```
+
 ## Usage
 
 Clone this repository:
@@ -80,6 +105,14 @@ Run crawler:
 ```
 ./start-crawler
 ```
+
+## Notes
+
+- Italy's solution uses PASETO v2 auth tokens. There must be a way to "login" and fetch a token, either as part of the web app, or via an auth provider that supports this.
+- The web app displaying the softwares to the users could also be implemented with static site generator (as Italy does). In this case, the site has to be re-generated after every crawling.
+- The publishers could either be statically managed (file) or in a (separate) web app. In the latter case, there must be a way to identify (or authorize) administrators that are curating these publishers.
+- The crawler seems to be very strict and only accepts publiccode.yml files that are fully correct.
+- The crawler has to be triggered after a change to the publishers and also at regular intervals (to catch repository updates).
 
 ## Resources
 
