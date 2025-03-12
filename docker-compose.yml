@@ -3,10 +3,41 @@ services:
     extends:
       file: developers-italia-api/docker-compose.yml
       service: api
-    environment:
-      - PASETO_KEY=${PASETO_KEY}
+    env_file: ".env" # Must define PASETO_KEY
 
   db:
     extends:
       file: developers-italia-api/docker-compose.yml
       service: db
+
+  crawler:
+    build:
+      context: ./publiccode-crawler
+    depends_on:
+      - api
+    networks:
+      - default
+    env_file: ".env" # Must define PASETO_KEY and GITHUB_TOKEN
+    environment:
+      - API_BASEURL=http://api:3000/v1/
+      - API_BEARER_TOKEN=${API_BEARER_TOKEN}
+
+  web:
+    image: node:22
+    depends_on:
+      - api
+    networks:
+      - default
+    ports:
+      - "8080:8080"
+    env_file: ".env" # Must define PASETO_KEY
+    environment:
+      - API_BASEURL=http://api:3000/v1/
+    volumes:
+      - ./web:/app
+    working_dir: /app
+    command: >
+      bash -c "
+        npm install
+        npm start
+      "

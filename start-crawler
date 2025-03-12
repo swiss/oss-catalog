@@ -1,0 +1,4 @@
+#!/bin/bash
+source .env
+API_BEARER_TOKEN="$(cd paseto/go/; go run paseto-generate.go $PASETO_KEY)" \
+  docker compose up crawler

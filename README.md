@@ -4,25 +4,41 @@ Proof-of-concept for an Open Source catalog based on the [Publiccode](https://gi
 
 ## Usage
 
+Clone this repository:
+
+```
+git clone git@github.com:puzzle/oss-catalog.git
+cd oss-catalog/
+git submodule init
+git submodule update
+```
+
 Generate PASETO key:
 
 ```
 ./paseto/generate-paseto-key.sh
-source .env
 ```
+
+Create GitHub API Token with the `public_repo` Permission under https://github.com/settings/tokens and add it to the .env file:
+
+```
+echo "GITHUB_TOKEN=<your access token>" >> .env
+```
+
+### API Service
 
 Start API with database:
 
 ```
-git submodule init
-git submodule update
-cd components/developers-italia-api/
-docker compose up -d
+./start-api
 ```
+
+#### Use API via Curl
 
 Generate PASETO token (valid for 24h):
 
 ```
+source .env
 cd paseto/go
 PASETO_TOKEN="$(go run paseto-generate.go $PASETO_KEY)"
 ```
@@ -39,15 +55,31 @@ Create a publisher:
 curl -X POST -H "Authorization: Bearer $PASETO_TOKEN" -H "Content-Type: application/json" -d '{"codeHosting": [{"url": "https://github.com/swiss/", "group": true}], "description": "Swiss Government"}' http://localhost:3000/v1/publishers
 ```
 
+### Catalog Web Application
+
 Start the catalog web application:
+
+```
+./start-web
+```
+
+Or start outside of Docker:
 
 ```
 cd web/
 npm install
-npm start
+npm run start-with-env
 ```
 
 Then visit http://localhost:8080
+
+### Crawler
+
+Run crawler:
+
+```
+./start-crawler
+```
 
 ## Resources
 
