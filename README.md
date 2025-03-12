@@ -2,26 +2,34 @@
 
 Proof-of-concept for an Open Source catalog based on the [Publiccode](https://github.com/publiccodeyml) standard.
 
-## Componenents
+## Usage
 
-### API
-
-Generate PASETO auth key:
+Generate PASETO key:
 
 ```
-echo "PASETO_KEY=$(shuf -er -n32  {A..Z} {a..z} {0..9} | tr -d '\n' | base64)" > .env
+./paseto/generate-paseto-key.sh
+source .env
 ```
 
 Start API with database:
 
 ```
 cd components/developers-italia-api/
-docker compose up
+docker compose up -d
 ```
 
-Generate PASETO token:
+Generate PASETO token (valid for 24h):
 
-TODO
+```
+cd paseto/go
+PASETO_TOKEN="$(go run paseto-generate.go $PASETO_KEY)"
+```
+
+List publishers (no authentication needed):
+
+```
+curl http://localhost:3000/v1/publishers
+```
 
 Create a publisher:
 
@@ -29,11 +37,15 @@ Create a publisher:
 curl -X POST -H "Authorization: Bearer $PASETO_TOKEN" -H "Content-Type: application/json" -d '{"codeHosting": [{"url": "https://github.com/swiss/", "group": true}], "description": "Swiss Government"}' http://localhost:3000/v1/publishers
 ```
 
-List publishers:
+Start the catalog web application:
 
 ```
-curl http://localhost:3000/v1/publishers
+cd web/
+npm install
+npm start
 ```
+
+Then visit http://localhost:8080
 
 ## Resources
 
