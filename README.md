@@ -14,6 +14,8 @@ source .env
 Start API with database:
 
 ```
+git submodule init
+git submodule update
 cd components/developers-italia-api/
 docker compose up -d
 ```

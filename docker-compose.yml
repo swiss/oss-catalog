@@ -1,12 +1,12 @@
 services:
   api:
     extends:
-      file: components/developers-italia-api/docker-compose.yml
+      file: developers-italia-api/docker-compose.yml
       service: api
     environment:
       - PASETO_KEY=${PASETO_KEY}
 
   db:
     extends:
-      file: components/developers-italia-api/docker-compose.yml
+      file: developers-italia-api/docker-compose.yml
       service: db
