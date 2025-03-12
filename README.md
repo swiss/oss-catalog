@@ -29,6 +29,20 @@ flowchart TB
 
 ## Usage
 
+### Overview
+
+What you will do:
+
+- Clone this repo
+- Generate PASETO key & create GitHub API token
+- Start API service (and DB)
+- Start catalog web application
+- Add publisher(s) via catalog web application
+- Run crawler
+- Observe the collected softwares in the catalog web application
+
+### Preparation
+
 Clone this repository:
 
 ```
