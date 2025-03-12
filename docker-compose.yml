@@ -11,6 +11,8 @@ services:
     extends:
       file: developers-italia-api/docker-compose.yml
       service: db
+    volumes:
+      - pgdata:/var/lib/postgresql/data
 
   crawler:
     build:
@@ -43,3 +45,6 @@ services:
         npm install
         npm start
       "
+
+volumes:
+  pgdata:
