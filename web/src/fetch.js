@@ -15,8 +15,10 @@ export function apiDelete(path) {
 }
 
 async function apiFetch(method, path, body, options = {}) {
+  const url = `${API_BASEURL}${path}`;
+  console.log(`${method} ${url} ${body ? JSON.stringify(body) : ""}`);
   const token = await getPasetoV2Token();
-  const res = await fetch(`${API_BASEURL}${path}`, {
+  const res = await fetch(url, {
     method,
     body: body ? JSON.stringify(body) : undefined,
     headers: {

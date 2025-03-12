@@ -18,7 +18,7 @@ export function newPublisherRoute(req, res) {
           align-items: start;
         }
       </style>
-      <form method="POST" action="/publishers/">
+      <form method="POST" action="/publishers/new/">
         <div class="form-control">
           <label for="description">Description:</label>
           <input id="description" name="description" type="text" required>

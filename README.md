@@ -58,7 +58,7 @@ Start API with database:
 ./start-api
 ```
 
-#### Use API via Curl
+#### Use API via Curl (optional)
 
 Generate PASETO token (valid for 24h):
 
