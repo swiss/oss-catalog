@@ -129,20 +129,23 @@ Required tasks to bring the OSS catalog into production:
   - 1 container for API service
   - Dedicated PostgreSQL service or 1 container
   - Or use SQLite?
+  - SSL/Cert
 - [ ] Design & implement website
-  - Based on a Static Site Generator (SSG)
+  - Static site, based on a Static Site Generator (SSG)
   - Fetches data from API service at build-time
   - [CD Bund](https://www.bk.admin.ch/bk/de/home/dokumentation/cd-bund/cd-manual.html)?
   - List of all projects (can we statically generate this or do we have to paginate & render it on client?) \
     → Example: https://developers.italia.it/en/search
   - Detail page of a project with links etc. \
     → Example: https://developers.italia.it/en/software/685ff6c9-c2e9-4e3b-a092-5d3208b4491c
-- [ ] Optional: Implement advanced website features
-  - Search (e.g. with https://pagefind.app/)
-  - Facetted search → Filter by type, category, status etc.
 - [ ] Deploy & operate website
   - Same operation environment as API/DB? GitHub Pages? ...
   - Domainname?
+  - SSL/Cert
+- [ ] Optional: Implement advanced website features
+  - Search
+  - Facetted search → Filter by type, category, status etc.
+  - https://pagefind.app/ or with additional query service that accesses the same DB?
 - [ ] Build mechanism to manage publishers
   - Based on a file in a repository, e.g. Markdown (https://github.com/swiss/index) or JSON
   - GitHub Actions workflow that:
