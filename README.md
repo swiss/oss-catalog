@@ -120,6 +120,43 @@ Run crawler:
 ./start-crawler
 ```
 
+## Work
+
+Required tasks to bring the OSS catalog into production:
+
+- [x] Proof-of-concept
+- [ ] Deploy & operate API service & DB
+  - 1 container for API service
+  - Dedicated PostgreSQL service or 1 container
+  - Or use SQLite?
+- [ ] Design & implement website
+  - Based on a Static Site Generator (SSG)
+  - Fetches data from API service at build-time
+  - [CD Bund](https://www.bk.admin.ch/bk/de/home/dokumentation/cd-bund/cd-manual.html)?
+  - List of all projects (can we statically generate this or do we have to paginate & render it on client?)
+  - Detail page of a project with links etc.
+- [ ] Optional: Implement advanced website features
+  - Search (e.g. with https://pagefind.app/)
+  - Facetted search → Filter by type, category, status etc.
+- [ ] Deploy & operate website
+  - Same operation environment as API/DB? GitHub Pages? ...
+  - Domainname?
+- [ ] Build mechanism to manage publishers
+  - Based on a file in a repository, e.g. Markdown (https://github.com/swiss/index) or JSON
+  - GitHub Actions workflow that:
+    1. Reads/parses the file
+    2. Updates/syncs publishers to API service
+    3. Runs the crawler
+    4. Triggers a rebuild of the website
+- [ ] Perodically run crawler to catch updated publiccode.yml
+  - GitHub Actions worflow with schedule
+- [ ] Optional: Perodically run [publiccode.yml issues bot](https://www.bk.admin.ch/bk/de/home/dokumentation/cd-bund/cd-manual.html)
+
+Required modifications/contributions to the OSS components:
+
+- In the above solution there we can generate PASETO v2 tokens in the GitHub Actions workflows via a script/CLI tool, sharing the PASETO_KEY secret between the API service and the workflows. So we could live with the PASETO-based authentication mechanism of the components.
+- Analyze why deletions aren't immediately reflected in the data. Does this also apply to updates? Can/should we fix this?
+
 ## Notes
 
 ### General
