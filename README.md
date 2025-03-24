@@ -21,7 +21,7 @@ flowchart TB
 
   user((User))
   admin((Admin))
-  github[GitHub]
+  github[GitHub, Gitlab, others]
   user -- "Read softwares<br>(HTTP)" --> web
   crawler -- "Scan repositories<br>Parse publiccode.yml" --> github
   admin -- "CRUD publishers<br>(HTTP)" --> web
