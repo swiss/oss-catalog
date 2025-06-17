@@ -40,6 +40,7 @@ What you will do:
 - Add publisher(s) via catalog web application
 - Run crawler
 - Observe the collected softwares in the catalog web application
+- Run the new astro based client
 
 ### Preparation
 
@@ -94,23 +95,24 @@ Create a publisher:
 curl -X POST -H "Authorization: Bearer $PASETO_TOKEN" -H "Content-Type: application/json" -d '{"codeHosting": [{"url": "https://github.com/swiss/", "group": true}], "description": "Swiss Government"}' http://localhost:3000/v1/publishers
 ```
 
-### Catalog Web Application
+### Catalog Client Application
 
-Start the catalog web application:
-
-```
-./start-web
-```
-
-Or start outside of Docker:
+Start the catalog client application:
 
 ```
-cd web/
+./start-client
+```
+
+Or start outside of Docker in development mode:
+
+```
+cd client/
+nvm use
 npm install
-npm run start-with-env
+npm run dev
 ```
 
-Then visit http://localhost:8080
+Then visit http://localhost:4321
 
 ### Crawler
 
@@ -130,7 +132,7 @@ Required tasks to bring the OSS catalog into production:
   - Dedicated PostgreSQL service or 1 container
   - Or use SQLite?
   - SSL/Cert
-- [ ] Design & implement website
+- [x] Design & implement website
   - Static site, based on a Static Site Generator (SSG)
   - Fetches data from API service at build-time
   - [CD Bund](https://www.bk.admin.ch/bk/de/home/dokumentation/cd-bund/cd-manual.html)?

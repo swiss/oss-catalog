@@ -1,0 +1,24 @@
+---
+import Layout from "../layouts/Layout.astro";
+import SoftwareCard from "../components/SoftwareCard.astro";
+
+const apiBaseUrl = import.meta.env.API_BASEURL  || "http://localhost:3000/v1";
+const response = await fetch(`${apiBaseUrl}/software`);
+const data = await response.json();
+const softwares = data.data;
+
+console.log("baseUrl", apiBaseUrl);
+---
+
+<Layout>
+  <section class="section bg--secondary-50">
+    <div class="container">
+      <h2 class="section__title">OSS Catalog</h2>
+    </div>
+  </section>
+  <section class="container section--default">
+    <div class="grid grid--responsive-cols-3 gap--responsive">
+      {softwares.map((software) => <SoftwareCard software={software} />)}
+    </div>
+  </section>
+</Layout>

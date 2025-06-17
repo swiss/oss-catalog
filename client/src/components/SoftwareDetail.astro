@@ -1,0 +1,35 @@
+---
+import yaml from "js-yaml";
+
+const { software } = Astro.props;
+const content = yaml.load(software.publiccodeYml);
+---
+
+<div>
+  <div class="info-block border-t">
+    <h3 class="info-block__title">Software name</h3>
+    <div>
+      <span>{content.name}</span>
+    </div>
+  </div><div class="info-block border-t">
+    <h3 class="info-block__title">Landing page</h3><div>
+      <div>{content.landingURL}</div>
+    </div>
+  </div><div class="info-block border-t">
+    <h3 class="info-block__title">Short description</h3><div>
+      <div>{content.description?.en?.shortDescription}</div>
+    </div>
+  </div><div class="info-block border-t">
+    <h3 class="info-block__title">Documentation</h3><div>
+      <div>{content.description?.en?.longDescription}</div>
+    </div>
+  </div><div class="info-block border-t">
+    <h3 class="info-block__title">Software version</h3><div>
+      {content.softwareVersion}
+    </div>
+  </div><div class="info-block border-t">
+    <h3 class="info-block__title">License</h3><div>
+      <div>{content.legal.license}</div>
+    </div>
+  </div>
+</div>

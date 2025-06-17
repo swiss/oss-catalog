@@ -1,0 +1,55 @@
+---
+import yaml from "js-yaml";
+import { getYear } from "date-fns";
+import GithubLogo from "./GithubLogo.astro";
+import LinkButton from "./LinkButton.astro";
+
+const { software } = Astro.props;
+const content = yaml.load(software.publiccodeYml);
+const detailPageUrl = "/softwares/" + software.id;
+---
+
+<style>
+  .card__content-icons {
+    margin: 0.75rem 1rem;
+  }
+</style>
+<div class="card card--default" has-icon="false">
+  <div class="card__content">
+    <div class="card__body">
+      <p class="meta-info">
+        {
+          content.releaseDate && (
+            <span class="meta-info__item">{getYear(content.releaseDate)}</span>
+          )
+        }
+        {
+          content.softwareVersion && (
+            <span class="meta-info__item">{content.softwareVersion}</span>
+          )
+        }
+        {
+          content.legal?.license && (
+            <span class="meta-info__item">{content.legal?.license}</span>
+          )
+        }
+      </p>
+      <div class="card__title">
+        <h3>{content.name}</h3>
+      </div>
+      <p>
+        {content.description.en?.shortDescription}
+      </p>
+    </div>
+    <section class="card__content-icons">
+      <div><GithubLogo /></div>
+      <div class="ml-2"><a href={software.url}>{software.url}</a></div>
+    </section>
+    <div class="card__footer">
+      <div class="card__footer__info"></div>
+      <div class="card__footer__action">
+        <LinkButton href={detailPageUrl} text="Read more" />
+      </div>
+    </div>
+  </div>
+</div>

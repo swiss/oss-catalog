@@ -26,25 +26,18 @@ services:
       - API_BASEURL=http://api:3000/v1/
       - API_BEARER_TOKEN=${API_BEARER_TOKEN}
 
-  web:
-    image: node:22
+  client:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      network: host
+      args:
+        - API_BASEURL=http://localhost:3000/v1
     depends_on:
       - api
     networks:
       - default
     ports:
-      - "8080:8080"
-    env_file: ".env" # Must define PASETO_KEY
-    environment:
-      - API_BASEURL=http://api:3000/v1/
-    volumes:
-      - ./web:/app
-    working_dir: /app
-    command: >
-      bash -c "
-        npm install
-        npm start
-      "
-
+      - "8081:8080"
 volumes:
   pgdata:

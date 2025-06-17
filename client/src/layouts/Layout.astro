@@ -1,0 +1,56 @@
+---
+import TopHeader from "../components/TopHeader.astro";
+import TopBar from "../components/TobBar.astro";
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <link rel="stylesheet" href="/cd-bund-1.0.35.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="128x128"
+      href="/favicon-128x128.png"
+    />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <meta name="msapplication-TileColor" content="#ffffff" />
+    <meta name="theme-color" content="#ffffff" />
+
+    <meta name="generator" content={Astro.generator} />
+    <title>OSS-Catalog</title>
+  </head>
+  <body>
+    <header id="main-header">
+      <a href="#main-content" class="skip-to-content">Skip to main content</a>
+      <TopBar />
+      <TopHeader />
+
+      <div class="desktop-menu"></div>
+      <div class="mobile-menu"></div>
+      <div class="breadcrumb"></div>
+    </header>
+
+    <main id="main-content">
+      <slot />
+    </main>
+    <footer id="main-footer" class="footer">
+      <div class="bg--secondary-700">
+        <nav class="container" aria-label="Footer">
+          <ul class="footer-navigation">
+            <li>
+              <a href="javascript:void(0)" class="footer__link">Rechtliches</a>
+            </li>
+            <li>
+              <a href="javascript:void(0)" class="footer__link">Datenschutz</a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>
