@@ -2,6 +2,9 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
+# -- enable frontend (does not affect api, db and crawler)
+enabled: true
+
 # This will set the replicaset count more information can be found here: https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/
 replicaCount: 1
 
@@ -12,7 +15,7 @@ image:
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
-  
+
 config:
   # -- API base URL (update according to the actual API service name)
   API_BASEURL: http://oss-catalog-api/v1/
@@ -32,12 +35,15 @@ config:
     databaseDSN: ""
   
 api:
+  # -- enable api
+  enabled: true
   # -- (int) Max number of requests.
   maxRequests:
   # -- Secret name
   useExistingSecret: "oss-catalog-secrets"
   
 crawler:
+  enabled: true
   env:
     # -- API base URL (update according to the actual API service name)
     API_BASEURL: http://oss-catalog-api/v1/
@@ -51,6 +57,8 @@ crawler:
   useExistingSecret: "oss-catalog-secrets"
 
 db:
+# -- enable db
+  enabled: true
   global:
     ## @param global.storageClass Global StorageClass for Persistent Volume(s)
     ##

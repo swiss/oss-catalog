@@ -7,3 +7,5 @@ node_modules/
 
 # asdf config
 .tool-versions
+charts/oss-catalog/Chart.lock
+charts/oss-catalog/charts/*
