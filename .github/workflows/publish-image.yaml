@@ -47,7 +47,7 @@ jobs:
         with:
           context: .
           build-args: |
-            API_BASEURL=https://oss-catalog-api/v1
+            API_BASEURL=https://oss-catalog-api.ocp.cloudscale.puzzle.ch/v1
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
