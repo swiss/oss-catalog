@@ -11,8 +11,6 @@ services:
     extends:
       file: developers-italia-api/docker-compose.yml
       service: db
-    volumes:
-      - pgdata:/var/lib/postgresql/data
 
   crawler:
     build:
@@ -23,6 +21,7 @@ services:
       - default
     env_file: ".env" # Must define PASETO_KEY and GITHUB_TOKEN
     environment:
+      # - API_BASEURL=https://oss-catalog-api.ocp.cloudscale.puzzle.ch/v1
       - API_BASEURL=http://api:3000/v1/
       - API_BEARER_TOKEN=${API_BEARER_TOKEN}
 

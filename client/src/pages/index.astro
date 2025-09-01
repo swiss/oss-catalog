@@ -3,11 +3,10 @@ import Layout from "../layouts/Layout.astro";
 import SoftwareCard from "../components/SoftwareCard.astro";
 
 const apiBaseUrl = import.meta.env.API_BASEURL  || "http://localhost:3000/v1";
-const response = await fetch(`${apiBaseUrl}/software`);
+const response = await fetch(`${apiBaseUrl}/software?page[size]=10000`);
 const data = await response.json();
 const softwares = data.data;
 
-console.log("baseUrl", apiBaseUrl);
 ---
 
 <Layout>
