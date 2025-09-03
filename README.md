@@ -46,7 +46,7 @@ What you will do:
 
 Clone this repository:
 
-```
+```bash
 git clone git@github.com:puzzle/oss-catalog.git
 cd oss-catalog/
 git submodule init
@@ -55,13 +55,13 @@ git submodule update
 
 Generate PASETO key:
 
-```
+```bash
 ./paseto/generate-paseto-key.sh
 ```
 
 Create GitHub API Token with the `public_repo` Permission under https://github.com/settings/tokens and add it to the .env file:
 
-```
+```bash
 echo "GITHUB_TOKEN=<your access token>" >> .env
 ```
 
@@ -69,7 +69,7 @@ echo "GITHUB_TOKEN=<your access token>" >> .env
 
 Start API with database:
 
-```
+```bash
 ./start-api
 ```
 
@@ -77,7 +77,7 @@ Start API with database:
 
 Generate PASETO token (valid for 24h):
 
-```
+```bash
 source .env
 cd paseto/go
 PASETO_TOKEN="$(go run paseto-generate.go $PASETO_KEY)"
@@ -85,13 +85,13 @@ PASETO_TOKEN="$(go run paseto-generate.go $PASETO_KEY)"
 
 List publishers (no authentication needed):
 
-```
+```bash
 curl http://localhost:3000/v1/publishers
 ```
 
 Create a publisher:
 
-```
+```bash
 curl -X POST -H "Authorization: Bearer $PASETO_TOKEN" -H "Content-Type: application/json" -d '{"codeHosting": [{"url": "https://github.com/swiss/", "group": true}], "description": "Swiss Government"}' http://localhost:3000/v1/publishers
 ```
 
@@ -101,7 +101,7 @@ curl -X POST -H "Authorization: Bearer $PASETO_TOKEN" -H "Content-Type: applicat
 
 Run the script:
 
-```
+```bash
 cd repo-scanner/
 nvm use
 PASETO_TOKEN=$PASETO_TOKEN API_ENDPOINT=http://localhost:3000 npm start
@@ -111,7 +111,7 @@ PASETO_TOKEN=$PASETO_TOKEN API_ENDPOINT=http://localhost:3000 npm start
 
 Run crawler - this will crawl all repositories in the API, checks for publiccode.yml and add them to the database if available.
 
-```
+```bash
 ./start-crawler
 ```
 
@@ -119,13 +119,13 @@ Run crawler - this will crawl all repositories in the API, checks for publiccode
 
 Start the catalog client application:
 
-```
+```bash
 ./start-client
 ```
 
 Or start outside of Docker in development mode:
 
-```
+```bash
 cd client/
 nvm use
 npm install

@@ -3,8 +3,6 @@ const path = require('path');
 const https = require('https');
 const http = require('http');
 
-require('dotenv').config();
-
 /**
  * Reads a text file of repository URLs, sending a POST request for each one
  * using the native Node.js https module.
@@ -117,8 +115,7 @@ async function processRepositories() {
 // 4. In the .env file, add the line: PASETO_TOKEN="your_actual_token_here"
 // 5. Open your terminal or command prompt.
 // 6. Make sure you have Node.js installed.
-// 7. Install the 'dotenv' dependency by running: npm install dotenv
-// 8. Run the script with: node process.js
+// 7. Run the script with: node process.js
 
 // Execute the main function.
 processRepositories();
