@@ -1,6 +1,8 @@
 ---
-import Layout from "../../layouts/Layout.astro";
-import SoftwareDetail from "../../components/SoftwareDetail.astro";
+import Layout from "../../../layouts/Layout.astro";
+import SoftwareDetail from "../../../components/SoftwareDetail.astro";
+import { getRelativeLocaleUrl } from "astro:i18n";
+import  { type Lang, useTranslations} from "../../../i18n/utils";
 
 const apiBaseUrl = import.meta.env.API_BASEURL || "http://localhost:3000/v1";
 console.log("apiBaseUrl", apiBaseUrl)
@@ -25,6 +27,10 @@ export async function getStaticPaths() {
 const { id } = Astro.params;
 const response = await fetch(`${apiBaseUrl}/software/${id}`);
 const software = await response.json();
+
+const lang = Astro.currentLocale as Lang;
+const t = useTranslations(lang);
+const homeUrl = getRelativeLocaleUrl(lang);
 ---
 
 <style></style>
@@ -32,7 +38,7 @@ const software = await response.json();
 <Layout>
   <div class="container">
     <a
-      href="/"
+      href={homeUrl}
       type="false"
       class="btn btn--outline btn--sm btn--icon-left btn--back"
       aria-label="false"
@@ -44,11 +50,11 @@ const software = await response.json();
           xmlns="http://www.w3.org/2000/svg"
           d="m8.306 5.116-4.066 7.044 4.066 7.044.65-.375-3.633-6.294h15.187v-.75h-15.187l3.633-6.294z"
         ></path></svg
-      ><span class="btn__text">Back to overview</span></a
+      ><span class="btn__text">{t('software.back')}</span></a
     >
   </div>
   <div class="container vertical-spacing">
-    <h2 class="h2">Detail Information</h2>
+    <h2 class="h2">{t('software.title')}</h2>
     <SoftwareDetail software={software} />
   </div>
 </Layout>

@@ -1,12 +1,17 @@
+---
+import { getLocalePaths } from '../i18n/utils';
+---
+
 <div class="language-switcher">
     <label for="lang-switcher" class="sr-only">Select language</label>
     <div class="form__group__select">
         <div class="select select--bare">
             <select id="lang-switcher" class="input--negative input--sm">
-                <option>EN</option>
-                <option>DE</option>
-                <option>FR</option>
-                <option>IT</option>
+              {getLocalePaths(Astro.url).map(({lang, path}) => (
+                <option label={lang.toUpperCase()}
+                        value={path}
+                        selected={lang === Astro.currentLocale} />
+              ))}
             </select>
             <div class="select__icon">
                 <svg role="presentation" aria-hidden="true" viewBox="0 0 24 24">
@@ -18,3 +23,10 @@
         </div>
     </div>
 </div>
+
+<script is:inline>
+  const langSwitcher = document.getElementById('lang-switcher');
+  langSwitcher.addEventListener('change', (event) => {
+    location.href = event.target?.value;
+  })
+</script>

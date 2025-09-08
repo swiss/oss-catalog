@@ -1,10 +1,13 @@
 ---
 import TopHeader from "../components/TopHeader.astro";
 import TopBar from "../components/TobBar.astro";
+import { type Lang, useTranslations } from "../i18n/utils";
+
+const t = useTranslations(Astro.currentLocale as Lang);
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={Astro.currentLocale}>
   <head>
     <link rel="stylesheet" href="/cd-bund-1.0.35.css" />
     <meta charset="UTF-8" />
@@ -22,11 +25,11 @@ import TopBar from "../components/TobBar.astro";
     <meta name="theme-color" content="#ffffff" />
 
     <meta name="generator" content={Astro.generator} />
-    <title>OSS-Catalog</title>
+    <title>{t("index.title")}</title>
   </head>
   <body>
     <header id="main-header">
-      <a href="#main-content" class="skip-to-content">Skip to main content</a>
+      <a href="#main-content" class="skip-to-content">{t("index.skip")}</a>
       <TopBar />
       <TopHeader />
 
@@ -43,10 +46,10 @@ import TopBar from "../components/TobBar.astro";
         <nav class="container" aria-label="Footer">
           <ul class="footer-navigation">
             <li>
-              <a href="javascript:void(0)" class="footer__link">Rechtliches</a>
+              <a href="javascript:void(0)" class="footer__link">{t("footer.legal")}</a>
             </li>
             <li>
-              <a href="javascript:void(0)" class="footer__link">Datenschutz</a>
+              <a href="javascript:void(0)" class="footer__link">{t("footer.privacy")}</a>
             </li>
           </ul>
         </nav>

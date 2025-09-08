@@ -1,11 +1,14 @@
 ---
 import Logo from "./Logo.astro";
 import LogoText from "./LogoText.astro";
+import { type Lang, useTranslations } from "../i18n/utils";
+
+const t = useTranslations(Astro.currentLocale as Lang);
 ---
 
 <div class="top-header">
   <div class="top-header__mobile-title" aria-hidden="true">
-    <div class="container container--flex">Open Source Software Catalogue</div>
+    <div class="container container--flex">{t("header.title")}</div>
   </div>
 
   <div class="container container--flex">
@@ -16,7 +19,7 @@ import LogoText from "./LogoText.astro";
       <div class="logo-title__container">
         <div class="logo__accronym">OSS</div>
         <div class="logo__title">
-          <div>Bundeskanzlei BK</div>
+          <div>{t("header.logo.title")}</div>
         </div>
       </div>
     </a>

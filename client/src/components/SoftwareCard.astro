@@ -3,10 +3,14 @@ import yaml from "js-yaml";
 import { getYear } from "date-fns";
 import GithubLogo from "./GithubLogo.astro";
 import LinkButton from "./LinkButton.astro";
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { type Lang, useTranslations } from "../i18n/utils";
 
 const { software } = Astro.props;
 const content = yaml.load(software.publiccodeYml);
-const detailPageUrl = "/softwares/" + software.id;
+const lang = Astro.currentLocale as Lang;
+const t = useTranslations(lang);
+const detailPageUrl = getRelativeLocaleUrl(lang, "softwares/" + software.id);
 ---
 
 <style>
@@ -48,7 +52,7 @@ const detailPageUrl = "/softwares/" + software.id;
     <div class="card__footer">
       <div class="card__footer__info"></div>
       <div class="card__footer__action">
-        <LinkButton href={detailPageUrl} text="Read more" />
+        <LinkButton href={detailPageUrl} text={t("software.more")} />
       </div>
     </div>
   </div>
