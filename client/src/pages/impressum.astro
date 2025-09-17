@@ -1,0 +1,44 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { type Lang, useTranslations } from "../i18n/utils";
+import PhoneIcon from "../components/PhoneIcon.astro";
+import EmailIcon from "../components/EmailIcon.astro";
+
+const t = useTranslations(Astro.currentLocale as Lang);
+---
+
+<Layout>
+  <section class="section bg--secondary-50">
+    <div class="container">
+      <h1 class="section__title">{t('impressum.title')}</h1>
+    </div>
+  </section>
+  <section class="container section--default vertical-spacing">
+    <h2 class="h2">
+      {t('impressum.content')}
+    </h2>
+    <address>
+      Bundeskanzlei<br/>
+      Bundeshaus<br/>
+      3003 Bern<br/><br/>
+
+      <a href="tel: +41 58 46 22111" class="btn btn--link btn--icon-left">
+        <PhoneIcon />
+        <span class="btn__text">+41 58 46 22111</span>
+      </a><br/>
+      <a href="mailto:opensource@bk.admin.ch" class="btn btn--link btn--icon-left">
+        <EmailIcon />
+        <span class="btn__text">opensource@bk.admin.ch</span>
+      </a><br/>
+    </address>
+
+    <h2 class="h2">
+      {t('impressum.design')}
+    </h2>
+    <address>
+      Puzzle ITC AG<br/>
+      Belpstrasse 37<br/>
+      3007 Bern<br/>
+    </address>
+  </section>
+</Layout>

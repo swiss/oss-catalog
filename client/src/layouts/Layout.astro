@@ -2,12 +2,15 @@
 import TopHeader from "../components/TopHeader.astro";
 import TopBar from "../components/TobBar.astro";
 import { type Lang, useTranslations } from "../i18n/utils";
+import { getRelativeLocaleUrl } from "astro:i18n";
 
-const t = useTranslations(Astro.currentLocale as Lang);
+const lang = Astro.currentLocale as Lang;
+const t = useTranslations(lang);
+const impressumUrl = getRelativeLocaleUrl(Astro.currentLocale as Lang, "impressum");
 ---
 
 <!doctype html>
-<html lang={Astro.currentLocale}>
+<html lang={lang}>
   <head>
     <link rel="stylesheet" href="/cd-bund-1.0.35.css" />
     <meta charset="UTF-8" />
@@ -46,10 +49,12 @@ const t = useTranslations(Astro.currentLocale as Lang);
         <nav class="container" aria-label="Footer">
           <ul class="footer-navigation">
             <li>
-              <a href="javascript:void(0)" class="footer__link">{t("footer.legal")}</a>
+              <a href={t('footer.legal.link')} class="footer__link" target="_blank">
+                {t("footer.legal")}
+              </a>
             </li>
             <li>
-              <a href="javascript:void(0)" class="footer__link">{t("footer.privacy")}</a>
+              <a href={impressumUrl} class="footer__link">{t("footer.impressum")}</a>
             </li>
           </ul>
         </nav>

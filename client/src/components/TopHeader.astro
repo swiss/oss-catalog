@@ -2,8 +2,11 @@
 import Logo from "./Logo.astro";
 import LogoText from "./LogoText.astro";
 import { type Lang, useTranslations } from "../i18n/utils";
+import { getRelativeLocaleUrl } from "astro:i18n";
 
-const t = useTranslations(Astro.currentLocale as Lang);
+const lang = Astro.currentLocale as Lang;
+const t = useTranslations(lang);
+const homeUrl = getRelativeLocaleUrl(lang);
 ---
 
 <div class="top-header">
@@ -12,7 +15,7 @@ const t = useTranslations(Astro.currentLocale as Lang);
   </div>
 
   <div class="container container--flex">
-    <a class="logo" href="/">
+    <a class="logo" href={homeUrl}>
       <Logo />
       <LogoText />
       <div class="logo__separator" role="separator" aria-hidden="true"></div>
