@@ -17,3 +17,9 @@ export function getLocalePaths(url: URL) {
     };
   });
 }
+
+export function resolveLanguage(lang: Lang, availableLanguages: string[]) {
+  return availableLanguages.find(l => l.startsWith(lang)) ??
+    availableLanguages.find(l => l.startsWith(defaultLang)) ??
+    availableLanguages[0];
+}

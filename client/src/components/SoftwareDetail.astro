@@ -1,34 +1,38 @@
 ---
 import yaml from "js-yaml";
+import  { type Lang, resolveLanguage } from "../i18n/utils";
 
 const { software } = Astro.props;
 const content = yaml.load(software.publiccodeYml);
+const lang = Astro.currentLocale as Lang
+const availableLanguages = Object.keys(content.description);
+const description = content.description[resolveLanguage(lang, availableLanguages)];
 ---
 
 <div>
   <div class="info-block border-t">
-    <h3 class="info-block__title">Software name</h3>
+    <h2 class="info-block__title">Software name</h2>
     <div>
       <span>{content.name}</span>
     </div>
   </div><div class="info-block border-t">
-    <h3 class="info-block__title">Landing page</h3><div>
+    <h2 class="info-block__title">Landing page</h2><div>
       <div>{content.landingURL}</div>
     </div>
   </div><div class="info-block border-t">
-    <h3 class="info-block__title">Short description</h3><div>
-      <div>{content.description?.en?.shortDescription}</div>
+    <h2 class="info-block__title">Short description</h2><div>
+      <div>{description?.shortDescription}</div>
     </div>
   </div><div class="info-block border-t">
-    <h3 class="info-block__title">Documentation</h3><div>
-      <div>{content.description?.en?.longDescription}</div>
+    <h2 class="info-block__title">Documentation</h2><div>
+      <div>{description?.longDescription}</div>
     </div>
   </div><div class="info-block border-t">
-    <h3 class="info-block__title">Software version</h3><div>
+    <h2 class="info-block__title">Software version</h2><div>
       {content.softwareVersion}
     </div>
   </div><div class="info-block border-t">
-    <h3 class="info-block__title">License</h3><div>
+    <h2 class="info-block__title">License</h2><div>
       <div>{content.legal.license}</div>
     </div>
   </div>

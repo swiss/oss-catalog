@@ -11,7 +11,7 @@ export async function getStaticPaths() {
   const apiBaseUrl = import.meta.env.API_BASEURL || "http://localhost:3000/v1";
 
   console.log("apiBaseUrl in getStaticPaths", apiBaseUrl)
-  const response = await fetch(`${apiBaseUrl}/software`);
+  const response = await fetch(`${apiBaseUrl}/software?page[size]=10000`);
   const data = await response.json();
   const softwares = data.data;
 
@@ -54,7 +54,7 @@ const homeUrl = getRelativeLocaleUrl(lang);
     >
   </div>
   <div class="container vertical-spacing">
-    <h2 class="h2">{t('software.title')}</h2>
+    <h1 class="h2">{t('software.title')}</h1>
     <SoftwareDetail software={software} />
   </div>
 </Layout>
