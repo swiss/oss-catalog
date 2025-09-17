@@ -1,8 +1,8 @@
 ---
-import Layout from "../../../layouts/Layout.astro";
-import SoftwareDetail from "../../../components/SoftwareDetail.astro";
+import Layout from "../../layouts/Layout.astro";
+import SoftwareDetail from "../../components/SoftwareDetail.astro";
 import { getRelativeLocaleUrl } from "astro:i18n";
-import  { type Lang, useTranslations} from "../../../i18n/utils";
+import  { type Lang, useTranslations} from "../../i18n/utils";
 
 const apiBaseUrl = import.meta.env.API_BASEURL || "http://localhost:3000/v1";
 console.log("apiBaseUrl", apiBaseUrl)
