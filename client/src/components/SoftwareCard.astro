@@ -47,12 +47,10 @@ const description = content.description[resolveLanguage(lang, availableLanguages
         {description?.shortDescription}
       </p>
     </div>
-    <section class="card__content-icons">
-      <div><GithubLogo /></div>
-      <div class="ml-2"><a href={software.url}>{software.url}</a></div>
-    </section>
     <div class="card__footer">
-      <div class="card__footer__info"></div>
+      <div class="card__footer__info">
+        <a href={software.url} target="_blank" aria-label={t('software.source')}><GithubLogo /></a>
+      </div>
       <div class="card__footer__action">
         <LinkButton href={detailPageUrl} text={t("software.more")} />
       </div>
