@@ -56,6 +56,11 @@ const impressumUrl = getRelativeLocaleUrl(Astro.currentLocale as Lang, "impressu
             <li>
               <a href={impressumUrl} class="footer__link">{t("footer.impressum")}</a>
             </li>
+            <li>
+              <a class="footer__link" href={`https://www.bk.admin.ch/bk/${Astro.currentLocale}/home/digitale-transformation-ikt-lenkung/bundesarchitektur/open_source_software/hilfsmittel_oss.html`} target="_blank">
+                {t('footer.tools')}
+              </a>
+            </li>
           </ul>
         </nav>
       </div>

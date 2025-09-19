@@ -2,6 +2,7 @@
 import Layout from "../layouts/Layout.astro";
 import SoftwareCard from "../components/SoftwareCard.astro";
 import { type Lang, useTranslations } from "../i18n/utils";
+import LinkButton from "../components/LinkButton.astro";
 
 const apiBaseUrl = import.meta.env.API_BASEURL  || "http://localhost:3000/v1";
 const response = await fetch(`${apiBaseUrl}/software?page[size]=10000`);
@@ -14,6 +15,16 @@ const t = useTranslations(Astro.currentLocale as Lang);
   <section class="section bg--secondary-50">
     <div class="container">
       <h1 class="section__title">{t('index.title')}</h1>
+      <h2 class="section__subtitle">{t('index.subtitle')}</h2>
+
+      <div class="card">
+        <div class="card__body">
+          {t('index.description')}
+        </div>
+      </div>
+      <div class="section__action">
+        <LinkButton href="https://puzzle.github.io/publiccode-editor/" text={t('index.publiccode')} />
+      </div>
     </div>
   </section>
   <section class="container section--default">
