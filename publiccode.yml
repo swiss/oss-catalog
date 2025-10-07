@@ -30,4 +30,6 @@ localisation:
   availableLanguages:
     - en
 ch:
-  org: Puzzle ITC Gmbh
+  countryExtensionVersion: "1.0"
+  piattaforme:
+    - spid: true
