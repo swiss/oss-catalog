@@ -29,7 +29,4 @@ localisation:
   localisationReady: false
   availableLanguages:
     - en
-ch:
-  countryExtensionVersion: "1.0"
-  piattaforme:
-    - spid: true
+x-org: test-org
