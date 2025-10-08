@@ -1,7 +1,7 @@
 publiccodeYmlVersion: "0.4"
 name: OSS Catalog POC
 applicationSuite: ""
-url: https://github.com/puzzle/oss-catalog
+url: https://github.com/swiss/oss-catalog
 platforms:
   - web
 categories:
