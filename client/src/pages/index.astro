@@ -1,13 +1,15 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import SoftwareCard from "../components/SoftwareCard.astro";
-import { type Lang, useTranslations } from "../i18n/utils";
+import { type Lang, useTranslations} from "../i18n/utils";
 import LinkButton from "../components/LinkButton.astro";
+import orgEinheiten from "../../public/org-einheiten-bund.json";
 
 const apiBaseUrl = import.meta.env.API_BASEURL  || "http://localhost:3000/v1";
 const response = await fetch(`${apiBaseUrl}/software?page[size]=10000`);
 const data = await response.json();
 const softwares = data.data;
+const lang = Astro.currentLocale as Lang;
 const t = useTranslations(Astro.currentLocale as Lang);
 ---
 
@@ -25,6 +27,36 @@ const t = useTranslations(Astro.currentLocale as Lang);
       <div class="section__action">
         <LinkButton href="https://swiss.github.io/publiccode-editor/" text={t('index.publiccode')} />
       </div>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container">
+    <div class="form__group__select">
+      <label for="organization-filter" class="text--base">
+        Filter
+      </label>
+    <select id="organization-filter">
+      <option value="all">Alle</option>
+      {orgEinheiten.map((org) => {
+        return <option value={org.organization}>{org[lang] ?? org.de}</option>
+      })}
+    </select>
+      <script>
+        function handleOrgChange(event) {
+          const selectedOrg = event.target.value;
+          const cards = document.querySelectorAll('.card');
+          cards.forEach((card) => {
+            if (card.dataset.org === selectedOrg || selectedOrg === "all") {
+              card.style.display = 'block';
+            } else {
+              card.style.display = 'none';
+            }
+          });
+        }
+
+        document.getElementById('organization-filter').addEventListener('change', handleOrgChange);
+      </script>
+    </div>
     </div>
   </section>
   <section class="container section--default">
