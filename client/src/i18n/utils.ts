@@ -27,7 +27,7 @@ export function resolveLanguage(lang: Lang, availableLanguages: string[]) {
 
 const mappings = [
   {url: "https://github.com/swiss/publiccode-editor.git", org: "https://ld.admin.ch/office/I.1.1"},
-  {url: "https://github.com/swiss/oss-catalog", org: "https://ld.admin.ch/office/I.1.1"},
+  {url: "https://github.com/swiss/oss-catalog.git", org: "https://ld.admin.ch/office/I.1.1"},
   {url: "https://github.com/sfa-siard/siard-suite.git", org:  "https://ld.admin.ch/office/II.1.4"},
   {url: "https://github.com/swiss/opensource-guidelines.git", org: "https://ld.admin.ch/office/I.1.1"},
   {url: "https://github.com/jeap-admin-ch/jeap-crypto.git", org: "https://ld.admin.ch/office/V.1.7"},
