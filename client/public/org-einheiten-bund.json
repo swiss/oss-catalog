@@ -1,9 +1,9 @@
 [
   {
     "organization": "https://ld.admin.ch/office/I.1.1",
-    "de": "Generalsekretariat",
-    "fr": "Secrétariat général",
-    "it": "Segreteria generale",
+    "de": "Bundeskanzlei",
+    "fr": "Chancellerie fédérale ChF",
+    "it": "Cancelleria federale CaF",
     "en": null
   },
   {
@@ -39,13 +39,6 @@
     "de": "Konsularische Direktion",
     "fr": "Direction consulaire",
     "it": "Direzione consolare",
-    "en": null
-  },
-  {
-    "organization": "https://ld.admin.ch/office/II.1.1",
-    "de": "Generalsekretariat",
-    "fr": "Secrétariat général",
-    "it": "Segreteria generale",
     "en": null
   },
   {
@@ -133,13 +126,6 @@
     "en": null
   },
   {
-    "organization": "https://ld.admin.ch/office/III.1.1",
-    "de": "Generalsekretariat",
-    "fr": "Secrétariat général",
-    "it": "Segreteria generale",
-    "en": null
-  },
-  {
     "organization": "https://ld.admin.ch/office/III.1.2",
     "de": "Bundesamt für Justiz",
     "fr": "Office fédéral de la justice",
@@ -200,13 +186,6 @@
     "de": "Eidgenössisches Institut für Metrologie",
     "fr": "Institut fédéral de métrologie",
     "it": "Istituto federale di metrologia",
-    "en": null
-  },
-  {
-    "organization": "https://ld.admin.ch/office/IV.1.1",
-    "de": "Generalsekretariat",
-    "fr": "Secrétariat général",
-    "it": "Segreteria generale",
     "en": null
   },
   {
@@ -277,13 +256,6 @@
     "de": "Unabhängige Aufsichtsbehörde über die nachrichtendienstlichen Tätigkeiten",
     "fr": "Autorité de surveillance indépendante des activités de renseignement",
     "it": "Autorità de vigilanza indipendente sulle attività informative",
-    "en": null
-  },
-  {
-    "organization": "https://ld.admin.ch/office/V.1.1",
-    "de": "Generalsekretariat",
-    "fr": "Secrétariat général",
-    "it": "Segreteria generale",
     "en": null
   },
   {
@@ -361,13 +333,6 @@
     "de": "Pensionskasse des Bundes",
     "fr": "Caisse fédérale de pensions",
     "it": "Cassa pensioni della Confederazione",
-    "en": null
-  },
-  {
-    "organization": "https://ld.admin.ch/office/VI.1.1",
-    "de": "Generalsekretariat",
-    "fr": "Secrétariat général",
-    "it": "Segreteria generale",
     "en": null
   },
   {
@@ -508,13 +473,6 @@
     "de": "Swiss Investment Fund for Emerging Markets",
     "fr": "Swiss Investment Fund for Emerging Markets",
     "it": "Swiss Investment Fund for Emerging Markets",
-    "en": null
-  },
-  {
-    "organization": "https://ld.admin.ch/office/VII.1.1",
-    "de": "Generalsekretariat",
-    "fr": "Secrétariat général",
-    "it": "Segreteria generale",
     "en": null
   },
   {
