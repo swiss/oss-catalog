@@ -53,6 +53,13 @@ git submodule init
 git submodule update
 ```
 
+
+To update the submodules:
+
+```bash
+git submodule update --remote --merge
+```
+
 Generate PASETO key:
 
 ```bash
@@ -94,6 +101,8 @@ Create a publisher:
 ```bash
 curl -X POST -H "Authorization: Bearer $PASETO_TOKEN" -H "Content-Type: application/json" -d '{"codeHosting": [{"url": "https://github.com/swiss/", "group": true}], "description": "Swiss Government"}' http://localhost:3000/v1/publishers
 ```
+
+curl -X POST -H "Authorization: Bearer $PASETO_TOKEN" -H "Content-Type: application/json" -d '{"codeHosting": [{"url": "https://github.com/sfa-siard/siard-suite", "group": false}], "description": "SIARD Suite"}'  https://oss-catalog-api.ocp.cloudscale.puzzle.ch/v1/publishers
 
 ### Add all Repositories in repos.txt
 
