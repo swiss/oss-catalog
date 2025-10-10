@@ -1,6 +1,4 @@
-
 https://github.com/swiss
-https://github.com/puzzle
 https://github.com/sfa-siard/siard-suite
 https://github.com/bigbluebutton/bigbluebutton
 https://github.com/jeap-admin-ch
