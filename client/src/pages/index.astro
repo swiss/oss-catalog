@@ -32,22 +32,35 @@ const t = useTranslations(Astro.currentLocale as Lang);
       </div>
     </div>
   </section>
-  <section class="section">
+  <section class="section section--default">
     <div class="container">
       <div class="form__group__select">
         <label for="organization-filter" class="text--base">
           {t("index.filter")}
         </label>
-        <select id="organization-filter">
-          <option value="all">{t("index.filter.option.all")}</option>
-          {
-            orgEinheiten.map((org) => {
-              return (
-                <option value={org.organization}>{org[lang] ?? org.de}</option>
-              );
-            })
-          }
-        </select>
+        <div class="select">
+          <select
+              id="organization-filter"
+              class="input--outline input--base"
+              name="organization-filter-name"
+          >
+            <option value="all">{t("index.filter.option.all")}</option>
+            {
+              orgEinheiten.map((org) => {
+                return (
+                    <option value={org.organization}>{org[lang] ?? org.de}</option>
+                );
+              })
+            }
+          </select>
+          <div class="select__icon">
+            <svg role="presentation" aria-hidden="true" viewBox="0 0 24 24">
+              <path
+                  d="m5.706 10.015 6.669 3.85 6.669-3.85.375.649-7.044 4.067-7.044-4.067z"
+              ></path>
+            </svg>
+          </div>
+        </div>
         <script>
           function handleOrgChange(event) {
             console.log("change event...");
@@ -79,13 +92,13 @@ const t = useTranslations(Astro.currentLocale as Lang);
         </script>
       </div>
     </div>
-  </section>
-  <section class="container section--default">
-    <div class="grid grid--responsive-cols-3 gap--responsive">
-      {softwares.map((software) => <SoftwareCard software={software} />)}
-    </div>
-    <div id="no-results-message" style="display: none">
-      <p>{t("index.noresults")}</p>
+    <div class="container">
+        <div class="grid grid--responsive-cols-3 gap--responsive">
+            {softwares.map((software) => <SoftwareCard software={software} />)}
+        </div>
+        <div id="no-results-message" style="display: none">
+            <p>{t("index.noresults")}</p>
+        </div>
     </div>
   </section>
 </Layout>
