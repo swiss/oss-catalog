@@ -18,7 +18,7 @@ export const locales = {
     "index.skip": "Skip to main content",
     "index.filter": "Filter",
     "index.filter.option.all": "All",
-    "index.noresults": "Für diese Bundesbehörde ist kein Quellcode im Katalog verfügbar",
+    "index.noresults": "The catalogue does not contain any source code for this federal authority.",
     "software.title": "Detailed Information",
     "software.back": "Back to overview",
     "software.more": "Read more",
