@@ -3,7 +3,7 @@ import Layout from "../layouts/Layout.astro";
 import SoftwareCard from "../components/SoftwareCard.astro";
 import { type Lang, useTranslations } from "../i18n/utils";
 import LinkButton from "../components/LinkButton.astro";
-import orgEinheiten from "../../public/org-einheiten-bund.json";
+import organisations from "../../public/organisations.json";
 
 const apiBaseUrl = import.meta.env.API_BASEURL || "http://localhost:3000/v1";
 const response = await fetch(`${apiBaseUrl}/software?page[size]=10000`);
@@ -46,9 +46,15 @@ const t = useTranslations(Astro.currentLocale as Lang);
           >
             <option value="all">{t("index.filter.option.all")}</option>
             {
-              orgEinheiten.map((org) => {
+              organisations.map((departement) => {
                 return (
-                    <option value={org.organization}>{org[lang] ?? org.de}</option>
+                    <optgroup label={departement.name[lang] ?? departement.name.de}>
+                        {departement.organisations.map((organisation) => {
+                            return (
+                                <option value={organisation.id}>{organisation.name[lang] ?? organisation.name.de}</option>
+                            );
+                        })}
+                    </optgroup>
                 );
               })
             }
