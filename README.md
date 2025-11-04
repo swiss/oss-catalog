@@ -177,3 +177,4 @@ Then visit http://localhost:4321
 - [Developers Italia website](https://github.com/italia/developers.italia.it) – Italy's [OSS catalog](https://developers.italia.it/en/software) (Jekyll site)
   - Downloads crawled softwares from Developers Italia API: https://github.com/italia/developers.italia.it/blob/main/scripts/get-software.js
 - [More publicode.yml components by Developers Italia](https://github.com/italia#-publiccode)
+- List of the [organisations of the Swiss Confederation](https://github.com/swiss/publiccode-editor/tree/cd-bund/src/app/data/README.md)
