@@ -1,6 +1,8 @@
 name: Build and publish container image
 
 on:
+  schedule:
+    - cron: "42 1 * * *"
   workflow_dispatch:
   push:
     branches:
