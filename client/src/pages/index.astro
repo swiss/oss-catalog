@@ -4,6 +4,7 @@ import SoftwareCard from "../components/SoftwareCard.astro";
 import { type Lang, useTranslations } from "../i18n/utils";
 import LinkButton from "../components/LinkButton.astro";
 import organisations from "../../public/organisations.json";
+import CustomSelect from "../components/CustomSelect.vue";
 
 const apiBaseUrl = import.meta.env.API_BASEURL || "http://localhost:3000/v1";
 const response = await fetch(`${apiBaseUrl}/software?page[size]=10000`);
@@ -38,10 +39,16 @@ const t = useTranslations(Astro.currentLocale as Lang);
         <label for="organization-filter" class="text--base">
           {t("index.filter")}
         </label>
-        <div class="select">
+          <CustomSelect client:visible options={organisations.map(departement => departement.organisations).flat().map((organisation) => {
+              return {
+                  label: organisation.name[lang] ?? organisation.name.de,
+                  value: organisation.id
+              }
+          })}></CustomSelect>
+<!--        <div class="select">
           <select
               id="organization-filter"
-              class="input--outline input--base"
+              class="input&#45;&#45;outline input&#45;&#45;base"
               name="organization-filter-name"
           >
             <option value="all">{t("index.filter.option.all")}</option>
@@ -66,11 +73,11 @@ const t = useTranslations(Astro.currentLocale as Lang);
               ></path>
             </svg>
           </div>
-        </div>
+        </div>-->
         <script>
           function handleOrgChange(event) {
             console.log("change event...");
-            const selectedOrg = event.target.value;
+            const selectedOrg = event.detail.value;
             const cards = document.querySelectorAll(".card");
             cards.forEach((card) => {
               if (card.dataset.org === selectedOrg || selectedOrg === "all") {
@@ -92,9 +99,11 @@ const t = useTranslations(Astro.currentLocale as Lang);
             }
           }
 
-          document
-            .getElementById("organization-filter")
-            .addEventListener("change", handleOrgChange);
+          document.addEventListener('select-change', (event) => {
+              console.log('Caught by Astro page script:', event.detail.value);
+              handleOrgChange(event)
+          });
+
         </script>
       </div>
     </div>
