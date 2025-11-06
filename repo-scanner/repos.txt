@@ -18,6 +18,7 @@ https://github.com/MeteoSwiss
 https://github.com/opendata-swiss
 https://github.com/SFOE
 https://github.com/Swiss-Armed-Forces
+https://gitlab.com/swiss-armed-forces
 https://github.com/swiss-territorial-data-lab
 https://github.com/SwissFederalArchives
 https://github.com/swisstopo
