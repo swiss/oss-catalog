@@ -22,3 +22,7 @@ Feel free to check [our documentation](https://docs.astro.build) or jump into ou
 ## CD Bund
 
 See https://swiss.github.io/designsystem/?path=/docs/get-started--docs
+
+## Organisations
+
+The app contains a filter that allows to filter the softwares by organisation. The organisations are loaded from `src/data/organisations.json`. This file is a copy of https://raw.githubusercontent.com/swiss/publiccode-editor/refs/heads/cd-bund/src/app/data/organisations.json
