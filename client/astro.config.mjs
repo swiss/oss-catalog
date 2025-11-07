@@ -23,6 +23,5 @@ export default defineConfig({
       fallbackType: "rewrite",
     },
   },
-
   integrations: [react()]
 });
