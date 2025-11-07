@@ -68,14 +68,7 @@ const buildDateFormatted = `${buildDate.toLocaleDateString(dateLocale, {
         allOption: t("index.filter.option.all"),
       }}
       organisations={organisations}
+      softwares={softwares}
     />
-    <div class="container">
-        <div class="grid grid--responsive-cols-3 gap--responsive">
-            {softwares.map((software) => <SoftwareCard key={software.id} software={software} />)}
-        </div>
-        <div id="no-results-message" style="display: none">
-            <p>{t("index.noresults")}</p>
-        </div>
-    </div>
   </section>
 </Layout>
