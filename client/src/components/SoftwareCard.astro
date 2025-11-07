@@ -5,11 +5,14 @@ import GithubLogo from "./GithubLogo.astro";
 import LinkButton from "./LinkButton.astro";
 import { getRelativeLocaleUrl } from 'astro:i18n';
 import { type Lang, resolveLanguage, useTranslations } from "../i18n/utils";
+import type { Software } from "src/types/software";
 
 const { software } = Astro.props;
 const content = yaml.load(software.publiccodeYml);
+
 const lang = Astro.currentLocale as Lang;
 const t = useTranslations(lang);
+
 const detailPageUrl = getRelativeLocaleUrl(lang, "softwares/" + software.id);
 const availableLanguages = Object.keys(content.description);
 const description = content.description[resolveLanguage(lang, availableLanguages)];

@@ -5,23 +5,11 @@ import { type Lang, useTranslations, toFullLocale } from "../i18n/utils";
 import LinkButton from "../components/LinkButton.astro";
 import organisations from "../data/organisations.json";
 import OrganisationSelection from "../components/OrganisationSelection.astro";
+import { type Software } from "../types/software";
 
 const apiBaseUrl = import.meta.env.API_BASEURL || "http://localhost:3000/v1";
 const lang = Astro.currentLocale as Lang;
 const t = useTranslations(lang);
-
-
-type Software = {
-  id: string;
-  name: string;
-  landingURL: string;
-  softwareVersion: string;
-  legal: {
-    license: string;
-  };
-  publiccodeYml: string;
-
-};
 
 let softwares: Software[] = [];
 
