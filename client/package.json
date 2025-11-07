@@ -19,6 +19,7 @@
     "react-dom": "^19.2.0"
   },
   "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
     "prettier": "3.6.2",
     "prettier-plugin-astro": "0.14.1"
   }
