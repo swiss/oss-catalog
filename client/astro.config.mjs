@@ -1,6 +1,7 @@
 // @ts-check
 import { defineConfig } from "astro/config";
 import dotenv from "dotenv";
+import react from "@astrojs/react";
 
 // Load environment variables from .env file
 dotenv.config();
@@ -22,4 +23,6 @@ export default defineConfig({
       fallbackType: "rewrite",
     },
   },
+
+  integrations: [react()]
 });
