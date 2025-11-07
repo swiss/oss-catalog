@@ -1,4 +1,4 @@
-# Open Source Software Catalog POC
+# Open Source Software Catalog
 
 Proof-of-concept for an Open Source software catalog based on the [Publiccode](https://github.com/publiccodeyml) standard.
 

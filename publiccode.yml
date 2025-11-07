@@ -1,5 +1,5 @@
 publiccodeYmlVersion: 0.5.0
-name: OSS Catalog POC
+name: Open Source Software Catalog
 url: https://github.com/swiss/oss-catalog
 platforms:
   - web
