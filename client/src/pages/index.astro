@@ -6,6 +6,7 @@ import LinkButton from "../components/LinkButton.astro";
 import organisations from "../data/organisations.json";
 import OrganisationSelection from "../components/OrganisationSelection.astro";
 import { type Software } from "../types/software";
+import { Combobox } from "../components/Combobox.tsx";
 
 const apiBaseUrl = import.meta.env.API_BASEURL || "http://localhost:3000/v1";
 const lang = Astro.currentLocale as Lang;
@@ -20,9 +21,19 @@ try {
   const data = await response.json();
   softwares = data.data ?? [];
 } catch (e) {
-  console.error("failed to load softwares", e)
+  console.error("failed to load softwares", e);
   softwares = [];
 }
+
+const transformedOrganisations = organisations
+  .map((departement) => departement.organisations)
+  .flat()
+  .map((organisation) => {
+    return {
+      label: organisation.name[lang] ?? organisation.name.de,
+      value: organisation.id,
+    };
+  });
 
 ---
 
@@ -46,14 +57,22 @@ try {
     </div>
   </section>
   <section class="section section--default">
-    <OrganisationSelection organisations={organisations} />
+    <!--<OrganisationSelection organisations={organisations} />-->
+    <Combobox 
+      organisations={transformedOrganisations}
+      client:load 
+    />
     <div class="container">
-        <div class="grid grid--responsive-cols-3 gap--responsive">
-            {softwares.map((software) => <SoftwareCard key={software.id} software={software} />)}
-        </div>
-        <div id="no-results-message" style="display: none">
-            <p>{t("index.noresults")}</p>
-        </div>
+      <div class="grid grid--responsive-cols-3 gap--responsive">
+        {
+          softwares.map((software) => (
+            <SoftwareCard key={software.id} software={software} />
+          ))
+        }
+      </div>
+      <div id="no-results-message" style="display: none">
+        <p>{t("index.noresults")}</p>
+      </div>
     </div>
   </section>
 </Layout>
