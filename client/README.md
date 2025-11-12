@@ -1,6 +1,6 @@
-# OSS-Catalog - Client
+# OSS Catalog - Client
 
-Web Client for OSS-Catalog, based on [Astro](https://astro.build).
+Web Client for OSS Catalog, based on [Astro](https://astro.build).
 
 ## 🧞 Commands
 

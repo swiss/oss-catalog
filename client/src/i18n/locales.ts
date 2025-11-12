@@ -10,9 +10,9 @@ export const defaultLang = "en";
 export const locales = {
   en: {
     "header.logo.title": "Federal Chancellery FCh",
-    "header.title": "Open Source Software Catalogue",
-    "index.title": "OSS Catalogue",
-    "index.subtitle": "Catalogue of open source software for public administrations",
+    "header.title": "Open Source Software Catalog",
+    "index.title": "OSS Catalog",
+    "index.subtitle": "Catalog of open source software for public administrations",
     "index.description": "This is the catalog provided for in the guidelines for the procurement and reuse of software. It includes solutions reused by public administrations and third-party open source software intended for public administrations.",
     "index.publiccode": "Add software",
     "index.skip": "Skip to main content",

@@ -1,6 +1,7 @@
-# Open Source Software Catalog POC
+# Open Source Software Catalog
 
-Proof-of-concept for an Open Source software catalog based on the [Publiccode](https://github.com/publiccodeyml) standard.
+The Open Source Software Catalogue provides an overview of free and open-source software developed by or for the Swiss Confederation.
+It is based on the [Public Code](https://github.com/publiccodeyml) standard, which describes software in a machine-readable way, making it discoverable and understandable for both developers and non-technical users.
 
 ## Context
 
