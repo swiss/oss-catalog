@@ -3,6 +3,7 @@ import TopHeader from "../components/TopHeader.astro";
 import TopBar from "../components/TobBar.astro";
 import { type Lang, useTranslations } from "../i18n/utils";
 import { getRelativeLocaleUrl } from "astro:i18n";
+import "../styles/global.css";
 
 const lang = Astro.currentLocale as Lang;
 const t = useTranslations(lang);
