@@ -63,12 +63,6 @@ jobs:
           npm run build
         env:
           API_BASEURL: http://localhost:3000/v1
-      - name: Verify build output
-        run: |
-          echo "=== Build output ==="
-          ls -la client/dist/
-          echo "=== File count ==="
-          find client/dist -type f | wc -l
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:

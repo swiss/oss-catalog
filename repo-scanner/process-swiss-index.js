@@ -56,6 +56,7 @@ async function processSwissIndex() {
         options.path,
         options.port
       );
+      console.log("postData:", postData);
 
       return new Promise((resolve, reject) => {
         const requestModule = apiEndpoint.protocol === "https:" ? https : http;
