@@ -48,7 +48,7 @@ jobs:
       - name: Register Repositories from /swiss/index
         run: |
           echo "Posting repository..."
-          curl -v -X POST http://localhost:3000/v1/publishers -H "Authorization: Bearer ${{ env.PASETO_TOKEN }}" -H "Content-Type: application/json" -d '{"codeHosting": [{"url": "https://github.com/sfa-siard/siard-suite", "group": false}], "description": "SIARD Suite"}'
+          curl -v -X POST http://localhost:3000/v1/publishers -H "Authorization: Bearer ${{ env.PASETO_TOKEN }}" -H "Content-Type: application/json" -d '{"codeHosting": [{"url": "https://github.com/swiss", "group": true}], "description": "swiss!"}'
           echo "Reading publishers..."
           curl -v http://localhost:3000/v1/publishers
       - name: Check API logs
