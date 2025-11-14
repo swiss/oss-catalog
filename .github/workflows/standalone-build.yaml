@@ -37,10 +37,10 @@ jobs:
           echo "::add-mask::$PASETO_TOKEN"
           echo "PASETO_TOKEN=$PASETO_TOKEN" >> "$GITHUB_ENV"
       - name: Register Repositories from /swiss/index
-      - run: |
+        run: |
           echo "TODO: read/ parse repository list from /swiss/index/readme.md and send to api"
       - name: Run crawler
-      - run: |
+        run: |
           docker run -e API_BEARER_TOKEN=${{ env.PASETO_TOKEN }} -e API_BASEURL=${{ vars.API_URL }} -e GITHUB_TOKEN=${{ secrets.PAT_TOKEN_GITHUB }} italia/publiccode-crawler:latest
       - name: Build client with npm
         run: |
@@ -51,7 +51,7 @@ jobs:
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
+          publish_dir: ./client/dist
 
   # build_and_publish_image:
   #   name: Push container image to ghcr
