@@ -47,8 +47,15 @@ jobs:
           echo "PASETO_TOKEN=$PASETO_TOKEN" >> "$GITHUB_ENV"
       - name: Register Repositories from /swiss/index
         run: |
-          echo curl -v -X POST http://localhost:3000/v1/publishers -H "Authorization: Bearer ${{ env.PASETO_TOKEN }}" -H "Content-Type: application/json" -d '{"codeHosting": [{"url": "https://github.com/sfa-siard/siard-suite", "group": false}], "description": "SIARD Suite"}'
-          echo curl -v http://localhost:3000/v1/publishers
+          echo "Posting repository..."
+          curl -v -X POST http://localhost:3000/v1/publishers -H "Authorization: Bearer ${{ env.PASETO_TOKEN }}" -H "Content-Type: application/json" -d '{"codeHosting": [{"url": "https://github.com/sfa-siard/siard-suite", "group": false}], "description": "SIARD Suite"}'
+          echo "Reading publishers..."
+          curl -v http://localhost:3000/v1/publishers
+      - name: Check API logs
+        if: always()
+        run: |
+          echo "=== API Logs ==="
+          docker compose logs api
       - name: Run crawler
         run: |
           docker run --add-host=host.docker.internal:host-gateway -e API_BEARER_TOKEN=${{ env.PASETO_TOKEN }} -e API_BASEURL=http://host.docker.internal:3000/v1 -e GITHUB_TOKEN=${{ secrets.PAT_TOKEN_GITHUB }} italia/publiccode-crawler:latest
@@ -59,6 +66,12 @@ jobs:
           npm run build
         env:
           API_BASEURL: http://localhost:3000/v1
+      - name: Verify build output
+        run: |
+          echo "=== Build output ==="
+          ls -la client/dist/
+          echo "=== File count ==="
+          find client/dist -type f | wc -l
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
