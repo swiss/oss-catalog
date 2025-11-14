@@ -51,6 +51,10 @@ jobs:
           API_ENDPOINT=http://localhost:3000 PASETO_TOKEN=${{ env.PASETO_TOKEN }} node process-swiss-index.js
       - name: Check API
         run: |
+          echo "=== Check API ==="
+          docker compose logs api
+      - name: Check repositories
+        run: |
           echo "=== Check repositories ==="
           curl http://localhost:3000/v1/publishers
       - name: Run crawler
