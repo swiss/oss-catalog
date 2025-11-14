@@ -47,7 +47,8 @@ jobs:
           echo "PASETO_TOKEN=$PASETO_TOKEN" >> "$GITHUB_ENV"
       - name: Register Repositories from /swiss/index
         run: |
-          echo "TODO: read/ parse repository list from /swiss/index/readme.md and send to api"
+          curl -X POST http://localhost:3000/v1/publishers -H "Authorization: Bearer $PASETO_TOKEN" -H "Content-Type: application/json" -d '{"codeHosting": [{"url": "https://github.com/sfa-siard/siard-suite", "group": false}], "description": "SIARD Suite"}'
+          echo "TODO: read/ parse repository list from https://raw.githubusercontent.com/swiss/index/refs/heads/main/README.md and send to api"
       - name: Run crawler
         run: |
           docker run --add-host=host.docker.internal:host-gateway -e API_BEARER_TOKEN=${{ env.PASETO_TOKEN }} -e API_BASEURL=http://host.docker.internal:3000/v1 -e GITHUB_TOKEN=${{ secrets.PAT_TOKEN_GITHUB }} italia/publiccode-crawler:latest
@@ -56,6 +57,8 @@ jobs:
           cd client
           npm ci
           npm run build
+        env:
+          API_BASEURL: http://localhost:3000/v1
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
