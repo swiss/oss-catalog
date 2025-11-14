@@ -29,6 +29,9 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: recursive
+      - name: Create .env file
+        run: |
+          echo "PASETO_KEY=${{ secrets.PASETO_KEY }}" > .env
       - name: Start the backend api and database
         run: |
           docker compose up -d --build api
