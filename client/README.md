@@ -1,4 +1,4 @@
-# OSS Catalog - Client
+# OSS Catalog – Client
 
 Web Client for OSS Catalog, based on [Astro](https://astro.build).
 
@@ -15,10 +15,9 @@ All commands are run from the root of the project, from a terminal:
 | `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
 | `npm run astro -- --help` | Get help using the Astro CLI                     |
 
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
-
 ## CD Bund
+The client's styling is based on the [Design System for the Swiss Confederation](https://github.com/swiss/designsystem) 🇨🇭.
 
-See https://swiss.github.io/designsystem/?path=/docs/get-started--docs
+
+## Organisations
+The client application contains a filter that allows the software to be filtered by organisation. The organisations are loaded from `src/data/organisations.json`, which is copied from the [Public Code Editor](https://github.com/swiss/publiccode-editor/tree/cd-bund/src/app/data/README.md).
