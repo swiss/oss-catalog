@@ -50,6 +50,13 @@ async function processSwissIndex() {
         },
       };
 
+      console.log(
+        "posting options",
+        options.hostname,
+        options.path,
+        options.port
+      );
+
       return new Promise((resolve, reject) => {
         const requestModule = apiEndpoint.protocol === "https:" ? https : http;
         const req = requestModule.request(options, (res) => {
