@@ -45,12 +45,13 @@ jobs:
           PASETO_TOKEN="$(go run paseto-generate.go ${{ secrets.PASETO_KEY }})"
           echo "::add-mask::$PASETO_TOKEN"
           echo "PASETO_TOKEN=$PASETO_TOKEN" >> "$GITHUB_ENV"
-      - name: Register Repositories from /swiss/index
+      - name: Register Swiss GitHub Organizations
         run: |
-          echo "Posting repository..."
-          curl -v -X POST http://localhost:3000/v1/publishers -H "Authorization: Bearer ${{ env.PASETO_TOKEN }}" -H "Content-Type: application/json" -d '{"codeHosting": [{"url": "https://github.com/swiss", "group": true}], "description": "swiss!"}'
-          echo "Reading publishers..."
-          curl -v http://localhost:3000/v1/publishers
+          cd repo-scanner
+          node process-swiss-index.js
+        env:
+          PASETO_TOKEN: ${{ env.PASETO_TOKEN }}
+          API_ENDPOINT: http://localhost:3000
       - name: Check API logs
         if: always()
         run: |
