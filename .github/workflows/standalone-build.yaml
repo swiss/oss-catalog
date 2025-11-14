@@ -46,7 +46,7 @@ jobs:
           echo "TODO: read/ parse repository list from /swiss/index/readme.md and send to api"
       - name: Run crawler
         run: |
-          docker run -e API_BEARER_TOKEN=${{ env.PASETO_TOKEN }} -e API_BASEURL=${{ vars.API_URL }} -e GITHUB_TOKEN=${{ secrets.PAT_TOKEN_GITHUB }} italia/publiccode-crawler:latest
+          docker run --add-host=host.docker.internal:host-gateway -e API_BEARER_TOKEN=${{ env.PASETO_TOKEN }} -e API_BASEURL=http://host.docker.internal:3000/v1 -e GITHUB_TOKEN=${{ secrets.PAT_TOKEN_GITHUB }} italia/publiccode-crawler:latest
       - name: Build client with npm
         run: |
           cd client
