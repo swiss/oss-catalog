@@ -13,7 +13,7 @@ async function processSwissIndex() {
     process.exit(1);
   }
 
-  const baseUrl = process.env.API_ENDPOINT || "http://localhost:3000";
+  const baseUrl = "http://localhost:3000";
   const apiEndpoint = new URL(`${baseUrl}/v1/publishers`);
   const indexUrl =
     "https://raw.githubusercontent.com/swiss/index/refs/heads/main/README.md";

@@ -48,15 +48,11 @@ jobs:
       - name: Register Swiss GitHub Organizations
         run: |
           cd repo-scanner
-          node process-swiss-index.js
-        env:
-          PASETO_TOKEN: ${{ env.PASETO_TOKEN }}
-          API_ENDPOINT: http://localhost:3000
-      - name: Check API logs
-        if: always()
+          API_ENDPOINT=http://localhost:3000 PASETO_TOKEN=${{ env.PASETO_TOKEN }} node process-swiss-index.js
+      - name: Check API
         run: |
-          echo "=== API Logs ==="
-          docker compose logs api
+          echo "=== Check repositories ==="
+          curl http://localhost:3000/v1/publishers
       - name: Run crawler
         run: |
           docker run --add-host=host.docker.internal:host-gateway -e API_BEARER_TOKEN=${{ env.PASETO_TOKEN }} -e API_BASEURL=http://host.docker.internal:3000/v1 -e GITHUB_TOKEN=${{ secrets.PAT_TOKEN_GITHUB }} italia/publiccode-crawler:latest
