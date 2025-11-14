@@ -35,6 +35,10 @@ jobs:
       - name: Start the backend api and database
         run: |
           docker compose up -d --build api
+      - name: Wait for API to be ready
+        run: |
+          timeout 60 sh -c 'until docker compose ps api | grep -q "healthy"; do echo "Waiting for API..."; sleep 2; done'
+          echo "API is ready!"
       - name: create paseto token
         run: |
           cd paseto/go

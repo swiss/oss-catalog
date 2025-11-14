@@ -6,6 +6,12 @@ services:
     env_file: ".env" # Must define PASETO_KEY
     environment:
       - GOFLAGS=-buildvcs=false
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/v1/publishers"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
 
   db:
     extends:
