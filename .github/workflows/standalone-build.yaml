@@ -27,6 +27,8 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
+        with:
+          submodules: recursive
       - name: Start the backend api and database
         run: |
           docker compose up -d --build api
