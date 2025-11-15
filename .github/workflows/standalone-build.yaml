@@ -49,21 +49,27 @@ jobs:
         run: |
           cd repo-scanner
           API_ENDPOINT=http://localhost:3000 PASETO_TOKEN=${{ env.PASETO_TOKEN }} node process-swiss-index.js
-      - name: Check API
+      - name: Wait for publishers data
         run: |
-          echo "=== Check API ==="
-          docker compose logs api
-      - name: Check repositories
-        run: |
-          echo "=== Check repositories ==="
-          curl http://localhost:3000/v1/publishers
-      - name: Manually add a publisher
-        run: |
-          curl -X POST -H "Authorization: Bearer ${{ env.PASETO_TOKEN }}" -H "Content-Type: application/json" -d '{"codeHosting": [{"url": "https://github.com/swiss/", "group": true}], "description": "Swiss Government"}' http://localhost:3000/v1/publishers
-      - name: Check repositories again
-        run: |
-          echo "=== Check repositories ==="
-          curl http://localhost:3000/v1/publishers
+          echo "Waiting for publishers data to appear..."
+          timeout 60 sh -c '
+            while true; do
+              response=$(curl -s http://localhost:3000/v1/publishers)
+              data=$(echo "$response" | jq -r ".data // []")
+              if [ "$data" != "[]" ]; then
+                echo "Publishers data found!"
+                echo "$response"
+                exit 0
+              fi
+              echo "No data found, waiting..."
+              sleep 2
+            done
+          ' || {
+            echo "Timeout reached: No publishers data found after 60 seconds"
+            echo "Final response:"
+            curl -s http://localhost:3000/v1/publishers
+            exit 1
+          }
       - name: Run crawler
         run: |
           docker run --add-host=host.docker.internal:host-gateway -e API_BEARER_TOKEN=${{ env.PASETO_TOKEN }} -e API_BASEURL=http://host.docker.internal:3000/v1 -e GITHUB_TOKEN=${{ secrets.PAT_TOKEN_GITHUB }} italia/publiccode-crawler:latest
