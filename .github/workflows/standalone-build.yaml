@@ -7,7 +7,6 @@ on:
   push:
     branches:
       - "main"
-      - "feat/standalone-image-build"
     tags:
       - "v*.*.*"
     paths-ignore:
