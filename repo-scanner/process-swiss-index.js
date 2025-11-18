@@ -28,11 +28,15 @@ async function processSwissIndex() {
 
     // Process each URL
     const requestPromises = githubUrls.map((url) => {
+      // Determine if this is a group URL or a repository URL
+      // Group URLs: https://github.com/groupname
+      // Repo URLs: https://github.com/groupname/reponame
+      const isGroupUrl = /^https:\/\/github\.com\/[^\/]+\/?$/.test(url);
       const postData = JSON.stringify({
         codeHosting: [
           {
             url: url,
-            group: true, // All organizations are groups
+            group: isGroupUrl,
           },
         ],
         description: `Swiss Federal Organization: ${url}`,
@@ -105,9 +109,6 @@ async function processSwissIndex() {
   }
 }
 
-/**
- * Fetches content from a URL
- */
 function fetchUrl(url) {
   return new Promise((resolve, reject) => {
     const requestModule = url.startsWith("https:") ? https : http;
@@ -138,37 +139,18 @@ function fetchUrl(url) {
   });
 }
 
-/**
- * Parses GitHub URLs from README content
- */
 function parseGithubUrls(content) {
   const lines = content.split("\n");
   const urls = [];
-  let inGithubSection = false;
 
   for (const line of lines) {
-    // Check if we're in the GitHub organizations section
-    if (line.includes("## GitHub Organizations of Federal Organisations")) {
-      inGithubSection = true;
-      continue;
-    }
-
-    // Stop at the next section
-    if (line.startsWith("##") && inGithubSection) {
-      break;
-    }
-
-    // Extract GitHub URLs from list items
-    if (inGithubSection && line.includes("github.com/")) {
-      const match = line.match(/\* (https:\/\/github\.com\/[^\s]+)/);
-      if (match) {
-        urls.push(match[1]);
-      }
+    const match = line.match(/\* (https:\/\/github\.com\/[^\s]+)/);
+    if (match) {
+      urls.push(match[1]);
     }
   }
 
   return urls;
 }
 
-// Execute the main function
 processSwissIndex();
