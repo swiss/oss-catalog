@@ -1,4 +1,4 @@
-name: Build and publish container image
+name: Build and publish Opensource Catalog
 
 on:
   schedule:
