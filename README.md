@@ -12,20 +12,24 @@ flowchart TB
     db[(PostgreSQL)]
     api[Developers Italia API]
     crawler[Publiccode Crawler]
-    web[OSS Catalog Web App]
+    web[OSS Catalog Client]
 
     api --> db
     crawler -- "Read publishers<br>Create softwares<br>(REST)" --> api
-    web -- "CRUD publishers<br>Read softwares<br>(REST)" --> api
-    web -. "Trigger crawling after publisher update?" .-> crawler
+    web <-- Static build<br>(REST) --> api
   end
 
   user((User))
-  admin((Admin))
   github[GitHub, GitLab, others]
-  user -- "Read softwares<br>(HTTP)" --> web
+  action[Scheduled Github Action]
+  swissindex[https://github.com/swiss/index/blob/main/README.md]
+  user -- "(HTTP)" --> web
   crawler -- "Scan repositories<br>Parse publiccode.yml" --> github
-  admin -- "CRUD publishers<br>(HTTP)" --> web
+
+  swissindex -- Reads publishers --> action
+  action -- creates publishers (REST) --> api
+  action -- triggers--> crawler
+
 ```
 
 ## Usage
@@ -104,9 +108,9 @@ curl -X POST -H "Authorization: Bearer $PASETO_TOKEN" -H "Content-Type: applicat
 
 curl -X POST -H "Authorization: Bearer $PASETO_TOKEN" -H "Content-Type: application/json" -d '{"codeHosting": [{"url": "https://github.com/sfa-siard/siard-suite", "group": false}], "description": "SIARD Suite"}' https://oss-catalog-api.ocp.cloudscale.puzzle.ch/v1/publishers
 
-### Add all Repositories in repos.txt
+### Import Publishers
 
-`publisher-importer/repos.txt` contains a list of repositories to be added to the API.
+The readme at github.com/swiss/index/readme.md contains the list of relevant publishers that should be added to the catalog. The importer will read this list and create publishers in the catalog.
 
 Run the script:
 
@@ -118,7 +122,7 @@ PASETO_TOKEN=$PASETO_TOKEN API_ENDPOINT=http://localhost:3000 npm start
 
 ### Crawler
 
-Run crawler - this will crawl all repositories in the API, checks for publiccode.yml and add them to the database if available.
+Run crawler - this will crawl all repositories in the API, checks for publiccode.yml and add them to the database if available and valid.
 
 ```bash
 ./start-crawler
