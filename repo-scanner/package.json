@@ -4,7 +4,7 @@
   "description": "A script to read repository URLs and post them to an API.",
   "main": "process.js",
   "scripts": {
-    "start": "node process.js"
+    "start": "node process-swiss-index.js"
   },
   "author": "",
   "license": "ISC",

@@ -22,12 +22,11 @@ async function processSwissIndex() {
     console.log("Fetching Swiss index README.md...");
     const readmeContent = await fetchUrl(indexUrl);
 
-    // Parse GitHub URLs from the README
-    const githubUrls = parseGithubUrls(readmeContent);
-    console.log(`Found ${githubUrls.length} GitHub organizations to process.`);
+    const urls = parseUrls(readmeContent);
+    console.log(`Found ${urls.length} GitHub organizations to process.`);
 
     // Process each URL
-    const requestPromises = githubUrls.map((url) => {
+    const requestPromises = urls.map((url) => {
       // Determine if this is a group URL or a repository URL
       // Group URLs: https://github.com/groupname
       // Repo URLs: https://github.com/groupname/reponame
@@ -139,18 +138,12 @@ function fetchUrl(url) {
   });
 }
 
-function parseGithubUrls(content) {
-  const lines = content.split("\n");
-  const urls = [];
-
-  for (const line of lines) {
-    const match = line.match(/\* (https:\/\/github\.com\/[^\s]+)/);
-    if (match) {
-      urls.push(match[1]);
-    }
-  }
-
-  return urls;
+function parseUrls(content) {
+  return content
+    .split("\n")
+    .map((line) => line.match(/\* (https:\/\/(?:github|gitlab)\.com\/[^ ]+)/))
+    .filter(Boolean)
+    .map((match) => match[1]);
 }
 
 processSwissIndex();
