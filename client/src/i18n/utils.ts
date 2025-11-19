@@ -18,14 +18,9 @@ export function getLocalePaths(url: URL) {
     : pathname;
 
   return Object.keys(languages).map((lang) => {
-    const localizedPath = getRelativeLocaleUrl(lang, pathWithoutBase);
-    const normalizedLocalizedPath = localizedPath.startsWith("/")
-      ? localizedPath.slice(1)
-      : localizedPath;
-
     return {
       lang: lang,
-      path: `${base}${normalizedLocalizedPath}`,
+      path: getRelativeLocaleUrl(lang, pathWithoutBase),
     };
   });
 }
