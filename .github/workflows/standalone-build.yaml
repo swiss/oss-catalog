@@ -50,7 +50,7 @@ jobs:
           echo "PASETO_TOKEN=$PASETO_TOKEN" >> "$GITHUB_ENV"
       - name: Register Swiss GitHub Organizations
         run: |
-          cd repo-scanner
+          cd publisher-importer
           API_ENDPOINT=http://localhost:3000 PASETO_TOKEN=${{ env.PASETO_TOKEN }} node process-swiss-index.js
       - name: Wait for publishers data
         run: |

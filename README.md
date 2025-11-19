@@ -54,7 +54,6 @@ git submodule init
 git submodule update
 ```
 
-
 To update the submodules:
 
 ```bash
@@ -103,16 +102,16 @@ Create a publisher:
 curl -X POST -H "Authorization: Bearer $PASETO_TOKEN" -H "Content-Type: application/json" -d '{"codeHosting": [{"url": "https://github.com/swiss/", "group": true}], "description": "Swiss Government"}' http://localhost:3000/v1/publishers
 ```
 
-curl -X POST -H "Authorization: Bearer $PASETO_TOKEN" -H "Content-Type: application/json" -d '{"codeHosting": [{"url": "https://github.com/sfa-siard/siard-suite", "group": false}], "description": "SIARD Suite"}'  https://oss-catalog-api.ocp.cloudscale.puzzle.ch/v1/publishers
+curl -X POST -H "Authorization: Bearer $PASETO_TOKEN" -H "Content-Type: application/json" -d '{"codeHosting": [{"url": "https://github.com/sfa-siard/siard-suite", "group": false}], "description": "SIARD Suite"}' https://oss-catalog-api.ocp.cloudscale.puzzle.ch/v1/publishers
 
 ### Add all Repositories in repos.txt
 
-`repo-scanner/repos.txt` contains a list of repositories to be added to the API.
+`publisher-importer/repos.txt` contains a list of repositories to be added to the API.
 
 Run the script:
 
 ```bash
-cd repo-scanner/
+cd publisher-importer/
 nvm use
 PASETO_TOKEN=$PASETO_TOKEN API_ENDPOINT=http://localhost:3000 npm start
 ```
@@ -144,24 +143,22 @@ npm run dev
 
 Then visit http://localhost:4321
 
-
 ## Add new repositories to remote API in production
 
-* Grab PASETO key from production, e.g. from your vault.
-* Set PASETO_KEY environment variable
+- Grab PASETO key from production, e.g. from your vault.
+- Set PASETO_KEY environment variable
   `PASETO_KEY="<your paseto key>"`
-* Generate the paseto token
+- Generate the paseto token
   ```
   cd paseto/go
   PASETO_TOKEN="$(go run paseto-generate.go $PASETO_KEY)"
   ```
-* Run the repository script (it's safe to push repos multiple times!)
+- Run the repository script (it's safe to push repos multiple times!)
   ```
-  cd repo-scanner/
+  cd publisher-importer/
   nvm use
   PASETO_TOKEN=$PASETO_TOKEN API_ENDPOINT=<your api endpoint> npm start
   ```
-  
 
 ### Known Issues
 

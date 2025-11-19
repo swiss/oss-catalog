@@ -1,5 +1,5 @@
 {
-  "name": "oss-catalog-repo-scanner",
+  "name": "oss-catalog-publisher-importer",
   "version": "1.0.0",
   "description": "A script to read repository URLs and post them to an API.",
   "main": "process.js",
