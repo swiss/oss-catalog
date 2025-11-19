@@ -106,11 +106,9 @@ Create a publisher:
 curl -X POST -H "Authorization: Bearer $PASETO_TOKEN" -H "Content-Type: application/json" -d '{"codeHosting": [{"url": "https://github.com/swiss/", "group": true}], "description": "Swiss Government"}' http://localhost:3000/v1/publishers
 ```
 
-curl -X POST -H "Authorization: Bearer $PASETO_TOKEN" -H "Content-Type: application/json" -d '{"codeHosting": [{"url": "https://github.com/sfa-siard/siard-suite", "group": false}], "description": "SIARD Suite"}' https://oss-catalog-api.ocp.cloudscale.puzzle.ch/v1/publishers
-
 ### Import Publishers
 
-The readme at github.com/swiss/index/readme.md contains the list of relevant publishers that should be added to the catalog. The importer will read this list and create publishers in the catalog.
+The [Federal Open Source GitHub Index](https://github.com/swiss/index/blob/main/README.md) contains the list of relevant publishers that are added to the catalog. There is an import script that reads this list and creates publishers in the catalog.
 
 Run the script:
 
