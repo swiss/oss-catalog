@@ -1,0 +1,116 @@
+name: Build and publish Opensource Catalog
+
+on:
+  schedule:
+    - cron: "42 1 * * *"
+  workflow_dispatch:
+  push:
+    branches:
+      - "main"
+      - "feat/standalone-image-build"
+    tags:
+      - "v*.*.*"
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  build-image:
+    name: Standalone build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+      attestations: write
+      id-token: write
+
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Create .env file
+        run: |
+          echo "PASETO_KEY=${{ secrets.PASETO_KEY }}" > .env
+      - name: Start the backend api and database
+        run: |
+          docker compose up -d --build api
+      - name: Wait for API to be ready
+        run: |
+          timeout 60 sh -c 'until docker compose ps api | grep -q "healthy"; do echo "Waiting for API..."; sleep 2; done'
+          echo "API is ready!"
+      - name: create paseto token
+        run: |
+          cd paseto/go
+          PASETO_TOKEN="$(go run paseto-generate.go ${{ secrets.PASETO_KEY }})"
+          echo "::add-mask::$PASETO_TOKEN"
+          echo "PASETO_TOKEN=$PASETO_TOKEN" >> "$GITHUB_ENV"
+      - name: Register Swiss GitHub Organizations
+        run: |
+          cd publisher-importer
+          API_ENDPOINT=http://localhost:3000 PASETO_TOKEN=${{ env.PASETO_TOKEN }} node process-swiss-index.js
+      - name: Wait for publishers data
+        run: |
+          echo "Waiting for publishers data to appear..."
+          timeout 60 sh -c '
+            while true; do
+              response=$(curl -s http://localhost:3000/v1/publishers)
+              data=$(echo "$response" | jq -r ".data // []")
+              if [ "$data" != "[]" ]; then
+                echo "Publishers data found!"
+                echo "$response"
+                exit 0
+              fi
+              echo "No data found, waiting..."
+              sleep 2
+            done
+          ' || {
+            echo "Timeout reached: No publishers data found after 60 seconds"
+            echo "Final response:"
+            curl -s http://localhost:3000/v1/publishers
+            exit 1
+          }
+      - name: Run crawler
+        run: |
+          docker run --add-host=host.docker.internal:host-gateway -e API_BEARER_TOKEN=${{ env.PASETO_TOKEN }} -e API_BASEURL=http://host.docker.internal:3000/v1 -e GITHUB_TOKEN=${{ secrets.PAT_TOKEN_GITHUB }} italia/publiccode-crawler:latest
+      - name: Build client with npm
+        run: |
+          cd client
+          npm ci
+          BASE_PATH=/oss-catalog/ npm run build
+        env:
+          API_BASEURL: http://localhost:3000/v1
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./client/dist
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3.4.0
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v5.7.0
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+      - name: Build and push Docker image
+        id: push
+        uses: docker/build-push-action@v6.17.0
+        with:
+          context: .
+          network: host
+          build-args: |
+            API_BASEURL=http://localhost:3000/v1
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+      - name: Generate artifact attestation
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME}}
+          subject-digest: ${{ steps.push.outputs.digest }}
+          push-to-registry: true

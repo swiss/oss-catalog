@@ -12,20 +12,24 @@ flowchart TB
     db[(PostgreSQL)]
     api[Developers Italia API]
     crawler[Publiccode Crawler]
-    web[OSS Catalog Web App]
+    web[OSS Catalog Client]
 
     api --> db
     crawler -- "Read publishers<br>Create softwares<br>(REST)" --> api
-    web -- "CRUD publishers<br>Read softwares<br>(REST)" --> api
-    web -. "Trigger crawling after publisher update?" .-> crawler
+    web <-- Static build<br>(REST) --> api
   end
 
   user((User))
-  admin((Admin))
   github[GitHub, GitLab, others]
-  user -- "Read softwares<br>(HTTP)" --> web
+  action[Scheduled Github Action]
+  swissindex[https://github.com/swiss/index/blob/main/README.md]
+  user -- "(HTTP)" --> web
   crawler -- "Scan repositories<br>Parse publiccode.yml" --> github
-  admin -- "CRUD publishers<br>(HTTP)" --> web
+
+  swissindex -- Reads publishers --> action
+  action -- creates publishers (REST) --> api
+  action -- triggers--> crawler
+
 ```
 
 ## Usage
@@ -53,7 +57,6 @@ cd oss-catalog/
 git submodule init
 git submodule update
 ```
-
 
 To update the submodules:
 
@@ -103,23 +106,21 @@ Create a publisher:
 curl -X POST -H "Authorization: Bearer $PASETO_TOKEN" -H "Content-Type: application/json" -d '{"codeHosting": [{"url": "https://github.com/swiss/", "group": true}], "description": "Swiss Government"}' http://localhost:3000/v1/publishers
 ```
 
-curl -X POST -H "Authorization: Bearer $PASETO_TOKEN" -H "Content-Type: application/json" -d '{"codeHosting": [{"url": "https://github.com/sfa-siard/siard-suite", "group": false}], "description": "SIARD Suite"}'  https://oss-catalog-api.ocp.cloudscale.puzzle.ch/v1/publishers
+### Import Publishers
 
-### Add all Repositories in repos.txt
-
-`repo-scanner/repos.txt` contains a list of repositories to be added to the API.
+The [Federal Open Source GitHub Index](https://github.com/swiss/index/blob/main/README.md) contains the list of relevant publishers that are added to the catalog. There is an import script that reads this list and creates publishers in the catalog.
 
 Run the script:
 
 ```bash
-cd repo-scanner/
+cd publisher-importer/
 nvm use
 PASETO_TOKEN=$PASETO_TOKEN API_ENDPOINT=http://localhost:3000 npm start
 ```
 
 ### Crawler
 
-Run crawler - this will crawl all repositories in the API, checks for publiccode.yml and add them to the database if available.
+Run crawler - this will crawl all repositories in the API, checks for publiccode.yml and add them to the database if available and valid.
 
 ```bash
 ./start-crawler
@@ -144,24 +145,22 @@ npm run dev
 
 Then visit http://localhost:4321
 
-
 ## Add new repositories to remote API in production
 
-* Grab PASETO key from production, e.g. from your vault.
-* Set PASETO_KEY environment variable
+- Grab PASETO key from production, e.g. from your vault.
+- Set PASETO_KEY environment variable
   `PASETO_KEY="<your paseto key>"`
-* Generate the paseto token
+- Generate the paseto token
   ```
   cd paseto/go
   PASETO_TOKEN="$(go run paseto-generate.go $PASETO_KEY)"
   ```
-* Run the repository script (it's safe to push repos multiple times!)
+- Run the repository script (it's safe to push repos multiple times!)
   ```
-  cd repo-scanner/
+  cd publisher-importer/
   nvm use
   PASETO_TOKEN=$PASETO_TOKEN API_ENDPOINT=<your api endpoint> npm start
   ```
-  
 
 ### Known Issues
 
