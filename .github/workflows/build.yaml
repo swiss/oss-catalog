@@ -10,8 +10,6 @@ on:
       - "feat/standalone-image-build"
     tags:
       - "v*.*.*"
-    paths-ignore:
-      - "charts/oss-catalog/**"
 
 env:
   REGISTRY: ghcr.io
