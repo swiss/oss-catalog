@@ -53,7 +53,7 @@ const findOrganisationByUri = (uri: string | undefined): OrganisationEntry | und
 const organisationEntry = findOrganisationByUri(content.organisation?.uri);
 const organisationName = organisationEntry
   ? organisationEntry.name[
-      resolveLanguage(lang, Object.keys(organisationEntry.name)) as keyof typeof organisationEntry.name
+    resolveLanguage(lang, Object.keys(organisationEntry.name)) as keyof typeof organisationEntry.name
     ]
   : undefined;
 ---
@@ -67,42 +67,42 @@ const organisationName = organisationEntry
   </div>
   <div class="info-block border-t">
     <h2 class="info-block__title">{t("softwaredetail.repositoryUrl")}</h2><div>
-      <div><a target="_blank" href={software.url}>{software.url}</a></div>
-    </div>
+    <div><a target="_blank" href={software.url}>{software.url}</a></div>
+  </div>
   </div>
   {content.landingURL && <div class="info-block border-t">
     <h2 class="info-block__title">{t("softwaredetail.landingPage")}</h2><div>
-      <div><a target="_blank" href={content.landingURL}>{content.landingURL}</a></div>
-    </div>
+    <div><a target="_blank" href={content.landingURL}>{content.landingURL}</a></div>
+  </div>
   </div>}
   {content.organisation?.uri && organisationName && (
     <div class="info-block border-t">
       <h2 class="info-block__title">{t("softwaredetail.organisation")}</h2><div>
-        <div><a target="_blank" href={content.organisation.uri}>{organisationName}</a></div>
-      </div>
+      <div><a target="_blank" href={content.organisation.uri}>{organisationName}</a></div>
+    </div>
     </div>
   )}
   <div class="info-block border-t">
     <h2 class="info-block__title">{t("softwaredetail.shortDescription")}</h2><div>
-      <div>{description?.shortDescription}</div>
-    </div>
+    <div>{description?.shortDescription}</div>
+  </div>
   </div>
   <div class="info-block border-t">
     <h2 class="info-block__title">{t("softwaredetail.documentation")}</h2><div>
-      <div>{description?.longDescription}</div>
-    </div>
-  </div><div class="info-block border-t">
-    <h2 class="info-block__title">{t("softwaredetail.version")}</h2><div>
-      {content.softwareVersion}
-    </div>
-  </div><div class="info-block border-t">
-    <h2 class="info-block__title">{t("softwaredetail.license")}</h2><div>
-      <div>{content.legal.license}</div>
-    </div>
+    <div>{description?.longDescription}</div>
   </div>
+  </div><div class="info-block border-t">
+  <h2 class="info-block__title">{t("softwaredetail.version")}</h2><div>
+  {content.softwareVersion}
+</div>
+</div><div class="info-block border-t">
+  <h2 class="info-block__title">{t("softwaredetail.license")}</h2><div>
+  <div>{content.legal.license}</div>
+</div>
+</div>
   <div class="info-block border-t">
     <h2 class="info-block__title">{t("softwaredetail.publiccodeVersion")}</h2><div>
-      <div>{content.publiccodeYmlVersion}</div>
-    </div>
+    <div>{content.publiccodeYmlVersion}</div>
+  </div>
   </div>
 </div>
