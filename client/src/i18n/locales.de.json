@@ -1,6 +1,7 @@
 {
   "header.logo.title": "Bundeskanzlei BK",
   "header.title": "Open Source Software Katalog",
+  "header.lastUpdated": "Letzte Aktualisierung",
   "index.title": "OSS-Katalog",
   "index.subtitle": "Dieser Katalog zeigt eine Übersicht der seit dem 1. Januar 2024 von den Bundesbehörden entwickelten und als Open Source veröffentlichten Software.",
   "index.description": "Bundesbehörden sind verpflichtet den Quellcode von Software offenlegen, die sie zur Erfüllung ihrer Aufgaben entwickeln oder entwickeln lassen. Diese Vorgabe sieht Artikel 9 des Bundesgesetzes über den Einsatz elektronischer Mittel zur Erfüllung von Behördenaufgaben EMBAG vor. Jede Behörde ist selbst für die Veröffentlichung ihres Quellcodes verantwortlich.",

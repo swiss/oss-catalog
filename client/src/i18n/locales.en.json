@@ -1,6 +1,7 @@
 {
   "header.logo.title": "Federal Chancellery FCh",
   "header.title": "Open Source Software Catalog",
+  "header.lastUpdated": "Last updated",
   "index.title": "OSS Catalog",
   "index.subtitle": "Catalog of open source software for public administrations",
   "index.description": "This is the catalog provided for in the guidelines for the procurement and reuse of software. It includes solutions reused by public administrations and third-party open source software intended for public administrations.",

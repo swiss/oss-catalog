@@ -1,6 +1,7 @@
 {
   "header.logo.title": "Chancellerie fédérale ChF",
   "header.title": "Catalogue Open Source Software",
+  "header.lastUpdated": "Dernière mise à jour",
   "index.title": "Catalogue OSS",
   "index.subtitle": "Catalogue des logiciels libres pour les administrations publiques",
   "index.description": "Il s'agit du catalogue prévu dans les lignes directrices relatives à l'acquisition et à la réutilisation de logiciels. Il comprend les solutions réutilisées par l'administration publique ainsi que les logiciels open source tiers destinés aux administrations publiques.",

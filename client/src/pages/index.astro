@@ -11,12 +11,27 @@ const data = await response.json();
 const softwares = data.data;
 const lang = Astro.currentLocale as Lang;
 const t = useTranslations(Astro.currentLocale as Lang);
+
+const dateLocale =
+  lang === "de" ? "de-CH" : lang === "fr" ? "fr-CH" : lang === "it" ? "it-CH" : "de-CH";
+const buildDate = new Date();
+const buildDateFormatted = `${buildDate.toLocaleDateString(dateLocale, {
+  day: "2-digit",
+  month: "2-digit",
+  year: "numeric",
+})} ${buildDate.toLocaleTimeString(dateLocale, {
+  hour: "2-digit",
+  minute: "2-digit",
+})}`;
 ---
 
 <Layout>
   <section class="section bg--secondary-50">
     <div class="container">
-      <h1 class="section__title">{t("index.title")}</h1>
+      <h1 class="section__title">
+        {t("index.title")} 
+        <span class="section__last-updated text--xs color--light">({t("header.lastUpdated")}: {buildDateFormatted})</span>
+      </h1>
       <h2 class="section__subtitle">{t("index.subtitle")}</h2>
 
       <div class="card">
