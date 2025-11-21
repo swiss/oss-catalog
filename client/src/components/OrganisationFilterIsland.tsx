@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import yaml from "js-yaml";
 import type { Software } from "../types/software";
 import { Combobox } from "@/components/Combobox.tsx";
+import { SoftwareCard } from "./SoftwareCard.tsx";
 
 type Locale = "en" | "de" | "fr" | "it";
 
@@ -36,7 +37,9 @@ export default function OrganisationFilterIsland({
   softwares,
 }: Props) {
   const [query, setQuery] = useState("");
-  const [selectedOrganisations, setSelectedOrganisations] = useState<string[]>([]);
+  const [selectedOrganisations, setSelectedOrganisations] = useState<string[]>(
+    [],
+  );
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
@@ -66,7 +69,8 @@ export default function OrganisationFilterIsland({
   }, [organisations, query, lang]);
 
   const filteredSoftwares = useMemo(() => {
-    if (!selectedOrganisations || selectedOrganisations.length === 0) return softwares;
+    if (!selectedOrganisations || selectedOrganisations.length === 0)
+      return softwares;
     const set = new Set(selectedOrganisations);
     return softwares.filter((s) => {
       try {
@@ -117,26 +121,13 @@ export default function OrganisationFilterIsland({
             } catch {}
             const detailUrl = `/softwares/${s.id}`;
             return (
-              <div key={s.id} className="card card--default" has-icon="false">
-                <div className="card__content">
-                  <div className="card__body">
-                    <div className="card__title">
-                      <h2>{content?.name || s.name}</h2>
-                    </div>
-                    <p>{content?.description?.en?.shortDescription || ""}</p>
-                  </div>
-                  <div className="card__footer">
-                    <div className="card__footer__action">
-                      <a
-                        href={detailUrl}
-                        className="btn btn--base btn--outline"
-                      >
-                        <span className="btn__text">More</span>
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <SoftwareCard
+                key={s.id}
+                software={s}
+                content={content}
+                detailUrl={detailUrl}
+                lang={lang}
+              />
             );
           })}
         </div>
