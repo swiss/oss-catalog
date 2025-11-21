@@ -24,12 +24,17 @@ interface Organisation {
     label: string
 }
 
-interface ComboboxProps {
+interface Departement {
+    label: string
     organisations: Organisation[]
+}
+
+interface ComboboxProps {
+    groups: Departement[]
     onChange?: (value: string) => void
 }
 
-export function Combobox({ organisations, onChange }: ComboboxProps) {
+export function Combobox({ groups, onChange }: ComboboxProps) {
     const [open, setOpen] = React.useState(false)
     const [value, setValue] = React.useState("")
 
@@ -43,9 +48,7 @@ export function Combobox({ organisations, onChange }: ComboboxProps) {
             className="w-full justify-between"
           >
             {value
-              ? organisations.find(
-                  (organisation) => organisation.value === value,
-                )?.label
+              ? groups.flatMap((g) => g.organisations).find((organisation) => organisation.value === value)?.label
               : ""}
             {/*TODO select all*/}
             <ChevronDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -56,31 +59,33 @@ export function Combobox({ organisations, onChange }: ComboboxProps) {
             <CommandInput/>
             <CommandList>
               <CommandEmpty>No organisation found.</CommandEmpty>
-              <CommandGroup>
-                {organisations.map((organisation) => (
-                  <CommandItem
-                    key={organisation.value}
-                    value={organisation.label}
-                    onSelect={() => {
-                      const newValue =
-                        value === organisation.value ? "" : organisation.value;
-                      setValue(newValue);
-                      onChange?.(newValue);
-                      setOpen(false);
-                    }}
-                  >
-                    <CheckIcon
-                      className={cn(
-                        "mr-2 h-4 w-4",
-                        value === organisation.value
-                          ? "opacity-100"
-                          : "opacity-0",
-                      )}
-                    />
-                    {organisation.label}
-                  </CommandItem>
-                ))}
-              </CommandGroup>
+              {groups.map((group) => (
+                <CommandGroup key={group.label} heading={group.label}>
+                  {group.organisations.map((organisation) => (
+                    <CommandItem
+                      key={organisation.value}
+                      value={organisation.label}
+                      onSelect={() => {
+                        const newValue =
+                          value === organisation.value ? "" : organisation.value;
+                        setValue(newValue);
+                        onChange?.(newValue);
+                        setOpen(false);
+                      }}
+                    >
+                      <CheckIcon
+                        className={cn(
+                          "mr-2 h-4 w-4",
+                          value === organisation.value
+                            ? "opacity-100"
+                            : "opacity-0",
+                        )}
+                      />
+                      {organisation.label}
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              ))}
             </CommandList>
           </Command>
         </PopoverContent>

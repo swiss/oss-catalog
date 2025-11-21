@@ -44,14 +44,24 @@ export default function OrganisationFilterIsland({
   const groupedOptions = useMemo(() => {
     const q = query.trim().toLowerCase();
     return organisations
-      .map((dept) => ({
-        id: dept.id,
-        label: dept.name[lang] || dept.name.en || "",
-        organisations: dept.organisations.filter((o) => {
-          if (!q) return true;
-          return (o.name[lang] || o.name.en || "").toLowerCase().includes(q);
-        }),
-      }))
+      .map((departement) => {
+        const filteredOrganisations = departement.organisations.filter(
+          (organisation) => {
+            if (!q) return true;
+            return (organisation.name[lang] || organisation.name.de || "")
+              .toLowerCase()
+              .includes(q);
+          },
+        );
+        return {
+          id: departement.id,
+          label: departement.name[lang] || departement.name.de || "",
+          organisations: filteredOrganisations.map((organisation) => ({
+            value: organisation.id,
+            label: organisation.name[lang] || organisation.name.de || "",
+          })),
+        };
+      })
       .filter((d) => d.organisations.length > 0);
   }, [organisations, query, lang]);
 
@@ -91,10 +101,7 @@ export default function OrganisationFilterIsland({
           style={{ position: "relative" }}
         >
           <Combobox
-            organisations={groupedOptions[0].organisations.map((o) => ({ // TODO all organisations grouped
-              value: o.id,
-              label: o.name[lang] || o.name.en || "",
-            }))}
+            groups={groupedOptions}
             onChange={(value) => setSelectedOrgId(value)}
           />
         </div>
