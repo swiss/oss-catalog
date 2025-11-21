@@ -36,7 +36,7 @@ export default function OrganisationFilterIsland({
   softwares,
 }: Props) {
   const [query, setQuery] = useState("");
-  const [selectedOrgId, setSelectedOrgId] = useState<string | null>(null);
+  const [selectedOrganisations, setSelectedOrganisations] = useState<string[]>([]);
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
@@ -66,17 +66,18 @@ export default function OrganisationFilterIsland({
   }, [organisations, query, lang]);
 
   const filteredSoftwares = useMemo(() => {
-    if (!selectedOrgId) return softwares;
+    if (!selectedOrganisations || selectedOrganisations.length === 0) return softwares;
+    const set = new Set(selectedOrganisations);
     return softwares.filter((s) => {
       try {
         const content: any = yaml.load(s.publiccodeYml as unknown as string);
         const orgUri: string | undefined = content?.organisation?.uri;
-        return orgUri === selectedOrgId;
+        return orgUri ? set.has(orgUri) : false;
       } catch {
         return false;
       }
     });
-  }, [softwares, selectedOrgId]);
+  }, [softwares, selectedOrganisations]);
 
   useEffect(() => {
     function onClickOutside(e: MouseEvent) {
@@ -102,7 +103,7 @@ export default function OrganisationFilterIsland({
         >
           <Combobox
             groups={groupedOptions}
-            onChange={(value) => setSelectedOrgId(value)}
+            onChange={(values) => setSelectedOrganisations(values)}
           />
         </div>
       </div>
