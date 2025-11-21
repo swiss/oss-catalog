@@ -8,6 +8,9 @@ const lang = Astro.currentLocale as Lang;
 const t = useTranslations(lang);
 const impressumUrl = getRelativeLocaleUrl(Astro.currentLocale as Lang, "impressum");
 
+const commitHash = import.meta.env.GIT_COMMIT_HASH
+  ? String(import.meta.env.GIT_COMMIT_HASH).slice(0, 7)
+  : undefined;
 ---
 
 <!doctype html>
@@ -63,6 +66,11 @@ const impressumUrl = getRelativeLocaleUrl(Astro.currentLocale as Lang, "impressu
                 {t('footer.tools')}
               </a>
             </li>
+            {commitHash && (
+              <li>
+                <span class="footer__link">{t("footer.commit")}: {commitHash}</span>
+              </li>
+            )}
           </ul>
         </nav>
       </div>
