@@ -1,12 +1,60 @@
 ---
 import yaml from "js-yaml";
 import  { type Lang, resolveLanguage } from "../i18n/utils";
+import organisations from "../../public/organisations.json";
+
+interface PubliccodeDescription {
+  shortDescription?: string;
+  longDescription?: string;
+}
+
+interface PubliccodeContent {
+  name: string;
+  landingURL?: string;
+  softwareVersion?: string;
+  description: Record<string, PubliccodeDescription>;
+  legal: {
+    license?: string;
+  };
+  organisation?: {
+    uri: string;
+  };
+  publiccodeYmlVersion?: string;
+}
 
 const { software } = Astro.props;
-const content = yaml.load(software.publiccodeYml);
+const content = yaml.load(software.publiccodeYml) as PubliccodeContent;
 const lang = Astro.currentLocale as Lang
 const availableLanguages = Object.keys(content.description);
 const description = content.description[resolveLanguage(lang, availableLanguages)];
+
+type OrganisationsRoot = typeof organisations;
+
+type OrganisationEntry =
+  | OrganisationsRoot[number]
+  | OrganisationsRoot[number]["organisations"][number];
+
+const findOrganisationByUri = (uri: string | undefined): OrganisationEntry | undefined => {
+  if (!uri) return undefined;
+
+  for (const dept of organisations) {
+    if (dept.id === uri) return dept;
+
+    if (dept.organisations) {
+      const nested = dept.organisations.find((org) => org.id === uri);
+      if (nested) return nested;
+    }
+  }
+
+  return undefined;
+};
+
+const organisationEntry = findOrganisationByUri(content.organisation?.uri);
+const organisationName = organisationEntry
+  ? organisationEntry.name[
+      resolveLanguage(lang, Object.keys(organisationEntry.name)) as keyof typeof organisationEntry.name
+    ]
+  : undefined;
 ---
 
 <div>
@@ -15,15 +63,30 @@ const description = content.description[resolveLanguage(lang, availableLanguages
     <div>
       <span>{content.name}</span>
     </div>
-  </div><div class="info-block border-t">
-    <h2 class="info-block__title">Landing page</h2><div>
-      <div>{content.landingURL}</div>
+  </div>
+  <div class="info-block border-t">
+    <h2 class="info-block__title">Repository Url</h2><div>
+      <div><a target="_blank" href={software.url}>{software.url}</a></div>
     </div>
-  </div><div class="info-block border-t">
+  </div>
+  {content.landingURL && <div class="info-block border-t">
+    <h2 class="info-block__title">Landing page</h2><div>
+      <div><a target="_blank" href={content.landingURL}>{content.landingURL}</a></div>
+    </div>
+  </div>}
+  {content.organisation?.uri && organisationName && (
+    <div class="info-block border-t">
+      <h2 class="info-block__title">Organisation</h2><div>
+        <div><a target="_blank" href={content.organisation.uri}>{organisationName}</a></div>
+      </div>
+    </div>
+  )}
+  <div class="info-block border-t">
     <h2 class="info-block__title">Short description</h2><div>
       <div>{description?.shortDescription}</div>
     </div>
-  </div><div class="info-block border-t">
+  </div>
+  <div class="info-block border-t">
     <h2 class="info-block__title">Documentation</h2><div>
       <div>{description?.longDescription}</div>
     </div>
@@ -34,6 +97,11 @@ const description = content.description[resolveLanguage(lang, availableLanguages
   </div><div class="info-block border-t">
     <h2 class="info-block__title">License</h2><div>
       <div>{content.legal.license}</div>
+    </div>
+  </div>
+  <div class="info-block border-t">
+    <h2 class="info-block__title">Publiccode.yml Version</h2><div>
+      <div>{content.publiccodeYmlVersion}</div>
     </div>
   </div>
 </div>
