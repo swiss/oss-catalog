@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import yaml from "js-yaml";
 import type { Software } from "../types/software";
+import { Combobox } from "@/components/Combobox.tsx";
 
 type Locale = "en" | "de" | "fr" | "it";
 
@@ -79,117 +80,24 @@ export default function OrganisationFilterIsland({
   }, []);
 
   return (
-    <div className="container">
-      <div
-        className="form__group"
-        ref={dropdownRef}
-        style={{ position: "relative" }}
-      >
-        <label className="text--base" htmlFor="org-input">
+    <>
+      <div className="container">
+        <label className="text--base" htmlFor="organization-filter">
           {i18n.filterLabel}
         </label>
-        <div style={{ position: "relative" }}>
-          <input
-            id="org-input"
-            className="input--outline input--base"
-            type="text"
-            placeholder={i18n.searchPlaceholder}
-            value={query}
-            onFocus={() => setOpen(true)}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              setQuery(e.target.value);
-              if (!open) setOpen(true);
-            }}
+        <div
+          className="form__group__select"
+          ref={dropdownRef}
+          style={{ position: "relative" }}
+        >
+          <Combobox
+            organisations={groupedOptions[0].organisations.map((o) => ({ // TODO all organisations grouped
+              value: o.id,
+              label: o.name[lang] || o.name.en || "",
+            }))}
+            onChange={(value) => setSelectedOrgId(value)}
           />
-          <button
-            type="button"
-            aria-label="toggle"
-            className="btn btn--ghost"
-            onClick={() => setOpen((o) => !o)}
-            style={{ position: "absolute", right: 6, top: 6, padding: 4 }}
-          >
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-              aria-hidden="true"
-            >
-              <path d="M7 10l5 5 5-5z" />
-            </svg>
-          </button>
         </div>
-
-        {open && (
-          <div
-            className="card"
-            style={{
-              position: "absolute",
-              zIndex: 2000,
-              width: "100%",
-              height: "10rem",
-              backgroundColor: "#fff",
-              boxShadow: "0 8px 24px rgba(0,0,0,0.12)",
-            }}
-          >
-            <div
-              className="card__body"
-              style={{
-                maxHeight: "10rem",
-                overflowY: "auto",
-                overflowX: "hidden",
-              }}
-            >
-              <div
-                className="select"
-                role="listbox"
-                aria-label={i18n.filterLabel}
-              >
-                <ul className="select__options">
-                  <li className="select__option">
-                    <label className="radio">
-                      <input
-                        type="radio"
-                        name="org"
-                        checked={selectedOrgId === null}
-                        onChange={() => {
-                          setSelectedOrgId(null);
-                          setOpen(false);
-                        }}
-                      />
-                      <span className="radio__label">{i18n.allOption}</span>
-                    </label>
-                  </li>
-                </ul>
-                {groupedOptions.map((dept) => (
-                  <div key={dept.id} className="form__group">
-                    <strong>{dept.label}</strong>
-                    <ul className="select__options">
-                      {dept.organisations.map((org) => (
-                        <li key={org.id} className="select__option">
-                          <label className="radio">
-                            <input
-                              type="radio"
-                              name="org"
-                              checked={selectedOrgId === org.id}
-                              onChange={() => {
-                                setSelectedOrgId(org.id);
-                                setOpen(false);
-                              }}
-                            />
-                            <span className="radio__label">
-                              {org.name[lang] || org.name.en || ""}
-                            </span>
-                          </label>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
       </div>
 
       <div className="container">
@@ -230,6 +138,6 @@ export default function OrganisationFilterIsland({
           </div>
         )}
       </div>
-    </div>
+    </>
   );
 }
