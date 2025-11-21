@@ -1,0 +1,23 @@
+{
+  "header.logo.title": "Federal Chancellery FCh",
+  "header.title": "Open Source Software Catalog",
+  "index.title": "OSS Catalog",
+  "index.subtitle": "Catalog of open source software for public administrations",
+  "index.description": "This is the catalog provided for in the guidelines for the procurement and reuse of software. It includes solutions reused by public administrations and third-party open source software intended for public administrations.",
+  "index.publiccode": "Add software",
+  "index.skip": "Skip to main content",
+  "index.filter": "Organisational unit",
+  "index.filter.option.all": "All",
+  "index.noresults": "The catalogue does not contain any source code for this federal authority.",
+  "software.title": "Detailed Information",
+  "software.back": "Back to overview",
+  "software.more": "Read more",
+  "software.source": "View source code",
+  "footer.legal": "Terms and conditions",
+  "footer.legal.link": "https://www.admin.ch/gov/en/start/terms-and-conditions.html",
+  "footer.impressum": "Impressum",
+  "impressum.title": "Impressum",
+  "impressum.content": "Publishing and content",
+  "impressum.design": "Concept, design, usability and technical realisation",
+  "footer.tools": "OSS Tools"
+}
