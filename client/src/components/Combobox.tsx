@@ -62,10 +62,7 @@ export function Combobox({ groups, lang, onChange }: ComboboxProps) {
       .filter(Boolean) as string[];
 
     if (labels.length === allOptions.length && labels.length > 0) {
-      return t("select.selectedCount").replace(
-        "{count}",
-        String(labels.length),
-      );
+      return t("select.selectedCount", { count: labels.length });
     }
 
     if (labels.length <= 2) return labels.join(", ");
