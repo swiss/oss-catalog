@@ -97,14 +97,14 @@ export default function OrganisationFilterIsland({
   return (
     <>
       <div className="container">
-        <label className="text--base" htmlFor="organization-filter">
-          {i18n.filterLabel}
-        </label>
         <div
           className="form__group__select"
           ref={dropdownRef}
           style={{ position: "relative" }}
         >
+          <label className="text--base" htmlFor="organization-filter">
+            {i18n.filterLabel}
+          </label>
           <Combobox
             groups={groupedOptions}
             onChange={(values) => setSelectedOrganisations(values)}

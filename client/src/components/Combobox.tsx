@@ -70,21 +70,20 @@ export function Combobox({ groups, onChange }: ComboboxProps) {
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <div className="select" style={{ width: "100%" }}>
+        <div className="select">
           <Button
             variant="outline"
             role="combobox"
             aria-expanded={open}
-            className="input--outline input--base w-full justify-between text-left"
+            className="input input--outline input--base w-full justify-between text-left"
           >
             {buttonLabel || "\u00a0"}
-            <ChevronDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+            <div className="select__icon" aria-hidden="true">
+              <svg role="presentation" viewBox="0 0 24 24">
+                <path d="m5.706 10.015 6.669 3.85 6.669-3.85.375.649-7.044 4.067-7.044-4.067z" />
+              </svg>
+            </div>
           </Button>
-          <div className="select__icon" aria-hidden="true">
-            <svg role="presentation" viewBox="0 0 24 24">
-              <path d="m5.706 10.015 6.669 3.85 6.669-3.85.375.649-7.044 4.067-7.044-4.067z" />
-            </svg>
-          </div>
         </div>
       </PopoverTrigger>
       <PopoverContent className="w-[min(32rem,90vw)] p-0">
