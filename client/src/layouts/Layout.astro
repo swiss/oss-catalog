@@ -68,7 +68,9 @@ const commitHash = import.meta.env.GIT_COMMIT_HASH
             </li>
             {commitHash && (
               <li>
-                <span class="footer__link">{t("footer.commit")}: {commitHash}</span>
+                <a class="footer__link" href={`https://github.com/swiss/oss-catalog/commit/${commitHash}`} target="_blank">
+                  {t('footer.commit')}: {commitHash}
+                </a>
               </li>
             )}
           </ul>
