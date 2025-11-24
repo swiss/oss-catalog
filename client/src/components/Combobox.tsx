@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { CheckIcon, ChevronDownIcon, XIcon } from "lucide-react";
+import { CheckIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -18,6 +18,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { type Lang, useTranslations } from "../i18n/utils";
 
 interface Organisation {
   value: string;
@@ -31,12 +32,14 @@ interface Departement {
 
 interface ComboboxProps {
   groups: Departement[];
+  lang: Lang;
   onChange?: (values: string[]) => void;
 }
 
-export function Combobox({ groups, onChange }: ComboboxProps) {
+export function Combobox({ groups, lang, onChange }: ComboboxProps) {
   const [open, setOpen] = React.useState(false);
   const [values, setValues] = React.useState<string[]>([]);
+  const t = useTranslations(lang);
 
   const allOptions = React.useMemo(
     () => groups.flatMap((g) => g.organisations),
@@ -59,7 +62,10 @@ export function Combobox({ groups, onChange }: ComboboxProps) {
       .filter(Boolean) as string[];
 
     if (labels.length === allOptions.length && labels.length > 0) {
-      return `${labels.length} selected`;
+      return t("select.selectedCount").replace(
+        "{count}",
+        String(labels.length),
+      );
     }
 
     if (labels.length <= 2) return labels.join(", ");
@@ -94,10 +100,7 @@ export function Combobox({ groups, onChange }: ComboboxProps) {
               {values.map((v) => {
                 const label = allOptions.find((o) => o.value === v)?.label || v;
                 return (
-                  <span
-                    key={v}
-                    className="vs__selected text-base"
-                  >
+                  <span key={v} className="vs__selected text-base">
                     {label}
                     <button
                       type="button"
@@ -117,26 +120,26 @@ export function Combobox({ groups, onChange }: ComboboxProps) {
             </div>
           )}
           <CommandList>
-            <CommandEmpty>No organisation found.</CommandEmpty>
-            <CommandGroup heading="Actions">
+            <CommandEmpty>{t("select.noresults")}</CommandEmpty>
+            <CommandGroup heading={t("select.actions")}>
               <CommandItem
-                value="Select all"
+                value={t("select.all")}
                 onSelect={() => {
                   const all = allOptions.map((o) => o.value);
                   setValues(all);
                   onChange?.(all);
                 }}
               >
-                Select all
+                {t("select.all")}
               </CommandItem>
               <CommandItem
-                value="Clear all"
+                value={t("select.clear")}
                 onSelect={() => {
                   setValues([]);
                   onChange?.([]);
                 }}
               >
-                Clear all
+                {t("select.clear")}
               </CommandItem>
             </CommandGroup>
             {groups.map((group) => (

@@ -1,8 +1,9 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import yaml from "js-yaml";
 import type { Software } from "../types/software";
 import { Combobox } from "@/components/Combobox.tsx";
 import { SoftwareCard } from "./SoftwareCard.tsx";
+import { useTranslations } from "../i18n/utils";
 
 type Locale = "en" | "de" | "fr" | "it";
 
@@ -21,18 +22,12 @@ type Department = {
 
 type Props = {
   lang: Locale;
-  i18n: {
-    filterLabel: string;
-    searchPlaceholder: string;
-    allOption: string;
-  };
   organisations: Department[];
   softwares: Software[];
 };
 
 export default function OrganisationFilterIsland({
   lang,
-  i18n,
   organisations,
   softwares,
 }: Props) {
@@ -42,6 +37,7 @@ export default function OrganisationFilterIsland({
   );
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
+  const t = useTranslations(lang);
 
   // Grouped, filtered options by department
   const groupedOptions = useMemo(() => {
@@ -103,10 +99,11 @@ export default function OrganisationFilterIsland({
           style={{ position: "relative" }}
         >
           <label className="text--base" htmlFor="organization-filter">
-            {i18n.filterLabel}
+            {t("index.filter")}
           </label>
           <Combobox
             groups={groupedOptions}
+            lang={lang}
             onChange={(values) => setSelectedOrganisations(values)}
           />
         </div>
@@ -133,7 +130,7 @@ export default function OrganisationFilterIsland({
         </div>
         {filteredSoftwares.length === 0 && (
           <div id="no-results-message">
-            <p>No results</p>
+            <p>{t("index.noresults.selectedOrganisations")}</p>
           </div>
         )}
       </div>
