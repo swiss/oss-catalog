@@ -15,13 +15,12 @@ env:
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
-  build-image:
+  build:
     name: Standalone build
     runs-on: ubuntu-latest
     permissions:
-      contents: write
-      packages: write
-      attestations: write
+      contents: read
+      pages: write
       id-token: write
 
     steps:
@@ -80,36 +79,19 @@ jobs:
           npm run build
         env:
           API_BASEURL: http://localhost:3000/v1
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./client/dist
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    needs: build
+    runs-on: ubuntu-latest
+    name: Deploy
+    steps:
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./client/dist
-      - name: Log in to the Container registry
-        uses: docker/login-action@v3.4.0
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
-        uses: docker/metadata-action@v5.7.0
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-      - name: Build and push Docker image
-        id: push
-        uses: docker/build-push-action@v6.17.0
-        with:
-          context: .
-          network: host
-          build-args: |
-            API_BASEURL=http://localhost:3000/v1
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-      - name: Generate artifact attestation
-        uses: actions/attest-build-provenance@v2
-        with:
-          subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME}}
-          subject-digest: ${{ steps.push.outputs.digest }}
-          push-to-registry: true
+        id: deployment
+        uses: actions/deploy-pages@v4
