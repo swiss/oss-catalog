@@ -11,16 +11,10 @@ export function useTranslations(lang: Lang) {
 }
 
 export function getLocalePaths(url: URL) {
-  const base = (import.meta.env.BASE_URL ?? "/").replace(/\/+$/g, "");
-  const pathname = url.pathname;
-  const pathWithoutBase = pathname.startsWith(base)
-    ? pathname.slice(base.length) || "/"
-    : pathname;
-
   return Object.keys(languages).map((lang) => {
     return {
       lang: lang,
-      path: getRelativeLocaleUrl(lang, pathWithoutBase),
+      path: getRelativeLocaleUrl(lang, url.pathname),
     };
   });
 }
