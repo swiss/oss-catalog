@@ -7,7 +7,6 @@ on:
   push:
     branches:
       - "main"
-      - "build/gh-pages-action"
     tags:
       - "v*.*.*"
 
