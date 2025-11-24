@@ -90,25 +90,26 @@ export function Combobox({ groups, onChange }: ComboboxProps) {
         <Command>
           <CommandInput />
           {values.length > 0 && (
-            <div className="flex flex-wrap gap-2 px-3 py-2">
+            <div className="flex flex-wrap gap-2 px-3 py-2 v-select">
               {values.map((v) => {
                 const label = allOptions.find((o) => o.value === v)?.label || v;
                 return (
                   <span
                     key={v}
-                    className="inline-flex items-center gap-1 rounded-md border px-2 py-0.5 text-xs"
+                    className="vs__selected text-base"
                   >
                     {label}
                     <button
                       type="button"
-                      className="opacity-60 hover:opacity-100"
                       onClick={(e) => {
                         e.stopPropagation();
                         toggleValue(v);
                       }}
                       aria-label={`Remove ${label}`}
                     >
-                      <XIcon className="h-3 w-3" />
+                      <span className="vs__deselect">
+                        <span>×</span>
+                      </span>
                     </button>
                   </span>
                 );
