@@ -7,7 +7,7 @@ on:
   push:
     branches:
       - "main"
-      - "feat/standalone-image-build"
+      - "chore/fix-basehref"
     tags:
       - "v*.*.*"
 
@@ -78,7 +78,7 @@ jobs:
         run: |
           cd client
           npm ci
-          BASE_PATH=/oss-catalog/ npm run build
+          npm run build
         env:
           API_BASEURL: http://localhost:3000/v1
       - name: Deploy to GitHub Pages

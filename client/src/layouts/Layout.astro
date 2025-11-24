@@ -8,27 +8,24 @@ const lang = Astro.currentLocale as Lang;
 const t = useTranslations(lang);
 const impressumUrl = getRelativeLocaleUrl(Astro.currentLocale as Lang, "impressum");
 
-// Use Astro's base path - works in all environments
-const base = import.meta.env.BASE_URL;
 ---
 
 <!doctype html>
 <html lang={lang}>
   <head>
-    <link rel="stylesheet" href={`${base}cd-bund-1.0.35.css`} />
+    <link rel="stylesheet" href={`/cd-bund-1.0.35.css`} />
     <meta charset="UTF-8" />
-    <base href={base} />
     <meta name="generator" content={Astro.generator} />
     <meta name="viewport" content="width=device-width" />
-    <link rel="apple-touch-icon" sizes="180x180" href={`${base}apple-touch-icon.png`} />
+    <link rel="apple-touch-icon" sizes="180x180" href={`/apple-touch-icon.png`} />
     <link
       rel="icon"
       type="image/png"
       sizes="128x128"
-      href={`${base}favicon-128x128.png`}
+      href={`/favicon-128x128.png`}
     />
-    <link rel="icon" type="image/png" sizes="32x32" href={`${base}favicon-32x32.png`} />
-    <link rel="icon" type="image/png" sizes="16x16" href={`${base}favicon-16x16.png`} />
+    <link rel="icon" type="image/png" sizes="32x32" href={`/favicon-32x32.png`} />
+    <link rel="icon" type="image/png" sizes="16x16" href={`/favicon-16x16.png`} />
     <meta name="msapplication-TileColor" content="#ffffff" />
     <meta name="theme-color" content="#ffffff" />
 
