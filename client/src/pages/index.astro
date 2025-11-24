@@ -28,9 +28,9 @@ const buildDateFormatted = `${buildDate.toLocaleDateString(dateLocale, {
 <Layout>
   <section class="section bg--secondary-50">
     <div class="container">
+      <div class="text--xs color--text-600">{t("header.lastUpdated")}: {buildDateFormatted}</div>
       <h1 class="section__title">
-        {t("index.title")} 
-        <span class="section__last-updated text--xs color--light">({t("header.lastUpdated")}: {buildDateFormatted})</span>
+        {t("index.title")}
       </h1>
       <h2 class="section__subtitle">{t("index.subtitle")}</h2>
 
