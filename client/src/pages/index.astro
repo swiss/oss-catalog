@@ -1,7 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import SoftwareCard from "../components/SoftwareCard.astro";
-import { type Lang, useTranslations } from "../i18n/utils";
+import { type Lang, useTranslations, toFullLocale } from "../i18n/utils";
 import LinkButton from "../components/LinkButton.astro";
 import organisations from "../../public/organisations.json";
 
@@ -12,8 +12,7 @@ const softwares = data.data;
 const lang = Astro.currentLocale as Lang;
 const t = useTranslations(Astro.currentLocale as Lang);
 
-const dateLocale =
-  lang === "de" ? "de-CH" : lang === "fr" ? "fr-CH" : lang === "it" ? "it-CH" : "de-CH";
+const dateLocale = toFullLocale(lang);
 const buildDate = new Date();
 const buildDateFormatted = `${buildDate.toLocaleDateString(dateLocale, {
   day: "2-digit",
