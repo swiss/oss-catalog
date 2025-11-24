@@ -86,7 +86,7 @@ export function Combobox({ groups, onChange }: ComboboxProps) {
           </Button>
         </div>
       </PopoverTrigger>
-      <PopoverContent className="w-[min(32rem,90vw)] p-0">
+      <PopoverContent className="w-[min(64rem,90vw)] p-0">
         <Command>
           <CommandInput />
           {values.length > 0 && (
