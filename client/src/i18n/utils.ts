@@ -26,3 +26,7 @@ export function resolveLanguage(lang: Lang, availableLanguages: string[]) {
     availableLanguages[0]
   );
 }
+
+export function toFullLocale(lang: Lang): string {
+  return lang === "de" ? "de-CH" : lang === "fr" ? "fr-CH" : lang === "it" ? "it-CH" : "de-CH";
+}

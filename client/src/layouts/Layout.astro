@@ -8,6 +8,9 @@ const lang = Astro.currentLocale as Lang;
 const t = useTranslations(lang);
 const impressumUrl = getRelativeLocaleUrl(Astro.currentLocale as Lang, "impressum");
 
+const commitHash = import.meta.env.GIT_COMMIT_HASH
+  ? String(import.meta.env.GIT_COMMIT_HASH).slice(0, 7)
+  : undefined;
 ---
 
 <!doctype html>
@@ -63,6 +66,13 @@ const impressumUrl = getRelativeLocaleUrl(Astro.currentLocale as Lang, "impressu
                 {t('footer.tools')}
               </a>
             </li>
+            {commitHash && (
+              <li>
+                <a class="footer__link" href={`https://github.com/swiss/oss-catalog/commit/${commitHash}`} target="_blank">
+                  {t('footer.commit')}: {commitHash}
+                </a>
+              </li>
+            )}
           </ul>
         </nav>
       </div>

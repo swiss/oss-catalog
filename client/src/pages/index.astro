@@ -1,7 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import SoftwareCard from "../components/SoftwareCard.astro";
-import { type Lang, useTranslations } from "../i18n/utils";
+import { type Lang, useTranslations, toFullLocale } from "../i18n/utils";
 import LinkButton from "../components/LinkButton.astro";
 import organisations from "../../public/organisations.json";
 
@@ -11,12 +11,26 @@ const data = await response.json();
 const softwares = data.data;
 const lang = Astro.currentLocale as Lang;
 const t = useTranslations(Astro.currentLocale as Lang);
+
+const dateLocale = toFullLocale(lang);
+const buildDate = new Date();
+const buildDateFormatted = `${buildDate.toLocaleDateString(dateLocale, {
+  day: "2-digit",
+  month: "2-digit",
+  year: "numeric",
+})} ${buildDate.toLocaleTimeString(dateLocale, {
+  hour: "2-digit",
+  minute: "2-digit",
+})}`;
 ---
 
 <Layout>
   <section class="section bg--secondary-50">
     <div class="container">
-      <h1 class="section__title">{t("index.title")}</h1>
+      <div class="text--xs color--text-600">{t("header.lastUpdated")}: {buildDateFormatted}</div>
+      <h1 class="section__title">
+        {t("index.title")}
+      </h1>
       <h2 class="section__subtitle">{t("index.subtitle")}</h2>
 
       <div class="card">
