@@ -167,7 +167,7 @@ export function Combobox({ groups, lang, onChange }: ComboboxProps) {
                 heading={
                   <button
                     type="button"
-                    className="w-full text-left font-semibold text--lg text--bold"
+                    className="w-full text-left"
                     onClick={(e) => {
                       e.stopPropagation();
                       toggleValues(group.organisations);
