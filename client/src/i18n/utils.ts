@@ -5,8 +5,20 @@ export type Lang = keyof typeof locales;
 type TranslationKey = keyof (typeof locales)[typeof defaultLang];
 
 export function useTranslations(lang: Lang) {
-  return function t(key: TranslationKey): string {
-    return locales[lang]?.[key] ?? locales[defaultLang][key] ?? (key as string);
+  return function t(
+    key: TranslationKey,
+    params?: Record<string, string | number>,
+  ): string {
+    let template =
+      locales[lang]?.[key] ?? locales[defaultLang][key] ?? (key as string);
+
+    if (params) {
+      for (const [paramKey, value] of Object.entries(params)) {
+        template = template.replace(`{${paramKey}}`, String(value));
+      }
+    }
+
+    return template;
   };
 }
 
@@ -28,5 +40,11 @@ export function resolveLanguage(lang: Lang, availableLanguages: string[]) {
 }
 
 export function toFullLocale(lang: Lang): string {
-  return lang === "de" ? "de-CH" : lang === "fr" ? "fr-CH" : lang === "it" ? "it-CH" : "de-CH";
+  return lang === "de"
+    ? "de-CH"
+    : lang === "fr"
+      ? "fr-CH"
+      : lang === "it"
+        ? "it-CH"
+        : "de-CH";
 }

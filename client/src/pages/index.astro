@@ -3,14 +3,26 @@ import Layout from "../layouts/Layout.astro";
 import SoftwareCard from "../components/SoftwareCard.astro";
 import { type Lang, useTranslations, toFullLocale } from "../i18n/utils";
 import LinkButton from "../components/LinkButton.astro";
-import organisations from "../../public/organisations.json";
+import organisations from "../data/organisations.json";
+import OrganisationFilterIsland from "../components/OrganisationFilterIsland";
+import { type Software } from "../types/software";
 
 const apiBaseUrl = import.meta.env.API_BASEURL || "http://localhost:3000/v1";
-const response = await fetch(`${apiBaseUrl}/software?page[size]=10000`);
-const data = await response.json();
-const softwares = data.data;
 const lang = Astro.currentLocale as Lang;
-const t = useTranslations(Astro.currentLocale as Lang);
+const t = useTranslations(lang);
+
+let softwares: Software[] = [];
+
+try {
+  const url = `${apiBaseUrl}/software?page[size]=10000`;
+  const response = await fetch(url);
+  if (!response.ok) throw new Error(`HTTP ${response.status}`);
+  const data = await response.json();
+  softwares = data.data ?? [];
+} catch (e) {
+  console.error("failed to load softwares", e)
+  softwares = [];
+}
 
 const dateLocale = toFullLocale(lang);
 const buildDate = new Date();
@@ -47,78 +59,11 @@ const buildDateFormatted = `${buildDate.toLocaleDateString(dateLocale, {
     </div>
   </section>
   <section class="section section--default">
-    <div class="container">
-      <div class="form__group__select">
-        <label for="organization-filter" class="text--base">
-          {t("index.filter")}
-        </label>
-        <div class="select">
-          <select
-              id="organization-filter"
-              class="input--outline input--base"
-              name="organization-filter-name"
-          >
-            <option value="all">{t("index.filter.option.all")}</option>
-            {
-              organisations.map((departement) => {
-                return (
-                    <optgroup label={departement.name[lang] ?? departement.name.de}>
-                        {departement.organisations.map((organisation) => {
-                            return (
-                                <option value={organisation.id}>{organisation.name[lang] ?? organisation.name.de}</option>
-                            );
-                        })}
-                    </optgroup>
-                );
-              })
-            }
-          </select>
-          <div class="select__icon">
-            <svg role="presentation" aria-hidden="true" viewBox="0 0 24 24">
-              <path
-                  d="m5.706 10.015 6.669 3.85 6.669-3.85.375.649-7.044 4.067-7.044-4.067z"
-              ></path>
-            </svg>
-          </div>
-        </div>
-        <script>
-          function handleOrgChange(event) {
-            console.log("change event...");
-            const selectedOrg = event.target.value;
-            const cards = document.querySelectorAll(".card");
-            cards.forEach((card) => {
-              if (card.dataset.org === selectedOrg || selectedOrg === "all") {
-                card.style.display = "flex";
-              } else {
-                card.style.display = "none";
-              }
-            });
-
-            const visibleCards = Array.from(
-              document.querySelectorAll(".card"),
-            ).filter((el) => getComputedStyle(el).display === "flex");
-            if (visibleCards.length === 0) {
-              document.getElementById("no-results-message").style.display =
-                "flex";
-            } else {
-              document.getElementById("no-results-message").style.display =
-                "none";
-            }
-          }
-
-          document
-            .getElementById("organization-filter")
-            .addEventListener("change", handleOrgChange);
-        </script>
-      </div>
-    </div>
-    <div class="container">
-        <div class="grid grid--responsive-cols-3 gap--responsive">
-            {softwares.map((software) => <SoftwareCard software={software} />)}
-        </div>
-        <div id="no-results-message" style="display: none">
-            <p>{t("index.noresults")}</p>
-        </div>
-    </div>
+    <OrganisationFilterIsland
+      client:load
+      lang={lang}
+      organisations={organisations}
+      softwares={softwares}
+    />
   </section>
 </Layout>

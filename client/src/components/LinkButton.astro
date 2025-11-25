@@ -2,7 +2,7 @@
 const { href, text } = Astro.props;
 ---
 
-<a href={href} class="btn btn--base btn--outline">
+<a href={href} rel="noopener noreferrer" class="btn btn--base btn--outline">
   <span class="btn__text">{text}</span>
   <svg viewBox="0 0 24 24" class="btn__icon icon icon--base icon--ArrowRight">
     <path

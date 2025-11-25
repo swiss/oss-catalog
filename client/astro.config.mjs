@@ -1,6 +1,8 @@
 // @ts-check
 import { defineConfig } from "astro/config";
 import dotenv from "dotenv";
+import react from "@astrojs/react";
+import tailwindcss from "@tailwindcss/vite";
 
 // Load environment variables from .env file
 dotenv.config();
@@ -22,4 +24,8 @@ export default defineConfig({
       fallbackType: "rewrite",
     },
   },
+  integrations: [react()],
+  vite: {
+    plugins: [tailwindcss()]
+  }
 });
