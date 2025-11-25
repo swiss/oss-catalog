@@ -55,6 +55,28 @@ export function Combobox({ groups, lang, onChange }: ComboboxProps) {
     });
   };
 
+  const toggleValues = (organisations: Organisation[]) => {
+    const ids = organisations.map((o) => o.value);
+
+    setValues((prev) => {
+      const allSelected = ids.every((id) => prev.includes(id));
+
+      let next: string[];
+      if (allSelected) {
+        // Unselect all organisations in this group
+        next = prev.filter((v) => !ids.includes(v));
+      } else {
+        // Select all organisations in this group (preserve others)
+        const set = new Set(prev);
+        ids.forEach((id) => set.add(id));
+        next = Array.from(set);
+      }
+
+      onChange?.(next);
+      return next;
+    });
+  };
+
   const buttonLabel = React.useMemo(() => {
     if (values.length === 0) return "";
     const labels = values
@@ -140,7 +162,21 @@ export function Combobox({ groups, lang, onChange }: ComboboxProps) {
               </CommandItem>
             </CommandGroup>
             {groups.map((group) => (
-              <CommandGroup key={group.label} heading={group.label}>
+              <CommandGroup
+                key={group.label}
+                heading={
+                  <button
+                    type="button"
+                    className="w-full text-left font-semibold text--lg text--bold"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      toggleValues(group.organisations);
+                    }}
+                  >
+                    {group.label}
+                  </button>
+                }
+              >
                 {group.organisations.map((organisation) => (
                   <CommandItem
                     key={organisation.value}
