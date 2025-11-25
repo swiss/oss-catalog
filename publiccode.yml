@@ -1,5 +1,5 @@
 publiccodeYmlVersion: 0.5.0
-name: Open Source Software Catalog
+name: Open Source Software Catalogue
 url: https://github.com/swiss/oss-catalog
 platforms:
   - web
@@ -12,7 +12,7 @@ organisation:
   name: Bundeskanzlei
 description:
   en:
-    shortDescription: Open Source software catalog based on the Public Code standard.
+    shortDescription: Open Source Software Catalogue based on the Public Code standard.
     longDescription: The Open Source Software Catalogue provides an overview of free
       and open-source software developed by or for the Swiss Confederation. It
       is based on the Public Code standard, which describes software in a
