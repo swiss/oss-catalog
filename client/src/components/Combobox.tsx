@@ -165,16 +165,24 @@ export function Combobox({ groups, lang, onChange }: ComboboxProps) {
               <CommandGroup
                 key={group.label}
                 heading={
-                  <button
-                    type="button"
-                    className="w-full text-left"
+                  <label
+                    className="w-full flex items-center gap-2 text-left text--sm"
                     onClick={(e) => {
                       e.stopPropagation();
-                      toggleValues(group.organisations);
                     }}
                   >
+                    <input
+                      type="checkbox"
+                      checked={group.organisations.every((o) =>
+                        values.includes(o.value),
+                      )}
+                      onChange={(e) => {
+                        e.stopPropagation();
+                        toggleValues(group.organisations);
+                      }}
+                    />
                     {group.label}
-                  </button>
+                  </label>
                 }
               >
                 {group.organisations.map((organisation) => (
