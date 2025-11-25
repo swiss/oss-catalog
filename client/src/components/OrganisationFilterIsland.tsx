@@ -4,6 +4,7 @@ import type { Software } from "../types/software";
 import { Combobox } from "@/components/Combobox.tsx";
 import { SoftwareCard } from "./SoftwareCard.tsx";
 import { useTranslations } from "../i18n/utils";
+import { getRelativeLocaleUrl } from "astro:i18n";
 
 type Locale = "en" | "de" | "fr" | "it";
 
@@ -116,7 +117,7 @@ export default function OrganisationFilterIsland({
             try {
               content = yaml.load(s.publiccodeYml as unknown as string) as any;
             } catch {}
-            const detailUrl = `/softwares/${s.id}`;
+            const detailUrl = `${getRelativeLocaleUrl(lang, "softwares")}${s.id}`;
             return (
               <SoftwareCard
                 key={s.id}
