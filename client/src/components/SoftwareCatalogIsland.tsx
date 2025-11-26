@@ -23,22 +23,45 @@ export default function SoftwareCatalogIsland({
   const [selectedOrganisations, setSelectedOrganisations] = useState<string[]>(
     [],
   );
+  const [nameQuery, setNameQuery] = useState("");
   const t = useTranslations(lang);
 
   const filteredSoftwares = useMemo(() => {
-    if (!selectedOrganisations || selectedOrganisations.length === 0)
-      return softwares;
-    const set = new Set(selectedOrganisations);
+    const hasOrganisationFilter =
+      selectedOrganisations && selectedOrganisations.length > 0;
+    const organisationSet = hasOrganisationFilter
+      ? new Set(selectedOrganisations)
+      : null;
+
+    const trimmedNameQuery = nameQuery.trim().toLowerCase();
+    const hasNameFilter = trimmedNameQuery.length > 0;
+
+    if (!hasOrganisationFilter && !hasNameFilter) return softwares;
+
     return softwares.filter((s) => {
+      let content: any;
       try {
-        const content: any = yaml.load(s.publiccodeYml as unknown as string);
-        const orgUri: string | undefined = content?.organisation?.uri;
-        return orgUri ? set.has(orgUri) : false;
+        content = yaml.load(s.publiccodeYml as unknown as string);
       } catch {
+        // If we cannot parse publiccodeYml, we cannot reliably filter by name or organisation
         return false;
       }
+
+      let matchesOrganisation = true;
+      if (hasOrganisationFilter && organisationSet) {
+        const orgUri: string | undefined = content?.organisation?.uri;
+        matchesOrganisation = orgUri ? organisationSet.has(orgUri) : false;
+      }
+
+      let matchesName = true;
+      if (hasNameFilter) {
+        const nameValue = (content?.name ?? "").toString().toLowerCase();
+        matchesName = nameValue.includes(trimmedNameQuery);
+      }
+
+      return matchesOrganisation && matchesName;
     });
-  }, [softwares, selectedOrganisations]);
+  }, [softwares, selectedOrganisations, nameQuery]);
 
   return (
     <>
@@ -47,6 +70,8 @@ export default function SoftwareCatalogIsland({
         organisations={organisations}
         selectedOrganisations={selectedOrganisations}
         onSelectedOrganisationsChange={setSelectedOrganisations}
+        nameQuery={nameQuery}
+        onNameQueryChange={setNameQuery}
       />
       <SoftwareList lang={lang} softwares={filteredSoftwares} t={t} />
     </>

@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Combobox } from "@/components/Combobox.tsx";
+import { Input } from "@/components/ui/input";
 import { useTranslations } from "../i18n/utils";
 
 export type Locale = "en" | "de" | "fr" | "it";
@@ -22,6 +23,8 @@ type Props = {
   organisations: Department[];
   selectedOrganisations: string[];
   onSelectedOrganisationsChange: (values: string[]) => void;
+  nameQuery: string;
+  onNameQueryChange: (value: string) => void;
 };
 
 export function SoftwareFiltersPanel({
@@ -29,6 +32,8 @@ export function SoftwareFiltersPanel({
   organisations,
   selectedOrganisations,
   onSelectedOrganisationsChange,
+  nameQuery,
+  onNameQueryChange,
 }: Props) {
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
@@ -84,6 +89,18 @@ export function SoftwareFiltersPanel({
           groups={groupedOptions}
           lang={lang}
           onChange={(values) => onSelectedOrganisationsChange(values)}
+        />
+      </div>
+
+      <div className="form__group" style={{ marginTop: "1rem" }}>
+        <label className="text--base" htmlFor="software-name-filter">
+          Software name
+        </label>
+        <Input
+          id="software-name-filter"
+          value={nameQuery}
+          onChange={(e) => onNameQueryChange(e.target.value)}
+          placeholder="Filter by name"
         />
       </div>
     </div>
