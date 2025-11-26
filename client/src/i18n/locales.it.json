@@ -11,6 +11,8 @@
   "index.filter.option.all": "Tutti",
   "index.noresults": "Per questa autorità federale non è disponibile alcun codice sorgente nel catalogo.",
   "index.noresults.selectedOrganisations": "Nessun risultato trovato per le organizzazioni selezionate",
+  "index.filterByName": "Nome del software",
+  "index.filterByName.placeholder": "Filtra per nome",
   "select.noresults": "Nessuna organizzazione trovata.",
   "select.actions": "Azioni",
   "select.all": "Seleziona tutto",

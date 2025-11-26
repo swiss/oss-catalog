@@ -11,6 +11,8 @@
   "index.filter.option.all": "Tous",
   "index.noresults": "Aucun code source n’est disponible dans le catalogue pour cet organisme fédéral.",
   "index.noresults.selectedOrganisations": "Aucun résultat trouvé pour les organisations sélectionnées",
+  "index.filterByName": "Nom du logiciel",
+  "index.filterByName.placeholder": "Filtrer par nom",
   "select.noresults": "Aucune organisation trouvée.",
   "select.actions": "Actions",
   "select.all": "Tout sélectionner",

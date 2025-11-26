@@ -94,13 +94,13 @@ export function SoftwareFiltersPanel({
 
       <div className="form__group" style={{ marginTop: "1rem" }}>
         <label className="text--base" htmlFor="software-name-filter">
-          Software name
+          {t("index.filterByName")}
         </label>
         <Input
           id="software-name-filter"
           value={nameQuery}
           onChange={(e) => onNameQueryChange(e.target.value)}
-          placeholder="Filter by name"
+          placeholder={t("index.filterByName.placeholder")}
         />
       </div>
     </div>
