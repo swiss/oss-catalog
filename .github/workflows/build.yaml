@@ -2,7 +2,7 @@ name: Build and publish Opensource Catalog
 
 on:
   schedule:
-    - cron: "42 1 * * *"
+    - cron: "42 */6 * * *"
   workflow_dispatch:
   push:
     branches:
