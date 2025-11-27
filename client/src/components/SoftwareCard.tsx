@@ -9,11 +9,13 @@ export function SoftwareCard({
   content,
   detailUrl,
   lang,
+  organisationName,
 }: {
   software: Software;
   content: any;
   detailUrl: string;
   lang: Lang;
+  organisationName?: string;
 }) {
   const t = useTranslations(lang);
   return (
@@ -33,8 +35,9 @@ export function SoftwareCard({
               <span className="meta-info__item">{content.legal?.license}</span>
             )}
           </p>
-          <div className="card__title">
-            <h2>{content.name}</h2>
+          <div>
+            <h2 className="card__title">{content.name}</h2>
+            <span className="meta-info meta-info__item">{organisationName}</span>
           </div>
           <p>{content.description?.shortDescription}</p>
         </div>
