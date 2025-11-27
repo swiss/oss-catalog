@@ -39,7 +39,7 @@ export function SoftwareCard({
             <h2 className="card__title">{content.name}</h2>
             <span className="meta-info meta-info__item">{organisationName}</span>
           </div>
-          <p>{content.description?.shortDescription}</p>
+          <p>{content.description[lang]?.shortDescription}</p>
         </div>
         <div className="card__footer">
           <div className="card__footer__info">
