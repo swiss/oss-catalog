@@ -26,7 +26,7 @@ type Props = {
   onNameQueryChange: (value: string) => void;
 };
 
-export function SoftwareFiltersPanel({
+export function SoftwareFilters({
   lang,
   organisations,
   onSelectedOrganisationsChange,

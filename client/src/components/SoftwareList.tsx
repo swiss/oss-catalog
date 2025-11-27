@@ -2,7 +2,7 @@ import yaml from "js-yaml";
 import { getRelativeLocaleUrl } from "astro:i18n";
 import type { Software } from "../types/software";
 import { SoftwareCard } from "./SoftwareCard.tsx";
-import type { Locale } from "./SoftwareFiltersPanel";
+import type { Locale } from "./SoftwareFilters.tsx";
 import { useTranslations } from "../i18n/utils";
 
 type Props = {

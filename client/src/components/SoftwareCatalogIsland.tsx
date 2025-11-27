@@ -3,10 +3,10 @@ import yaml from "js-yaml";
 import type { Software } from "../types/software";
 import { useTranslations } from "../i18n/utils";
 import {
-  SoftwareFiltersPanel,
+  SoftwareFilters,
   type Department,
   type Locale,
-} from "./SoftwareFiltersPanel";
+} from "./SoftwareFilters";
 import { SoftwareList } from "./SoftwareList";
 
 type Props = {
@@ -65,7 +65,7 @@ export default function SoftwareCatalogIsland({
 
   return (
     <>
-      <SoftwareFiltersPanel
+      <SoftwareFilters
         lang={lang}
         organisations={organisations}
         onSelectedOrganisationsChange={setSelectedOrganisations}
