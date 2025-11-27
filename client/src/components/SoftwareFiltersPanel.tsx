@@ -21,7 +21,6 @@ export type Department = {
 type Props = {
   lang: Locale;
   organisations: Department[];
-  selectedOrganisations: string[];
   onSelectedOrganisationsChange: (values: string[]) => void;
   nameQuery: string;
   onNameQueryChange: (value: string) => void;
@@ -30,13 +29,12 @@ type Props = {
 export function SoftwareFiltersPanel({
   lang,
   organisations,
-  selectedOrganisations,
   onSelectedOrganisationsChange,
   nameQuery,
   onNameQueryChange,
 }: Props) {
-  const [query, setQuery] = useState("");
-  const [open, setOpen] = useState(false);
+  const [query] = useState("");
+  const [setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
   const t = useTranslations(lang);
 
@@ -93,7 +91,7 @@ export function SoftwareFiltersPanel({
           />
         </div>
 
-        <div className="form__group">
+        <div className="form__group__input">
           <label className="text--base" htmlFor="software-name-filter">
             {t("index.filterByName")}
           </label>

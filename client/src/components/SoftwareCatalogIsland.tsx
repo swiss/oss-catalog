@@ -68,7 +68,6 @@ export default function SoftwareCatalogIsland({
       <SoftwareFiltersPanel
         lang={lang}
         organisations={organisations}
-        selectedOrganisations={selectedOrganisations}
         onSelectedOrganisationsChange={setSelectedOrganisations}
         nameQuery={nameQuery}
         onNameQueryChange={setNameQuery}
