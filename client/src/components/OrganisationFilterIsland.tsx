@@ -80,6 +80,13 @@ export default function OrganisationFilterIsland({
     });
   }, [softwares, selectedOrganisations]);
 
+  const toOrganisationName = (uri: string| undefined) => {
+    return organisations
+      .flatMap(o => o.organisations ?? [])
+      .find(o => o.id === uri)
+      ?.name?.[lang];
+  };
+
   useEffect(() => {
     function onClickOutside(e: MouseEvent) {
       if (!dropdownRef.current) return;
@@ -125,6 +132,7 @@ export default function OrganisationFilterIsland({
                 content={content}
                 detailUrl={detailUrl}
                 lang={lang}
+                organisationName={toOrganisationName(content.organisation?.uri)}
               />
             );
           })}
