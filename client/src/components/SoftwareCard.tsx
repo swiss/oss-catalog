@@ -3,6 +3,7 @@ import { GithubLogo } from "./GithubLogo.tsx";
 import { LinkButton } from "./LinkButton.tsx";
 import { getYear } from "date-fns";
 import { type Lang, useTranslations } from "../i18n/utils";
+import organisations from "../data/organisations.json";
 
 export function SoftwareCard({
   software,
@@ -18,6 +19,11 @@ export function SoftwareCard({
   organisationName?: string;
 }) {
   const t = useTranslations(lang);
+  const toOrganisationName = (uri: string | undefined) => {
+    return organisations
+      .flatMap((o) => o.organisations ?? [])
+      .find((o) => o.id === uri)?.name?.[lang];
+  };
   return (
     <div className="card card--default" has-icon="false">
       <div className="card__content">
@@ -37,7 +43,9 @@ export function SoftwareCard({
           </p>
           <div>
             <h2 className="card__title">{content.name}</h2>
-            <span className="meta-info meta-info__item">{organisationName}</span>
+            <span className="meta-info meta-info__item">
+              {toOrganisationName(content.organisation?.uri)}
+            </span>
           </div>
           <p>{content.description[lang]?.shortDescription}</p>
         </div>

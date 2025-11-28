@@ -11,6 +11,8 @@
   "index.filter.option.all": "All",
   "index.noresults": "The catalogue does not contain any source code for this federal authority.",
   "index.noresults.selectedOrganisations": "No results for the selected organisations found",
+  "index.filterByName": "Software name",
+  "index.filterByName.placeholder": "Filter by name",
   "select.noresults": "No organisation found.",
   "select.actions": "Actions",
   "select.all": "Select all",
