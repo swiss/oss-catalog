@@ -78,7 +78,7 @@ jobs:
       - name: Check softwares data exists
         run: |
           echo "Checking that softwares data exists..."
-          response=$(curl -s http://localhost:3000/v1/softwares)
+          response=$(curl -s http://localhost:3000/v1/software)
           data=$(echo "$response" | jq -r ".data // []")
           if [ "$data" = "[]" ]; then
             echo "No softwares found in /v1/softwares response. Failing build."
