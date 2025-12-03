@@ -7,6 +7,7 @@ on:
   push:
     branches:
       - "main"
+      - "chore/check-that-softwares-where-found"
     tags:
       - "v*.*.*"
 
@@ -74,6 +75,19 @@ jobs:
       - name: Run crawler
         run: |
           docker run --add-host=host.docker.internal:host-gateway -e API_BEARER_TOKEN=${{ env.PASETO_TOKEN }} -e API_BASEURL=http://host.docker.internal:3000/v1 -e GITHUB_TOKEN=${{ secrets.PAT_TOKEN_GITHUB }} italia/publiccode-crawler:latest
+      - name: Check softwares data exists
+        run: |
+          echo "Checking that softwares data exists..."
+          response=$(curl -s http://localhost:3000/v1/softwares)
+          data=$(echo "$response" | jq -r ".data // []")
+          if [ "$data" = "[]" ]; then
+            echo "No softwares found in /v1/softwares response. Failing build."
+            echo "Response was:"
+            echo "$response"
+            exit 1
+          fi
+          echo "Softwares data found:"
+          echo "$response"
       - name: Build client with npm
         run: |
           cd client
