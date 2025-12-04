@@ -5,6 +5,7 @@ import LinkButton from "../components/LinkButton.astro";
 import organisations from "../data/organisations.json";
 import SoftwareCatalogIsland from "../components/SoftwareCatalogIsland";
 import { type Software } from "../types/software";
+import yaml from "js-yaml";
 
 const apiBaseUrl = import.meta.env.API_BASEURL || "http://localhost:3000/v1";
 const lang = Astro.currentLocale as Lang;
@@ -17,7 +18,47 @@ try {
   const response = await fetch(url);
   if (!response.ok) throw new Error(`HTTP ${response.status}`);
   const data = await response.json();
-  softwares = data.data ?? [];
+  const rawSoftwares = data.data ?? [];
+  
+  // Parse publiccodeYml and enrich software objects with name
+  softwares = rawSoftwares.map((software: Software) => {
+    try {
+      const publiccode = yaml.load(software.publiccodeYml as unknown as string) as any;
+      return {
+        ...software,
+        name: publiccode?.name ?? "",
+        organisationUri: publiccode?.organisation?.uri ?? "",
+        categories: publiccode?.categories ?? [],
+        developmentStatus: publiccode?.developmentStatus ?? "",
+        softwareType: publiccode?.softwareType ?? "",
+        description: publiccode?.description ?? "",
+        legal: publiccode?.legal ?? "",
+        maintenance: publiccode?.maintenance ?? "",
+        localisation: publiccode?.localisation ?? "",
+      };
+    } catch (e) {
+      console.error(`Failed to parse publiccodeYml for software ${software.id}`, e);
+      return {
+        ...software,
+        name: "",
+        organisationUri: "",
+        categories: [],
+        developmentStatus: "",
+        softwareType: "",
+        description: "",
+        legal: "",
+        maintenance: "",
+        localisation: "",
+      };
+    }
+  });
+  
+  // Sort softwares by name and organisationUri
+  softwares.sort((a, b) => {
+    const nameComparison = a.name.localeCompare(b.name);
+    if (nameComparison !== 0) return nameComparison;
+    return a.organisationUri.localeCompare(b.organisationUri);
+  });
 } catch (e) {
   console.error("failed to load softwares", e)
   softwares = [];
