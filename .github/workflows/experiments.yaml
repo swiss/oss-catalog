@@ -1,20 +1,20 @@
-name: Build and publish Opensource Catalog
+name: Run experiments
 
 on:
   push:
     branches:
       - "feat/experiments"
 
-  jobs:
-    build:
-      name: perform some experiments
-      runs-on: ubuntu-latest
+jobs:
+  build:
+    name: just do it
+    runs-on: ubuntu-latest
 
-      steps:
-        - name: Check out repository code
-          uses: actions/checkout@v4
-          with:
-            submodules: recursive
-        - name: Run experiments
-          run: |
-            curl https://www.swisstopo.admin.ch/en/satellite-images-swisseo
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Run experiments
+        run: |
+          curl https://www.swisstopo.admin.ch/en/satellite-images-swisseo
