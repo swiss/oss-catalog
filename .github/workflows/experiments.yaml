@@ -5,9 +5,6 @@ on:
     branches:
       - "feat/experiments"
 
-env:
-
-jobs:
   build:
     name: perform some experiments
     runs-on: ubuntu-latest
