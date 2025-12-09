@@ -19,6 +19,6 @@ jobs:
         run: |
           curl -I https://www.swisstopo.admin.ch/en/satellite-images-swisseo
       - name: Test DNS in container ipv4
-        run: docker run --rm alpine sh -c "apk add curl && curl -4 -I https://www.swisstopo.admin.ch/en/satellite-images-swisseo
+        run: docker run --rm alpine sh -c "apk add curl && curl -4 -I https://www.swisstopo.admin.ch/en/satellite-images-swisseo"
       - name: Test DNS in container ipv6
-        run: docker run --rm alpine sh -c "apk add curl && curl -6 -I https://www.swisstopo.admin.ch/en/satellite-images-swisseo
+        run: docker run --rm alpine sh -c "apk add curl && curl -6 -I https://www.swisstopo.admin.ch/en/satellite-images-swisseo"
