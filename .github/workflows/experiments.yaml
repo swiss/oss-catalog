@@ -17,4 +17,6 @@ jobs:
           submodules: recursive
       - name: Run experiments
         run: |
-          curl -v https://www.swisstopo.admin.ch/en/satellite-images-swisseo
+          curl -I https://www.swisstopo.admin.ch/en/satellite-images-swisseo
+      - name: Test DNS in container
+        run: docker run --rm alpine sh -c "apk add curl && curl -I https://www.swisstopo.admin.ch/en/satellite-images-swisseo"
