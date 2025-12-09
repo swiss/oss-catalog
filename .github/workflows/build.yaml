@@ -7,7 +7,6 @@ on:
   push:
     branches:
       - "main"
-      - "chore/add-cname-file"
     tags:
       - "v*.*.*"
 
