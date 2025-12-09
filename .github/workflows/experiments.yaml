@@ -5,15 +5,16 @@ on:
     branches:
       - "feat/experiments"
 
-  build:
-    name: perform some experiments
-    runs-on: ubuntu-latest
+  jobs:
+    build:
+      name: perform some experiments
+      runs-on: ubuntu-latest
 
-    steps:
-      - name: Check out repository code
-        uses: actions/checkout@v4
-        with:
-          submodules: recursive
-      - name: Run experiments
-        run: |
-          curl https://www.swisstopo.admin.ch/en/satellite-images-swisseo
+      steps:
+        - name: Check out repository code
+          uses: actions/checkout@v4
+          with:
+            submodules: recursive
+        - name: Run experiments
+          run: |
+            curl https://www.swisstopo.admin.ch/en/satellite-images-swisseo
