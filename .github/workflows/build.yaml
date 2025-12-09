@@ -7,6 +7,7 @@ on:
   push:
     branches:
       - "main"
+      - "feat/experiments"
     tags:
       - "v*.*.*"
 
@@ -73,7 +74,13 @@ jobs:
           }
       - name: Run crawler
         run: |
-          docker run --add-host=host.docker.internal:host-gateway -e API_BEARER_TOKEN=${{ env.PASETO_TOKEN }} -e API_BASEURL=http://host.docker.internal:3000/v1 -e GITHUB_TOKEN=${{ secrets.PAT_TOKEN_GITHUB }} italia/publiccode-crawler:latest
+          docker run \
+            --add-host=host.docker.internal:host-gateway \
+            -e API_BEARER_TOKEN="${{ env.PASETO_TOKEN }}" \
+            -e API_BASEURL="http://host.docker.internal:3000/v1" \
+            -e GITHUB_TOKEN="${{ secrets.PAT_TOKEN_GITHUB }}" \
+            -e GODEBUG="netdns=go+noipv6" \
+            italia/publiccode-crawler:latest
       - name: Build client with npm
         run: |
           cd client
@@ -88,6 +95,7 @@ jobs:
           path: ./client/dist
 
   deploy:
+    if: github.ref == 'refs/heads/main'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
