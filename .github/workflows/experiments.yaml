@@ -17,4 +17,4 @@ jobs:
           submodules: recursive
       - name: Run experiments
         run: |
-          curl https://www.swisstopo.admin.ch/en/satellite-images-swisseo
+          curl -v https://www.swisstopo.admin.ch/en/satellite-images-swisseo
