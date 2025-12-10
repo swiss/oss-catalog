@@ -55,9 +55,9 @@ try {
   
   // Sort softwares by name and organisationUri
   softwares.sort((a, b) => {
-    const nameComparison = a.name.localeCompare(b.name);
-    if (nameComparison !== 0) return nameComparison;
-    return a.organisationUri.localeCompare(b.organisationUri);
+    const orgComparison = a.organisationUri.localeCompare(b.organisationUri);
+    if (orgComparison !== 0) return orgComparison;
+    return a.name.localeCompare(b.name);
   });
 } catch (e) {
   console.error("failed to load softwares", e)
