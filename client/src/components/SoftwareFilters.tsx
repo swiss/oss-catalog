@@ -75,32 +75,34 @@ export function SoftwareFilters({
 
   return (
     <div className="container">
-      <div className="grid grid--responsive-cols-2 gap--responsive">
-        <div
-          className="form__group__select"
-          ref={dropdownRef}
-          style={{ position: "relative" }}
-        >
-          <label className="text--base" htmlFor="organization-filter">
-            {t("index.filter")}
-          </label>
-          <Combobox
-            groups={groupedOptions}
-            lang={lang}
-            onChange={(values) => onSelectedOrganisationsChange(values)}
-          />
-        </div>
+      <div className="search">
+        <div className="grid grid--responsive-cols-2 gap--responsive">
+          <div
+            className="form__group__select"
+            ref={dropdownRef}
+            style={{ position: "relative" }}
+          >
+            <label className="text--base" htmlFor="organization-filter">
+              {t("index.filter")}
+            </label>
+            <Combobox
+              groups={groupedOptions}
+              lang={lang}
+              onChange={(values) => onSelectedOrganisationsChange(values)}
+            />
+          </div>
 
-        <div className="form__group__input">
-          <label className="text--base" htmlFor="software-name-filter">
-            {t("index.filterByName")}
-          </label>
-          <Input
-            id="software-name-filter"
-            value={nameQuery}
-            onChange={(e) => onNameQueryChange(e.target.value)}
-            placeholder={t("index.filterByName.placeholder")}
-          />
+          <div className="form__group__input">
+            <label className="text--base" htmlFor="software-name-filter">
+              {t("index.filterByName")}
+            </label>
+            <Input
+              id="software-name-filter"
+              value={nameQuery}
+              onChange={(e) => onNameQueryChange(e.target.value)}
+              placeholder={t("index.filterByName.placeholder")}
+            />
+          </div>
         </div>
       </div>
     </div>

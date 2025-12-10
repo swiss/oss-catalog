@@ -13,6 +13,7 @@
   "index.noresults.selectedOrganisations": "Aucun résultat trouvé pour les organisations sélectionnées",
   "index.filterByName": "Nom du logiciel",
   "index.filterByName.placeholder": "Filtrer par nom",
+  "index.results": "results",
   "select.noresults": "Aucune organisation trouvée.",
   "select.actions": "Actions",
   "select.all": "Tout sélectionner",
