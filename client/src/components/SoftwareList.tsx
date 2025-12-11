@@ -4,6 +4,7 @@ import type { Software } from "../types/software";
 import { SoftwareCard } from "./SoftwareCard.tsx";
 import type { Locale } from "./SoftwareFilters.tsx";
 import { useTranslations } from "../i18n/utils";
+import { hashUrl } from "../utils/hash";
 
 type Props = {
   lang: Locale;
@@ -28,7 +29,7 @@ export function SoftwareList({ lang, softwares, t }: Props) {
         <h2 className="sr-only">Results list</h2>
         <ul className="search-results-list">
           {softwares.map((s) => {
-            const detailUrl = `${getRelativeLocaleUrl(lang, "softwares")}${s.id}`;
+            const detailUrl = `${getRelativeLocaleUrl(lang, "softwares")}${hashUrl(s.url)}`;
             return (
               <li key={s.id}>
                 <SoftwareCard

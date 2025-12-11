@@ -5,6 +5,7 @@ import { getRelativeLocaleUrl } from "astro:i18n";
 import  { type Lang, useTranslations} from "../../i18n/utils";
 import type { PubliccodeYml, Software } from "@/types/software";
 import yaml from "js-yaml";
+import { hashUrl } from "../../utils/hash";
 
 const apiBaseUrl = import.meta.env.API_BASEURL || "http://localhost:3000/v1";
 console.log("apiBaseUrl", apiBaseUrl)
@@ -19,15 +20,16 @@ export async function getStaticPaths() {
   return softwares.map((software) => {
     return {
       params: {
-        id: software.id, // todo: software id is not stable
+        id: hashUrl(software.url),
+      },
+      props: {
+        software,
       },
     };
   });
 }
 
-const { id } = Astro.params;
-const response = await fetch(`${apiBaseUrl}/software/${id}`);
-const rawSoftware = await response.json();
+const rawSoftware = Astro.props.software;
 
 const software: Software = {
   ...rawSoftware,
