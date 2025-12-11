@@ -12,7 +12,7 @@
   "index.noresults": "Aucun code source n’est disponible dans le catalogue pour cet organisme fédéral.",
   "index.filterByName": "Nom du logiciel",
   "index.filterByName.placeholder": "Filtrer par nom",
-  "index.results": "results",
+  "index.results": "résultats",
   "select.noresults": "Aucune organisation trouvée.",
   "select.actions": "Actions",
   "select.all": "Tout sélectionner",
