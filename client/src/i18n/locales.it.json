@@ -7,7 +7,7 @@
   "index.description": "Conformemente all’articolo 9 della legge federale concernente l’impiego di mezzi elettronici per l’adempimento dei compiti della autorità (LMeCA), le autorità federali sono tenute a pubblicare il codice sorgente dei software che sviluppano o fanno sviluppare. Ogni autorità è direttamente responsabile della pubblicazione dei propri codici sorgente.",
   "index.publiccode": "Registrare software",
   "index.skip": "Vai al contenuto principale",
-  "index.filter": "Unità organizzativa",
+  "index.filterByOrganisation": "Unità organizzativa",
   "index.filter.option.all": "Tutti",
   "index.noresults": "Per questa autorità federale non è disponibile alcun codice sorgente nel catalogo.",
   "index.filterByName": "Nome del software",

@@ -84,7 +84,7 @@ export function SoftwareFilters({
               style={{ position: "relative" }}
             >
               <label className="text--base" htmlFor="organization-filter">
-                {t("index.filter")}
+                {t("index.filterByOrganisation")}
               </label>
               <Combobox
                 groups={groupedOptions}

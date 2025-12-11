@@ -7,7 +7,7 @@
   "index.description": "Die Bundesbehörden sind verpflichtet, den Quellcode der Software zu veröffentlichen, die sie zur Erfüllung ihrer Aufgaben entwickeln oder entwickeln lassen. Dies entspricht den Vorgaben von Artikel 9 des Bundesgesetzes über den Einsatz elektronischer Mittel zur Erfüllung von Behördenaufgaben (EMBAG). Für die Veröffentlichung ihres Quellcodes sind die einzelnen Behörden selbst verantwortlich.",
   "index.publiccode": "Software erfassen",
   "index.skip": "Zum Hauptinhalt springen",
-  "index.filter": "Organisationseinheit",
+  "index.filterByOrganisation": "Organisationseinheit",
   "index.filter.option.all": "Alle",
   "index.noresults": "Für diese Bundesbehörde ist kein Quellcode im Katalog verfügbar",
   "index.filterByName": "Softwarename",

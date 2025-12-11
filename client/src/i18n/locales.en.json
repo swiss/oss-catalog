@@ -7,7 +7,7 @@
   "index.description": "The federal authorities are required to publish the source code of software they develop or commission for the performance of their work. This requirement is laid down in Article 9 of the Federal Act on the Use of Electronic Means to Carry Out Official Tasks (EMOTA). Each authority is responsible for publishing its own source code.",
   "index.publiccode": "Add software",
   "index.skip": "Skip to main content",
-  "index.filter": "Organisational unit",
+  "index.filterByOrganisation": "Organisational unit",
   "index.filter.option.all": "All",
   "index.noresults": "The catalogue does not contain any source code for this federal authority.",
   "index.results": "results",
