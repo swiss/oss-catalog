@@ -34,7 +34,7 @@ export function SoftwareFilters({
   onNameQueryChange,
 }: Props) {
   const [query] = useState("");
-  const [setOpen] = useState(false);
+  const [_open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
   const t = useTranslations(lang);
 
