@@ -22,7 +22,7 @@ try {
   
   softwares = rawSoftwares.map((software: Software) => {
     try {
-      const publiccode = yaml.load(software.publiccodeYml as unknown as string) as PubliccodeYml; 
+      const publiccode = yaml.load(software.publiccodeYml) as PubliccodeYml;
       
       return {
         ...software,
@@ -38,11 +38,11 @@ try {
     }
   });
   
-  // Sort softwares by name and organisationUri
+  // Sort by name, then by organisation uri
   softwares.sort((a, b) => {
-    const orgComparison = a.publiccode?.organisation?.uri.localeCompare(b.publiccode?.organisation?.uri);
-    if (orgComparison !== 0) return orgComparison;
-    return a.publiccode?.name.localeCompare(b.publiccode?.name);
+    const nameComparison = a.publiccode?.name.localeCompare(b.publiccode?.name);
+    if (nameComparison !== 0) return nameComparison;
+    return a.publiccode?.organisation?.uri.localeCompare(b.publiccode?.organisation?.uri)
   });
 } catch (e) {
   console.error("failed to load softwares", e)
