@@ -7,13 +7,10 @@ import organisations from "../data/organisations.json";
 
 export function SoftwareCard({
   software,
-  content,
   detailUrl,
   lang,
-  organisationName,
 }: {
   software: Software;
-  content: any;
   detailUrl: string;
   lang: Lang;
   organisationName?: string;
@@ -29,25 +26,29 @@ export function SoftwareCard({
       <div className="card__content">
         <div className="card__body">
           <p className="meta-info">
-            {content.releaseDate && (
+            {software.publiccode.releaseDate && (
               <span className="meta-info__item">
-                {getYear(content.releaseDate)}
+                {getYear(software.publiccode.releaseDate)}
               </span>
             )}
-            {content.softwareVersion && (
-              <span className="meta-info__item">{content.softwareVersion}</span>
+            {software.publiccode.softwareVersion && (
+              <span className="meta-info__item">
+                {software.publiccode.softwareVersion}
+              </span>
             )}
-            {content.legal?.license && (
-              <span className="meta-info__item">{content.legal?.license}</span>
+            {software.publiccode.legal?.license && (
+              <span className="meta-info__item">
+                {software.publiccode.legal?.license}
+              </span>
             )}
           </p>
           <div>
-            <h2 className="card__title">{content.name}</h2>
+            <h2 className="card__title">{software.publiccode.name}</h2>
             <span className="meta-info meta-info__item">
-              {toOrganisationName(content.organisation?.uri)}
+              {toOrganisationName(software.publiccode.organisation?.uri)}
             </span>
           </div>
-          <p>{content.description[lang]?.shortDescription}</p>
+          <p>{software.publiccode.description[lang]?.shortDescription}</p>
         </div>
         <div className="card__footer">
           <div className="card__footer__info">

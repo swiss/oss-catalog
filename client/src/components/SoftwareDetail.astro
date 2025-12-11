@@ -3,31 +3,12 @@ import yaml from "js-yaml";
 import  { type Lang, resolveLanguage, useTranslations } from "../i18n/utils";
 import organisations from "../data/organisations.json";
 
-interface PubliccodeDescription {
-  shortDescription?: string;
-  longDescription?: string;
-}
-
-interface PubliccodeContent {
-  name: string;
-  landingURL?: string;
-  softwareVersion?: string;
-  description: Record<string, PubliccodeDescription>;
-  legal: {
-    license?: string;
-  };
-  organisation?: {
-    uri: string;
-  };
-  publiccodeYmlVersion?: string;
-}
 
 const { software } = Astro.props;
-const content = yaml.load(software.publiccodeYml) as PubliccodeContent;
 const lang = Astro.currentLocale as Lang
 const t = useTranslations(lang);
-const availableLanguages = Object.keys(content.description);
-const description = content.description[resolveLanguage(lang, availableLanguages)];
+const availableLanguages = Object.keys(software.publiccode?.description ?? {});
+const description = software.publiccode?.description[resolveLanguage(lang, availableLanguages)];
 
 type OrganisationsRoot = typeof organisations;
 
@@ -50,7 +31,7 @@ const findOrganisationByUri = (uri: string | undefined): OrganisationEntry | und
   return undefined;
 };
 
-const organisationEntry = findOrganisationByUri(content.organisation?.uri);
+const organisationEntry = findOrganisationByUri(software.publiccode.organisation?.uri);
 const organisationName = organisationEntry
   ? organisationEntry.name[
     resolveLanguage(lang, Object.keys(organisationEntry.name)) as keyof typeof organisationEntry.name
@@ -62,7 +43,7 @@ const organisationName = organisationEntry
   <div class="info-block border-t">
     <h2 class="info-block__title">{t("softwaredetail.name")}</h2>
     <div>
-      <span>{content.name}</span>
+      <span>{software.publiccode.name}</span>
     </div>
   </div>
   <div class="info-block border-t">
@@ -70,15 +51,15 @@ const organisationName = organisationEntry
     <div><a target="_blank" href={software.url}>{software.url}</a></div>
   </div>
   </div>
-  {content.landingURL && <div class="info-block border-t">
+  {software.publiccode.landingURL && <div class="info-block border-t">
     <h2 class="info-block__title">{t("softwaredetail.landingPage")}</h2><div>
-    <div><a target="_blank" href={content.landingURL}>{content.landingURL}</a></div>
+    <div><a target="_blank" href={software.publiccode.landingURL}>{software.publiccode.landingURL}</a></div>
   </div>
   </div>}
-  {content.organisation?.uri && organisationName && (
+  {software.publiccode.organisation?.uri && organisationName && (
     <div class="info-block border-t">
       <h2 class="info-block__title">{t("softwaredetail.organisation")}</h2><div>
-      <div><a target="_blank" href={content.organisation.uri}>{organisationName}</a></div>
+      <div><a target="_blank" href={software.publiccode.organisation.uri}>{organisationName}</a></div>
     </div>
     </div>
   )}
@@ -93,16 +74,16 @@ const organisationName = organisationEntry
   </div>
   </div><div class="info-block border-t">
   <h2 class="info-block__title">{t("softwaredetail.version")}</h2><div>
-  {content.softwareVersion}
+  {software.publiccode.softwareVersion}
 </div>
 </div><div class="info-block border-t">
   <h2 class="info-block__title">{t("softwaredetail.license")}</h2><div>
-  <div>{content.legal.license}</div>
+  <div>{software.publiccode.legal.license}</div>
 </div>
 </div>
   <div class="info-block border-t">
     <h2 class="info-block__title">{t("softwaredetail.publiccodeVersion")}</h2><div>
-    <div>{content.publiccodeYmlVersion}</div>
+    <div>{software.publiccode.publiccodeYmlVersion}</div>
   </div>
   </div>
 </div>

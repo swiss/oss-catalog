@@ -28,17 +28,12 @@ export function SoftwareList({ lang, softwares, t }: Props) {
         <h2 className="sr-only">Results list</h2>
         <ul className="search-results-list">
           {softwares.map((s) => {
-            let content: any = {};
-            try {
-              content = yaml.load(s.publiccodeYml as unknown as string) as any;
-            } catch {}
             const detailUrl = `${getRelativeLocaleUrl(lang, "softwares")}${s.id}`;
             return (
               <li key={s.id}>
                 <SoftwareCard
                   key={s.id}
                   software={s}
-                  content={content}
                   detailUrl={detailUrl}
                   lang={lang}
                 />

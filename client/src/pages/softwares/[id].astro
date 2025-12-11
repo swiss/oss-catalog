@@ -3,6 +3,8 @@ import Layout from "../../layouts/Layout.astro";
 import SoftwareDetail from "../../components/SoftwareDetail.astro";
 import { getRelativeLocaleUrl } from "astro:i18n";
 import  { type Lang, useTranslations} from "../../i18n/utils";
+import type { PubliccodeYml, Software } from "@/types/software";
+import yaml from "js-yaml";
 
 const apiBaseUrl = import.meta.env.API_BASEURL || "http://localhost:3000/v1";
 console.log("apiBaseUrl", apiBaseUrl)
@@ -12,12 +14,12 @@ export async function getStaticPaths() {
 
   const response = await fetch(`${apiBaseUrl}/software?page[size]=10000`);
   const data = await response.json();
-  const softwares = data.data;
+  const softwares: Software[] = data.data;
 
   return softwares.map((software) => {
     return {
       params: {
-        id: software.id,
+        id: software.id, // todo: software id is not stable
       },
     };
   });
@@ -25,7 +27,12 @@ export async function getStaticPaths() {
 
 const { id } = Astro.params;
 const response = await fetch(`${apiBaseUrl}/software/${id}`);
-const software = await response.json();
+const rawSoftware = await response.json();
+
+const software: Software = {
+  ...rawSoftware,
+  publiccode: yaml.load(rawSoftware.publiccodeYml as unknown as string) as PubliccodeYml,
+};
 
 const lang = Astro.currentLocale as Lang;
 const t = useTranslations(lang);

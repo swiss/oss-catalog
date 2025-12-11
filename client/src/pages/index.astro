@@ -4,7 +4,7 @@ import { type Lang, useTranslations, toFullLocale } from "../i18n/utils";
 import LinkButton from "../components/LinkButton.astro";
 import organisations from "../data/organisations.json";
 import SoftwareCatalogIsland from "../components/SoftwareCatalogIsland";
-import { type Software } from "../types/software";
+import { type PubliccodeYml, type Software } from "../types/software";
 import yaml from "js-yaml";
 
 const apiBaseUrl = import.meta.env.API_BASEURL || "http://localhost:3000/v1";
@@ -23,41 +23,27 @@ try {
   // Parse publiccodeYml and enrich software objects with name
   softwares = rawSoftwares.map((software: Software) => {
     try {
-      const publiccode = yaml.load(software.publiccodeYml as unknown as string) as any;
+      const publiccode = yaml.load(software.publiccodeYml as unknown as string) as PubliccodeYml; 
+      
       return {
         ...software,
-        name: publiccode?.name ?? "",
-        organisationUri: publiccode?.organisation?.uri ?? "",
-        categories: publiccode?.categories ?? [],
-        developmentStatus: publiccode?.developmentStatus ?? "",
-        softwareType: publiccode?.softwareType ?? "",
-        description: publiccode?.description ?? "",
-        legal: publiccode?.legal ?? "",
-        maintenance: publiccode?.maintenance ?? "",
-        localisation: publiccode?.localisation ?? "",
+        publiccode,
+        
       };
     } catch (e) {
       console.error(`Failed to parse publiccodeYml for software ${software.id}`, e);
       return {
         ...software,
-        name: "",
-        organisationUri: "",
-        categories: [],
-        developmentStatus: "",
-        softwareType: "",
-        description: "",
-        legal: "",
-        maintenance: "",
-        localisation: "",
+        publiccode: null,
       };
     }
   });
   
   // Sort softwares by name and organisationUri
   softwares.sort((a, b) => {
-    const orgComparison = a.organisationUri.localeCompare(b.organisationUri);
+    const orgComparison = a.publiccode?.organisation?.uri.localeCompare(b.publiccode?.organisation?.uri);
     if (orgComparison !== 0) return orgComparison;
-    return a.name.localeCompare(b.name);
+    return a.publiccode?.name.localeCompare(b.publiccode?.name);
   });
 } catch (e) {
   console.error("failed to load softwares", e)
