@@ -20,7 +20,6 @@ try {
   const data = await response.json();
   const rawSoftwares = data.data ?? [];
   
-  // Parse publiccodeYml and enrich software objects with name
   softwares = rawSoftwares.map((software: Software) => {
     try {
       const publiccode = yaml.load(software.publiccodeYml as unknown as string) as PubliccodeYml; 
