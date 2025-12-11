@@ -10,7 +10,6 @@
   "index.filter": "Organisationseinheit",
   "index.filter.option.all": "Alle",
   "index.noresults": "Für diese Bundesbehörde ist kein Quellcode im Katalog verfügbar",
-  "index.noresults.selectedOrganisations": "Keine Ergebnisse für die ausgewählten Organisationen gefunden",
   "index.filterByName": "Softwarename",
   "index.filterByName.placeholder": "Nach Name filtern",
   "index.results": "Suchergebnisse",

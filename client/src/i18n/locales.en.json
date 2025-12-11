@@ -10,7 +10,6 @@
   "index.filter": "Organisational unit",
   "index.filter.option.all": "All",
   "index.noresults": "The catalogue does not contain any source code for this federal authority.",
-  "index.noresults.selectedOrganisations": "No results for the selected organisations found",
   "index.results": "results",
   "index.filterByName": "Software name",
   "index.filterByName.placeholder": "Filter by name",
