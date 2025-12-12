@@ -39,23 +39,15 @@ export default function SoftwareCatalogIsland({
     if (!hasOrganisationFilter && !hasNameFilter) return softwares;
 
     return softwares.filter((s) => {
-      let content: any;
-      try {
-        content = yaml.load(s.publiccodeYml as unknown as string);
-      } catch {
-        // If we cannot parse publiccodeYml, we cannot reliably filter by name or organisation
-        return false;
-      }
-
       let matchesOrganisation = true;
       if (hasOrganisationFilter && organisationSet) {
-        const orgUri: string | undefined = content?.organisation?.uri;
+        const orgUri: string | undefined = s.publiccode?.organisation?.uri;
         matchesOrganisation = orgUri ? organisationSet.has(orgUri) : false;
       }
 
       let matchesName = true;
       if (hasNameFilter) {
-        const nameValue = (content?.name ?? "").toString().toLowerCase();
+        const nameValue = (s.publiccode?.name ?? "").toString().toLowerCase();
         matchesName = nameValue.includes(trimmedNameQuery);
       }
 

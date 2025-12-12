@@ -4,7 +4,6 @@ import * as React from "react";
 import { CheckIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
 import {
   Command,
   CommandEmpty,
@@ -96,19 +95,28 @@ export function Combobox({ groups, lang, onChange }: ComboboxProps) {
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <div className="select">
-          <Button
-            variant="outline"
+          <div
+            dir="auto"
+            className="v-select vs--multiple vs--searchable input--outline input--base"
             role="combobox"
             aria-expanded={open}
-            className="input input--outline input--base w-full justify-between text-left"
           >
-            {buttonLabel || "\u00a0"}
-            <div className="select__icon" aria-hidden="true">
-              <svg role="presentation" viewBox="0 0 24 24">
-                <path d="m5.706 10.015 6.669 3.85 6.669-3.85.375.649-7.044 4.067-7.044-4.067z" />
-              </svg>
+            <div className="vs__dropdown-toggle">
+              <div className="vs__selected-options vs--single">
+                <span className="vs__selected">
+                  {buttonLabel || "\u00a0"}
+                </span>
+              </div>
+              <div className="vs__actions">
+                {/* actions like clear or spinner are not used here */}
+              </div>
             </div>
-          </Button>
+          </div>
+          <div className="select__icon" aria-hidden="true">
+            <svg role="presentation" viewBox="0 0 24 24">
+              <path d="m5.706 10.015 6.669 3.85 6.669-3.85.375.649-7.044 4.067-7.044-4.067z" />
+            </svg>
+          </div>
         </div>
       </PopoverTrigger>
       <PopoverContent className="w-[min(64rem,90vw)] p-0">

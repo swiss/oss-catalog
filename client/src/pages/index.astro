@@ -4,7 +4,8 @@ import { type Lang, useTranslations, toFullLocale } from "../i18n/utils";
 import LinkButton from "../components/LinkButton.astro";
 import organisations from "../data/organisations.json";
 import SoftwareCatalogIsland from "../components/SoftwareCatalogIsland";
-import { type Software } from "../types/software";
+import { type PubliccodeYml, type Software } from "../types/software";
+import yaml from "js-yaml";
 
 const apiBaseUrl = import.meta.env.API_BASEURL || "http://localhost:3000/v1";
 const lang = Astro.currentLocale as Lang;
@@ -17,7 +18,32 @@ try {
   const response = await fetch(url);
   if (!response.ok) throw new Error(`HTTP ${response.status}`);
   const data = await response.json();
-  softwares = data.data ?? [];
+  const rawSoftwares = data.data ?? [];
+  
+  softwares = rawSoftwares.map((software: Software) => {
+    try {
+      const publiccode = yaml.load(software.publiccodeYml) as PubliccodeYml;
+      
+      return {
+        ...software,
+        publiccode,
+        
+      };
+    } catch (e) {
+      console.error(`Failed to parse publiccodeYml for software ${software.id}`, e);
+      return {
+        ...software,
+        publiccode: null,
+      };
+    }
+  });
+  
+  // Sort by name, then by organisation uri
+  softwares.sort((a, b) => {
+    const nameComparison = a.publiccode?.name.localeCompare(b.publiccode?.name);
+    if (nameComparison !== 0) return nameComparison;
+    return a.publiccode?.organisation?.uri.localeCompare(b.publiccode?.organisation?.uri)
+  });
 } catch (e) {
   console.error("failed to load softwares", e)
   softwares = [];
