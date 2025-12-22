@@ -52,7 +52,7 @@ What you will do:
 Clone this repository:
 
 ```bash
-git clone git@github.com:puzzle/oss-catalog.git
+git clone git@github.com:swiss/oss-catalog.git
 cd oss-catalog/
 git submodule init
 git submodule update
