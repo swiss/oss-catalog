@@ -10,11 +10,13 @@ export type LocalizedString = Partial<Record<Locale | string, string>>;
 export type Organisation = {
   id: string;
   name: LocalizedString;
+  alternativeName?: LocalizedString;
 };
 
 export type Department = {
   id: string;
   name: LocalizedString;
+  abbreviation?: LocalizedString;
   organisations: Organisation[];
 };
 
@@ -38,6 +40,10 @@ export function SoftwareFilters({
   const dropdownRef = useRef<HTMLDivElement | null>(null);
   const t = useTranslations(lang);
 
+  const toLabel = (unit: Organisation | Department, suffix: Organisation['alternativeName'] | Department['abbreviation']) => {
+    return `${unit.name[lang] || unit.name.de || ""} ${suffix ? ` (${suffix[lang] || suffix.de})` : ""}`;
+  };
+
   const groupedOptions = useMemo(() => {
     const q = query.trim().toLowerCase();
     return organisations
@@ -52,10 +58,10 @@ export function SoftwareFilters({
         );
         return {
           id: departement.id,
-          label: departement.name[lang] || departement.name.de || "",
+          label: toLabel(departement, departement.abbreviation),
           organisations: filteredOrganisations.map((organisation) => ({
             value: organisation.id,
-            label: organisation.name[lang] || organisation.name.de || "",
+            label: toLabel(organisation, organisation.alternativeName),
           })),
         };
       })
