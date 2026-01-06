@@ -1,5 +1,4 @@
 ---
-import yaml from "js-yaml";
 import  { type Lang, resolveLanguage, useTranslations } from "../i18n/utils";
 import organisations from "../data/organisations.json";
 
@@ -31,12 +30,20 @@ const findOrganisationByUri = (uri: string | undefined): OrganisationEntry | und
   return undefined;
 };
 
+const toLocalizedName = (organisationEntry: OrganisationEntry | undefined) => {
+  if (!organisationEntry) return undefined;
+  const name = organisationEntry.name[resolveLanguage(lang, Object.keys(organisationEntry.name)) as keyof typeof organisationEntry.name]
+  const abbrevation = "abbreviation" in organisationEntry && organisationEntry.abbreviation
+    ? organisationEntry.abbreviation[resolveLanguage(lang, Object.keys(organisationEntry.abbreviation)) as keyof typeof organisationEntry.abbreviation]
+    : undefined;
+  const alternativeName = "alternativeName" in organisationEntry && organisationEntry.alternativeName
+    ? organisationEntry.alternativeName[resolveLanguage(lang, Object.keys(organisationEntry.alternativeName)) as keyof typeof organisationEntry.alternativeName]
+    : undefined;
+  return `${name}${alternativeName ? ` (${alternativeName})` : ""}${abbrevation ? ` (${abbrevation})` : ""}`;
+}
+
 const organisationEntry = findOrganisationByUri(software.publiccode.organisation?.uri);
-const organisationName = organisationEntry
-  ? organisationEntry.name[
-    resolveLanguage(lang, Object.keys(organisationEntry.name)) as keyof typeof organisationEntry.name
-    ]
-  : undefined;
+const organisationName = toLocalizedName(organisationEntry);
 ---
 
 <div>
