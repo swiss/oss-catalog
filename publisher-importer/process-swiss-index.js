@@ -27,15 +27,16 @@ async function processSwissIndex() {
 
     // Process each URL
     const requestPromises = urls.map((url) => {
-      // Determine if this is a group URL or a repository URL
-      // Group URLs: https://github.com/groupname
-      // Repo URLs: https://github.com/groupname/reponame
-      const isGroupUrl = /^https:\/\/github\.com\/[^\/]+\/?$/.test(url);
+      // For the time being, we only allow group URLs.
+      // As GitLabs allows subgroups, it is not possible to tell whether a URL is for a group or a repository.
+      // Group URLs: https://github.com/group or https://gitlab.com/group/subgroup
+      // Repo URLs: https://github.com/group/repo
+      // const isGroupUrl = /^https:\/\/(?:github|gitlab)\.com\/[^\/]+\/?$/.test(url);
       const postData = JSON.stringify({
         codeHosting: [
           {
             url: url,
-            group: isGroupUrl,
+            group: true,
           },
         ],
         description: `Swiss Federal Organization: ${url}`,
