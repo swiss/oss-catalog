@@ -75,6 +75,11 @@ Create GitHub API Token with the `public_repo` Permission under https://github.c
 ```bash
 echo "GITHUB_TOKEN=<your access token>" >> .env
 ```
+Install and enable pnpm (see [pnpm docs](https://pnpm.io/installation#using-corepack)):
+
+```bash
+corepack enable pnpm
+```
 
 ### API Service
 
@@ -115,7 +120,7 @@ Run the script:
 ```bash
 cd publisher-importer/
 nvm use
-PASETO_TOKEN=$PASETO_TOKEN API_ENDPOINT=http://localhost:3000 npm start
+PASETO_TOKEN=$PASETO_TOKEN API_ENDPOINT=http://localhost:3000 pnpm start
 ```
 
 ### Crawler
@@ -137,10 +142,9 @@ Start the catalog client application:
 Or start outside of Docker in development mode:
 
 ```bash
-cd client/
 nvm use
-npm install
-npm run dev
+pnpm install
+pnpm scope:client run dev
 ```
 
 Then visit http://localhost:4321
@@ -159,7 +163,7 @@ Then visit http://localhost:4321
   ```
   cd publisher-importer/
   nvm use
-  PASETO_TOKEN=$PASETO_TOKEN API_ENDPOINT=<your api endpoint> npm start
+  PASETO_TOKEN=$PASETO_TOKEN API_ENDPOINT=<your api endpoint> pnpm start
   ```
 
 ### Known Issues

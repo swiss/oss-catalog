@@ -1,0 +1,15 @@
+{
+  "name": "oss-catalog",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "scope:all": "pnpm --recursive",
+    "scope:client": "pnpm --filter='client'"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "sharp"
+    ]
+  }
+}
