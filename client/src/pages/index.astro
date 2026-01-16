@@ -40,9 +40,14 @@ try {
   
   // Sort by name, then by organisation uri
   softwares.sort((a, b) => {
-    const nameComparison = a.publiccode?.name.localeCompare(b.publiccode?.name);
+    const nameA = a.publiccode?.name ?? "";
+    const nameB = b.publiccode?.name ?? "";
+    const nameComparison = nameA.localeCompare(nameB);
     if (nameComparison !== 0) return nameComparison;
-    return a.publiccode?.organisation?.uri.localeCompare(b.publiccode?.organisation?.uri)
+    
+    const orgA = a.publiccode?.organisation?.uri ?? "";
+    const orgB = b.publiccode?.organisation?.uri ?? "";
+    return orgA.localeCompare(orgB);
   });
 } catch (e) {
   console.error("failed to load softwares", e)
