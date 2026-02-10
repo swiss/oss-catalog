@@ -43,6 +43,6 @@ services:
     networks:
       - default
     ports:
-      - "8081:8080"
+      - "4321:8080"
 volumes:
   pgdata:
