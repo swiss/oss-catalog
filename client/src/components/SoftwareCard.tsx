@@ -1,5 +1,6 @@
 import type { Software } from "@/types/software";
 import { GithubLogo } from "./GithubLogo.tsx";
+import { GitlabLogo } from "./Gitlab.logo.tsx";
 import { LinkButton } from "./LinkButton.tsx";
 import { getYear } from "date-fns";
 import { type Lang, useTranslations } from "../i18n/utils";
@@ -21,6 +22,20 @@ export function SoftwareCard({
       .flatMap((o) => o.organisations ?? [])
       .find((o) => o.id === uri)?.name?.[lang];
   };
+
+  const getRepositoryPlatform = (url?: string) => {
+    if (!url) return "unknown";
+
+    const normalized = url.toLowerCase();
+
+    if (normalized.includes("gitlab")) return "gitlab";
+    if (normalized.includes("github")) return "github";
+
+    return "unknown";
+  };
+
+  const repositoryPlatform = getRepositoryPlatform(software.url);
+
   return (
     <div className="card card--default" has-icon="false">
       <div className="card__content">
@@ -55,9 +70,10 @@ export function SoftwareCard({
             <a
               href={software.url}
               target="_blank"
+              rel="noreferrer"
               aria-label={t("software.source")}
             >
-              <GithubLogo />
+              {repositoryPlatform === "gitlab" ? <GitlabLogo /> : <GithubLogo />}
             </a>
           </div>
           <div className="card__footer__action">
