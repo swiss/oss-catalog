@@ -1,6 +1,6 @@
 import type { Software } from "@/types/software";
-import { GithubLogo } from "./GithubLogo.tsx";
 import { LinkButton } from "./LinkButton.tsx";
+import { RepositoryPlatformLogo } from "./RepositoryPlatformLogo.tsx";
 import { getYear } from "date-fns";
 import { type Lang, useTranslations } from "../i18n/utils";
 import organisations from "../data/organisations.json";
@@ -16,11 +16,13 @@ export function SoftwareCard({
   organisationName?: string;
 }) {
   const t = useTranslations(lang);
+
   const toOrganisationName = (uri: string | undefined) => {
     return organisations
       .flatMap((o) => o.organisations ?? [])
       .find((o) => o.id === uri)?.name?.[lang];
   };
+
   return (
     <div className="card card--default" has-icon="false">
       <div className="card__content">
@@ -55,9 +57,10 @@ export function SoftwareCard({
             <a
               href={software.url}
               target="_blank"
+              rel="noreferrer"
               aria-label={t("software.source")}
             >
-              <GithubLogo />
+              <RepositoryPlatformLogo url={software.url} />
             </a>
           </div>
           <div className="card__footer__action">
