@@ -30,6 +30,16 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: recursive
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: pnpm
+          cache-dependency-path: client/pnpm-lock.yaml
       - name: Create .env file
         run: |
           echo "PASETO_KEY=${{ secrets.PASETO_KEY }}" > .env
@@ -74,11 +84,11 @@ jobs:
       - name: Run crawler
         run: |
           docker run --add-host=host.docker.internal:host-gateway -e API_BEARER_TOKEN=${{ env.PASETO_TOKEN }} -e API_BASEURL=http://host.docker.internal:3000/v1 -e GITHUB_TOKEN=${{ secrets.PAT_TOKEN_GITHUB }} italia/publiccode-crawler:latest
-      - name: Build client with npm
+      - name: Build client with pnpm
         run: |
           cd client
-          npm ci
-          npm run build
+          pnpm install --frozen-lockfile
+          pnpm run build
         env:
           API_BASEURL: http://localhost:3000/v1
           GIT_COMMIT_HASH: ${{ github.sha }}
