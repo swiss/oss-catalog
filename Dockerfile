@@ -6,10 +6,14 @@ ARG API_BASEURL=http://localhost:3000
 ENV API_BASEURL=${API_BASEURL}
 
 WORKDIR /app
-COPY ./client/package*.json ./
-RUN npm install
+
+RUN corepack enable
+
+COPY ./client/package.json ./
+COPY ./client/pnpm-lock.yaml ./
+RUN pnpm install --frozen-lockfile
 COPY ./client .
-RUN npm run build
+RUN pnpm run build
 
 FROM nginx:alpine AS runtime
 COPY ./client/nginx/nginx.conf /etc/nginx/nginx.conf
