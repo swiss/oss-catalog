@@ -77,7 +77,7 @@ jobs:
       - name: Verify software count threshold
         run: |
           echo "Checking software count..."
-          response=$(curl -s http://localhost:3000/v1/softwares)
+          response=$(curl -s http://localhost:3000/v1/software)
           software_count=$(echo "$response" | jq -r ".data | length")
           echo "Found $software_count software entries"
           if [ "$software_count" -lt 100 ]; then
