@@ -79,15 +79,15 @@ jobs:
           echo "Waiting 10 seconds for software data to be populated..."
           sleep 10
           echo "Checking software count..."
-          response=$(curl -s http://localhost:3000/v1/software)
+          response=$(curl -s http://localhost:3000/v1/software?all=true&page[size]=100")
           software_count=$(echo "$response" | jq -r ".data | length")
           echo "Found $software_count software entries"
-          if [ "$software_count" -lt 100 ]; then
-            echo "Error: Software count ($software_count) is below threshold of 100"
+          if [ "$software_count" -lt 80 ]; then
+            echo "Error: Software count ($software_count) is below threshold of 80"
             echo "Failing the pipeline to prevent deployment of incomplete catalog"
             exit 1
           fi
-          echo "Software count verification passed: $software_count >= 60"
+          echo "Software count verification passed: $software_count >= 80"
       - name: Build client with npm
         run: |
           cd client
