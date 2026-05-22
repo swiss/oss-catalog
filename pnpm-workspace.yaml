@@ -1,0 +1,5 @@
+packages:
+  - client
+allowBuilds:
+  esbuild: true
+  sharp: true
