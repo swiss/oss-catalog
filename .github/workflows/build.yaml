@@ -33,11 +33,11 @@ jobs:
       - name: Install pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: 10
+          version: 11.2.2
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: lts/*
+          node-version: lts/krypton
           cache: pnpm
           cache-dependency-path: client/pnpm-lock.yaml
       - name: Create .env file
@@ -101,8 +101,8 @@ jobs:
       - name: Build client with pnpm
         run: |
           cd client
-          pnpm install --frozen-lockfile
-          pnpm run build
+          pnpm install --frozen-lockfile --strict-peer-dependencies
+          pnpm build
         env:
           API_BASEURL: http://localhost:3000/v1
           GIT_COMMIT_HASH: ${{ github.sha }}

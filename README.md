@@ -119,7 +119,6 @@ Run the script:
 
 ```bash
 cd publisher-importer/
-nvm use
 PASETO_TOKEN=$PASETO_TOKEN API_ENDPOINT=http://localhost:3000 pnpm start
 ```
 
@@ -142,9 +141,8 @@ Start the catalog client application:
 Or start outside of Docker in development mode:
 
 ```bash
-nvm use
 pnpm install
-pnpm scope:client run dev
+pnpm scope:client dev
 ```
 
 Then visit http://localhost:4321
@@ -162,7 +160,6 @@ Then visit http://localhost:4321
 - Run the repository script (it's safe to push repos multiple times!)
   ```
   cd publisher-importer/
-  nvm use
   PASETO_TOKEN=$PASETO_TOKEN API_ENDPOINT=<your api endpoint> pnpm start
   ```
 

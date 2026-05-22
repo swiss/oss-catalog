@@ -5,11 +5,5 @@
   "scripts": {
     "scope:all": "pnpm --recursive",
     "scope:client": "pnpm --filter='client'"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "esbuild",
-      "sharp"
-    ]
   }
 }
