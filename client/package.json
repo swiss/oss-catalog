@@ -1,5 +1,5 @@
 {
-  "name": "client",
+  "name": "oss-catalog-client",
   "type": "module",
   "version": "0.0.1",
   "scripts": {

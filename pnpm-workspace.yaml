@@ -1,5 +1,5 @@
 packages:
-  - client
+  - oss-catalog-client
 allowBuilds:
   esbuild: true
   sharp: true
