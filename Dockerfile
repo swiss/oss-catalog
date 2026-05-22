@@ -13,7 +13,7 @@ COPY ./client/package.json ./
 COPY ./client/pnpm-lock.yaml ./
 RUN pnpm install --frozen-lockfile
 COPY ./client .
-RUN pnpm run build
+RUN pnpm build
 
 FROM nginx:alpine AS runtime
 COPY ./client/nginx/nginx.conf /etc/nginx/nginx.conf
