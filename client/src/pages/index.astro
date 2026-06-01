@@ -1,73 +1,42 @@
 ---
-import Layout from "../layouts/Layout.astro";
-import { type Lang, useTranslations } from "../i18n/utils";
-import LinkButton from "../components/LinkButton.astro";
-import organisations from "../data/organisations.json";
-import SoftwareCatalogIsland from "../components/SoftwareCatalogIsland";
-import SearchFiltersIsland from "../components/SearchFiltersIsland";
-import { type PubliccodeYml, type Software } from "../types/software";
-import yaml from "js-yaml";
+import { getRelativeLocaleUrl } from "astro:i18n";
 
-const apiBaseUrl = import.meta.env.API_BASEURL || "http://localhost:3000/v1";
-const lang = Astro.currentLocale as Lang;
-const t = useTranslations(lang);
+// DO NOT use Astro.request or Astro.preferredLocale here.
+// Instead, just generate the static URLs using the safe helpers:
+const fallbackUrl = getRelativeLocaleUrl("en", "");
 
-let softwares: Software[] = [];
-
-try {
-  const url = `${apiBaseUrl}/software?page[size]=10000`;
-  const response = await fetch(url);
-  if (!response.ok) throw new Error(`HTTP ${response.status}`);
-  const data = await response.json();
-  const rawSoftwares = data.data ?? [];
-  
-  softwares = rawSoftwares.map((software: Software) => {
-    try {
-      const publiccode = yaml.load(software.publiccodeYml) as PubliccodeYml;
-      
-      return {
-        ...software,
-        publiccode,
-        
-      };
-    } catch (e) {
-      console.error(`Failed to parse publiccodeYml for software ${software.id}`, e);
-      return {
-        ...software,
-        publiccode: null,
-      };
-    }
-  });
-  
-  // Sort by name, then by organisation uri
-  softwares.sort((a, b) => {
-    const nameComparison = a.publiccode?.name.localeCompare(b.publiccode?.name);
-    if (nameComparison !== 0) return nameComparison;
-    return a.publiccode?.organisation?.uri.localeCompare(b.publiccode?.organisation?.uri)
-  });
-} catch (e) {
-  console.error("failed to load softwares", e)
-  softwares = [];
-}
+const targetUrls = {
+  en: getRelativeLocaleUrl("en", ""),
+  de: getRelativeLocaleUrl("de", ""),
+  fr: getRelativeLocaleUrl("fr", ""),
+  it: getRelativeLocaleUrl("it", ""),
+};
 ---
 
-<Layout>
-  <section class="section section--default bg--secondary-50">
-    <div class="container">
-      <h1 class="section__title">
-        {t("index.title")}
-      </h1>
-      <h2 class="section__subtitle">{t("index.subtitle")}</h2>
-      <SearchFiltersIsland client:load
-                           lang={lang}
-                           organisations={organisations}/>
-    </div>
-  </section>
-  <section class="section section--default">
-    <SoftwareCatalogIsland
-      client:load
-      lang={lang}
-      softwares={softwares}
-    />
-  </section>
-</Layout>
+<html lang="en">
+  <head>
+    <title>Redirecting...</title>
+    <noscript>
+      <meta http-equiv="refresh" content={`0;url=${fallbackUrl}`} />
+    </noscript>
+  </head>
+  <body>
+    <script is:inline define:vars={{ targetUrls, fallbackUrl }}>
+      // This code runs strictly inside the user's browser, where headers aren't needed
+      // because we can read the browser's language setting directly!
+      const userLanguages = navigator.languages || [navigator.language];
+      let matchedUrl = null;
+
+      for (const lang of userLanguages) {
+        const shortLang = lang.split("-")[0].toLowerCase(); // e.g., 'de-CH' -> 'de'
+        if (targetUrls[shortLang]) {
+          matchedUrl = targetUrls[shortLang];
+          break;
+        }
+      }
+
+      // Instantly push the user to their language folder
+      window.location.replace(matchedUrl || fallbackUrl);
+    </script>
+  </body>
+</html>

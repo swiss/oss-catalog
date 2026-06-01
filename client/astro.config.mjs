@@ -14,18 +14,22 @@ export default defineConfig({
     locales: ["en", "de", "fr", "it"],
     defaultLocale: "en",
     fallback: {
-      de: "en",
       fr: "en",
+      de: "en",
       it: "en",
     },
+
     routing: {
-      prefixDefaultLocale: false,
-      redirectToDefaultLocale: false,
+      prefixDefaultLocale: true,
+      redirectToDefaultLocale: true,
       fallbackType: "rewrite",
     },
   },
+  redirects: {
+    "/impressum": "[locale]/impressum",
+  },
   integrations: [react()],
   vite: {
-    plugins: [tailwindcss()]
-  }
+    plugins: [tailwindcss()],
+  },
 });

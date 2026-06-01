@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@astrojs/react": "^4.4.2",
+    "@astrojs/react": "^5.0.6",
     "@nanostores/react": "^1.1.0",
     "@radix-ui/react-dialog": "^1.1.15",
     "@radix-ui/react-popover": "^1.1.15",
@@ -17,7 +18,7 @@
     "@tailwindcss/vite": "^4.3.0",
     "@types/react": "19.2.15",
     "@types/react-dom": "^19.2.2",
-    "astro": "^5.18.1",
+    "astro": "^6.4.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",

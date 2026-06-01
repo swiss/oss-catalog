@@ -1,8 +1,16 @@
 ---
-import Layout from "../layouts/Layout.astro";
-import { type Lang, useTranslations } from "../i18n/utils";
-import PhoneIcon from "../components/PhoneIcon.astro";
-import EmailIcon from "../components/EmailIcon.astro";
+import Layout from "../../layouts/Layout.astro";
+import { type Lang, useTranslations } from "../../i18n/utils";
+import PhoneIcon from "../../components/PhoneIcon.astro";
+import EmailIcon from "../../components/EmailIcon.astro";
+
+export async function getStaticPaths() {
+  const locales = ['en', 'de', 'fr', 'it'];
+  
+  return locales.map((locale) => ({
+    params: { locale },
+  }));
+}
 
 const t = useTranslations(Astro.currentLocale as Lang);
 ---

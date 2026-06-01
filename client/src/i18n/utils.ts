@@ -24,9 +24,16 @@ export function useTranslations(lang: Lang) {
 
 export function getLocalePaths(url: URL) {
   return Object.keys(languages).map((lang) => {
+    // Strip the current locale prefix from the pathname
+    // e.g., /de/about -> /about, /en/about -> /about
+    const pathWithoutLocale = url.pathname.replace(
+      /^\/(en|de|fr|it)(\/|$)/,
+      "/",
+    );
+
     return {
       lang: lang,
-      path: getRelativeLocaleUrl(lang, url.pathname),
+      path: getRelativeLocaleUrl(lang, pathWithoutLocale),
     };
   });
 }
