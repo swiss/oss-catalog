@@ -97,7 +97,7 @@ export function Combobox({ groups, lang, onChange }: ComboboxProps) {
         <div className="select">
           <div
             dir="auto"
-            className="v-select vs--multiple vs--searchable input--outline input--base"
+            className="v-select vs--multiple vs--searchable input--outline input--base bg-white"
             role="combobox"
             aria-expanded={open}
           >
