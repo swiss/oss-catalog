@@ -1,29 +1,24 @@
-import { useMemo, useState } from "react";
-import yaml from "js-yaml";
+import { useMemo } from "react";
 import type { Software } from "../types/software";
 import { useTranslations } from "../i18n/utils";
 import {
-  SoftwareFilters,
-  type Department,
   type Locale,
 } from "./SoftwareFilters";
 import { SoftwareList } from "./SoftwareList";
+import { useStore } from "@nanostores/react";
+import { nameQuery as nameQuery$, selectedOrganisations as selectedOrganisations$ } from "../stores/filters";
 
 type Props = {
   lang: Locale;
-  organisations: Department[];
   softwares: Software[];
 };
 
 export default function SoftwareCatalogIsland({
   lang,
-  organisations,
   softwares,
 }: Props) {
-  const [selectedOrganisations, setSelectedOrganisations] = useState<string[]>(
-    [],
-  );
-  const [nameQuery, setNameQuery] = useState("");
+  const selectedOrganisations = useStore(selectedOrganisations$);
+  const nameQuery = useStore(nameQuery$);
   const t = useTranslations(lang);
 
   const filteredSoftwares = useMemo(() => {
@@ -56,15 +51,6 @@ export default function SoftwareCatalogIsland({
   }, [softwares, selectedOrganisations, nameQuery]);
 
   return (
-    <>
-      <SoftwareFilters
-        lang={lang}
-        organisations={organisations}
-        onSelectedOrganisationsChange={setSelectedOrganisations}
-        nameQuery={nameQuery}
-        onNameQueryChange={setNameQuery}
-      />
       <SoftwareList lang={lang} softwares={filteredSoftwares} t={t} />
-    </>
   );
 }

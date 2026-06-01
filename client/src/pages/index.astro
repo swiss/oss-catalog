@@ -58,7 +58,9 @@ try {
         {t("index.title")}
       </h1>
       <h2 class="section__subtitle">{t("index.subtitle")}</h2>
-      <SearchFiltersIsland client:load lang={lang} />
+      <SearchFiltersIsland client:load
+                           lang={lang}
+                           organisations={organisations}/>
       <div class="filters__active"></div>
       <div class="section__action">
         <LinkButton
@@ -72,7 +74,6 @@ try {
     <SoftwareCatalogIsland
       client:load
       lang={lang}
-      organisations={organisations}
       softwares={softwares}
     />
   </section>

@@ -1,14 +1,22 @@
 import { useState } from "react";
 import type { Lang } from "../i18n/utils";
 import { useTranslations } from "../i18n/utils";
+import {
+  type Department,
+  SoftwareFilters,
+} from "@/components/SoftwareFilters.tsx";
+import { useStore } from "@nanostores/react";
+import { nameQuery as nameQuery$ } from "../stores/filters";
 
 interface Props {
   lang: Lang;
+  organisations: Department[];
 }
 
-export default function SearchFiltersIsland({ lang }: Props) {
+export default function SearchFiltersIsland({ lang, organisations }: Props) {
   const t = useTranslations(lang);
   const [isOpen, setIsOpen] = useState(false);
+  const nameQuery = useStore(nameQuery$);
 
   return (
     <>
@@ -20,6 +28,8 @@ export default function SearchFiltersIsland({ lang }: Props) {
             aria-labelledby="search-button"
             placeholder={t("index.search")}
             autoComplete="off"
+            value={nameQuery}
+            onChange={(e) => nameQuery$.set(e.target.value)}
           />
           <button
             type="button"
@@ -71,7 +81,10 @@ export default function SearchFiltersIsland({ lang }: Props) {
         {isOpen && (
           <div className="search__filters__drawer">
             <div className="form__group__select">
-              TODO
+              <SoftwareFilters
+                lang={lang}
+                organisations={organisations}
+              />
             </div>
           </div>
         )}
