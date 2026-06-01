@@ -7,6 +7,7 @@ import { getRelativeLocaleUrl } from "astro:i18n";
 const lang = Astro.currentLocale as Lang;
 const t = useTranslations(lang);
 const homeUrl = getRelativeLocaleUrl(lang);
+const ossToolsUrl = `https://www.bk.admin.ch/bk/${Astro.currentLocale}/home/digitale-transformation-ikt-lenkung/bundesarchitektur/open_source_software/hilfsmittel_oss.html`;
 ---
 
 <div class="top-header">
@@ -26,5 +27,22 @@ const homeUrl = getRelativeLocaleUrl(lang);
         </div>
       </div>
     </a>
+    <div class="top-header__right">
+      <div class="meta-navigation-container">
+        <nav class="meta-navigation main-navigation--desktop" aria-label="Meta">
+          <ul>
+            <li>
+              <a
+                class="meta-navigation__item"
+                href={ossToolsUrl}
+                target="_blank"
+              >
+                {t("footer.tools")}
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
   </div>
 </div>
