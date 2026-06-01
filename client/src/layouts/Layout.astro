@@ -1,7 +1,7 @@
 ---
 import TopHeader from "../components/TopHeader.astro";
 import TopBar from "../components/TobBar.astro";
-import { type Lang, useTranslations } from "../i18n/utils";
+import { type Lang, toFullLocale, useTranslations } from "../i18n/utils";
 import { getRelativeLocaleUrl } from "astro:i18n";
 import "../styles/global.css";
 
@@ -12,6 +12,17 @@ const impressumUrl = getRelativeLocaleUrl(Astro.currentLocale as Lang, "impressu
 const commitHash = import.meta.env.GIT_COMMIT_HASH
   ? String(import.meta.env.GIT_COMMIT_HASH).slice(0, 7)
   : undefined;
+
+const dateLocale = toFullLocale(lang);
+const buildDate = new Date();
+const buildDateFormatted = `${buildDate.toLocaleDateString(dateLocale, {
+  day: "2-digit",
+  month: "2-digit",
+  year: "numeric",
+})} ${buildDate.toLocaleTimeString(dateLocale, {
+  hour: "2-digit",
+  minute: "2-digit",
+})}`;
 ---
 
 <!doctype html>
@@ -61,13 +72,11 @@ const commitHash = import.meta.env.GIT_COMMIT_HASH
             <li>
               <a href={impressumUrl} class="footer__link">{t("footer.impressum")}</a>
             </li>
-            {commitHash && (
-              <li>
-                <a class="footer__link" href={`https://github.com/swiss/oss-catalog/commit/${commitHash}`} target="_blank">
-                  {t('footer.commit')}: {commitHash}
-                </a>
-              </li>
-            )}
+            <li>
+              <a class="footer__link" href={`https://github.com/swiss/oss-catalog/commit/${commitHash}`} target="_blank">
+                {t("header.lastUpdated")}: {buildDateFormatted}
+              </a>
+            </li>
           </ul>
         </nav>
       </div>
