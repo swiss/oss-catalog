@@ -13,6 +13,8 @@
   "index.filterByName": "Software name",
   "index.filterByName.placeholder": "Filter by name",
   "index.search": "Search the catalogue…",
+  "index.search.filter.open": "Show filters",
+  "index.search.filter.close": "Hide filters",
   "select.noresults": "No organisation found.",
   "select.actions": "Actions",
   "select.all": "Select all",

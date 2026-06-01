@@ -4,6 +4,7 @@ import { type Lang, useTranslations } from "../i18n/utils";
 import LinkButton from "../components/LinkButton.astro";
 import organisations from "../data/organisations.json";
 import SoftwareCatalogIsland from "../components/SoftwareCatalogIsland";
+import SearchFiltersIsland from "../components/SearchFiltersIsland";
 import { type PubliccodeYml, type Software } from "../types/software";
 import yaml from "js-yaml";
 
@@ -57,35 +58,8 @@ try {
         {t("index.title")}
       </h1>
       <h2 class="section__subtitle">{t("index.subtitle")}</h2>
-      <div class="search search--large search--page-result">
-        <div class="search__group">
-          <input
-            id="search-input"
-            type="search"
-            aria-labelledby="search-button"
-            placeholder={t('index.search')}
-            autocomplete="off"
-          />
-          <button
-            type="button"
-            class="btn btn--bare btn--lg btn--icon-only"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" enable-background="new 0 0 24 24" class="icon icon--3xl icon--Search"><path xmlns="http://www.w3.org/2000/svg" d="m13.3 12.8c1.9-2.2 1.7-5.6-.5-7.5s-5.6-1.7-7.5.5-1.7 5.6.5 7.5c2 1.7 4.9 1.7 6.9 0l6 6 .5-.5zm-4 1c-2.5 0-4.5-2-4.5-4.5s2-4.5 4.5-4.5 4.5 2 4.5 4.5-2 4.5-4.5 4.5z"></path></svg>
-            <span class="btn__text" id="search-button">{t('index.search')}</span>
-          </button>
-        </div>
-        <div class="search__filters">
-          <button
-            type="button"
-            class="btn btn--bare btn--sm btn--icon-left"
-            aria-label="false"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon icon--base icon--ChevronDown btn__icon"><path xmlns="http://www.w3.org/2000/svg" d="m5.706 10.015 6.669 3.85 6.669-3.85.375.649-7.044 4.067-7.044-4.067z"></path></svg>
-            <span class="btn__text">Filter anzeigen</span>
-          </button>
-        </div>
-        <div class="filters__active"></div>
-      </div>
+      <SearchFiltersIsland client:load lang={lang} />
+      <div class="filters__active"></div>
       <div class="section__action">
         <LinkButton
           href="https://swiss.github.io/publiccode-editor/"

@@ -13,6 +13,8 @@
   "index.filterByName.placeholder": "Filtra per nome",
   "index.results": "risultati",
   "index.search": "Cerca nel catalogo…",
+  "index.search.filter.open": "Mostra filtri",
+  "index.search.filter.close": "Nascondi filtri",
   "select.noresults": "Nessuna organizzazione trovata.",
   "select.actions": "Azioni",
   "select.all": "Seleziona tutto",
