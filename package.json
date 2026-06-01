@@ -2,8 +2,16 @@
   "name": "oss-catalog",
   "type": "module",
   "version": "0.0.1",
+  "engines": {
+    "runtime": {
+      "name": "node",
+      "version": "24.15.0",
+      "onFail": "download"
+    }
+  },
   "scripts": {
     "scope:all": "pnpm --recursive",
-    "scope:client": "pnpm --filter='client'"
-  }
+    "scope:client": "pnpm --filter=oss-catalog-client"
+  },
+  "dependencies": {}
 }
