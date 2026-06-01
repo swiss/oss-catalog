@@ -1,5 +1,4 @@
-import { locales, defaultLang, languages } from "./locales.ts";
-import { getRelativeLocaleUrl } from "astro:i18n";
+import { locales, defaultLang } from "./locales.ts";
 
 export type Lang = keyof typeof locales;
 type TranslationKey = keyof (typeof locales)[typeof defaultLang];
@@ -20,22 +19,6 @@ export function useTranslations(lang: Lang) {
 
     return template;
   };
-}
-
-export function getLocalePaths(url: URL) {
-  return Object.keys(languages).map((lang) => {
-    // Strip the current locale prefix from the pathname
-    // e.g., /de/about -> /about, /en/about -> /about
-    const pathWithoutLocale = url.pathname.replace(
-      /^\/(en|de|fr|it)(\/|$)/,
-      "/",
-    );
-
-    return {
-      lang: lang,
-      path: getRelativeLocaleUrl(lang, pathWithoutLocale),
-    };
-  });
 }
 
 export function resolveLanguage(lang: Lang, availableLanguages: string[]) {

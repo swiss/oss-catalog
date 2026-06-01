@@ -1,5 +1,11 @@
 ---
-import { getLocalePaths } from '../i18n/utils';
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { languages } from '../i18n/locales';
+
+const currentLang = Astro.currentLocale || 'en';
+const currentPath = Astro.url.pathname
+  .replace(new RegExp(`^\\/${currentLang}(\\/|$)`), '')
+  .replace(/^\//, '');
 ---
 
 <div class="language-switcher">
@@ -7,10 +13,10 @@ import { getLocalePaths } from '../i18n/utils';
     <div class="form__group__select">
         <div class="select select--bare">
             <select id="lang-switcher" class="input--negative input--sm">
-              {getLocalePaths(Astro.url).map(({lang, path}) => (
+              {Object.keys(languages).map((lang) => (
                 <option label={lang.toUpperCase()}
-                        value={path}
-                        selected={lang === Astro.currentLocale} />
+                        value={getRelativeLocaleUrl(lang, currentPath)}
+                        selected={lang === currentLang} />
               ))}
             </select>
             <div class="select__icon">
