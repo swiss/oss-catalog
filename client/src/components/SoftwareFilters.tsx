@@ -79,7 +79,6 @@ export function SoftwareFilters({
         {t("index.filterByOrganisation")}
       </label>
       <Combobox
-        id="organization-filter"
         groups={groupedOptions}
         lang={lang}
         onChange={(values) => selectedOrganisations.set(values)}
