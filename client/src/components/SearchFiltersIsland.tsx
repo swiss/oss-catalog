@@ -34,13 +34,15 @@ export default function SearchFiltersIsland({ lang, organisations }: Props) {
           <button
             type="button"
             className="btn btn--bare btn--lg btn--icon-only"
+            disabled
+            aria-hidden="true"
+            tabIndex={-1}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
               enableBackground="new 0 0 24 24"
               className="icon icon--3xl icon--Search"
-              aria-hidden="true"
             >
               <path
                 xmlns="http://www.w3.org/2000/svg"
