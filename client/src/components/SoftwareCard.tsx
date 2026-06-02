@@ -1,9 +1,9 @@
-import type { Software } from "@/types/software";
+import type { Software } from "@/lib/software";
 import { LinkButton } from "./LinkButton.tsx";
 import { RepositoryPlatformLogo } from "./RepositoryPlatformLogo.tsx";
 import { getYear } from "date-fns";
-import { type Lang, useTranslations } from "../i18n/utils";
-import organisations from "../data/organisations.json";
+import { type Lang, useTranslations } from "@/i18n/utils";
+import organisations from "@/data/organisations.json";
 
 export function SoftwareCard({
   software,

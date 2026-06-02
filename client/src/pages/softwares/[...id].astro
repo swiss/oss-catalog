@@ -2,39 +2,20 @@
 // src/pages/software/[...id].astro
 import { getRelativeLocaleUrl } from 'astro:i18n';
 import { hashUrl } from '@/utils/hash';
-import type { Software } from '@/types/software';
+import { getSoftwares } from '@/lib/software';
 
 export async function getStaticPaths() {
-  const apiBaseUrl = import.meta.env.API_BASEURL || "http://localhost:3000/v1";
-  
-  try {
-    const response = await fetch(`${apiBaseUrl}/software?page[size]=10000`);
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}`);
-    }
-    const data = await response.json();
-    const softwares: Software[] = data.data || [];
     
-    const paths: Array<{ params: { id: string | undefined } }> = softwares.map((software) => ({
+    const softwares = await getSoftwares();
+
+    return softwares.map((software) => ({
       params: { id: hashUrl(software.url) }
     }));
-    
-    // Also include undefined to support /softwares/ or /softwares
-    paths.push({ params: { id: undefined } });
-    
-    return paths;
-  } catch (e) {
-    console.error("Error fetching softwares for redirect paths:", e);
-    return [{ params: { id: undefined } }];
-  }
 }
 
-// If the URL is /software/m2kcbm, then id will be "m2kcbm"
-// If the URL is just /software/, id will be undefined
 const { id } = Astro.params;
 const routePath = id ? `softwares/${id}` : '';
 
-// Map the target localized paths dynamically
 const targetUrls = {
   en: getRelativeLocaleUrl('en', routePath),
   de: getRelativeLocaleUrl('de', routePath),
@@ -65,8 +46,6 @@ const fallbackUrl = targetUrls.en;
       }
     }
 
-    console.log('Redirecting to:', matchedUrl || fallbackUrl);
-    // Instantly forward them to the localized path
     window.location.replace(matchedUrl || fallbackUrl);
   </script>
 </body>

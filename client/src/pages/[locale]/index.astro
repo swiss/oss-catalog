@@ -4,50 +4,35 @@ import { type Lang, useTranslations, toFullLocale } from "@/i18n/utils";
 import LinkButton from "@/components/LinkButton.astro";
 import organisations from "@/data/organisations.json";
 import SoftwareCatalogIsland from "@/components/SoftwareCatalogIsland";
-import { type PubliccodeYml, type Software } from "@/types/software";
+import { type PubliccodeYml, type Software } from "@/lib/software";
 import yaml from "js-yaml";
+import { getSoftwares } from "@/lib/software";
 
-const apiBaseUrl = import.meta.env.API_BASEURL || "http://localhost:3000/v1";
 const lang = Astro.currentLocale as Lang;
 const t = useTranslations(lang);
 
 let softwares: Software[] = [];
 
-try {
-  const url = `${apiBaseUrl}/software?page[size]=10000`;
-  const response = await fetch(url);
-  if (!response.ok) throw new Error(`HTTP ${response.status}`);
-  const data = await response.json();
-  const rawSoftwares = data.data ?? [];
-  
-  softwares = rawSoftwares.map((software: Software) => {
-    try {
-      const publiccode = yaml.load(software.publiccodeYml) as PubliccodeYml;
-      
-      return {
-        ...software,
-        publiccode,
-        
-      };
-    } catch (e) {
-      console.error(`Failed to parse publiccodeYml for software ${software.id}`, e);
-      return {
-        ...software,
-        publiccode: null,
-      };
-    }
-  });
-  
-  // Sort by name, then by organisation uri
-  softwares.sort((a, b) => {
-    const nameComparison = a.publiccode?.name.localeCompare(b.publiccode?.name);
-    if (nameComparison !== 0) return nameComparison;
-    return a.publiccode?.organisation?.uri.localeCompare(b.publiccode?.organisation?.uri)
-  });
-} catch (e) {
-  console.error("failed to load softwares", e)
-  softwares = [];
-}
+const rawSoftwares = await getSoftwares();
+
+softwares = rawSoftwares.map((software: Software) => {
+  return {
+    ...software,
+    publiccode: yaml.load(software.publiccodeYml) as PubliccodeYml,
+  };
+});
+
+// Sort by name, then by organisation uri
+softwares.sort((a, b) => {
+  const nameA = a.publiccode?.name || "";
+  const nameB = b.publiccode?.name || "";
+  const nameComparison = nameA.localeCompare(nameB);
+  if (nameComparison !== 0) return nameComparison;
+
+  const uriA = a.publiccode?.organisation?.uri || "";
+  const uriB = b.publiccode?.organisation?.uri || "";
+  return uriA.localeCompare(uriB);
+});
 
 const dateLocale = toFullLocale(lang);
 const buildDate = new Date();
@@ -60,10 +45,9 @@ const buildDateFormatted = `${buildDate.toLocaleDateString(dateLocale, {
   minute: "2-digit",
 })}`;
 
-
 export async function getStaticPaths() {
-  const locales = ['en', 'de', 'fr', 'it'];
-  
+  const locales = ["en", "de", "fr", "it"];
+
   return locales.map((locale) => {
     return {
       params: { locale },
@@ -75,7 +59,9 @@ export async function getStaticPaths() {
 <Layout>
   <section class="section bg--secondary-50">
     <div class="container">
-      <div class="text--xs color--text-600">{t("header.lastUpdated")}: {buildDateFormatted}</div>
+      <div class="text--xs color--text-600">
+        {t("header.lastUpdated")}: {buildDateFormatted}
+      </div>
       <h1 class="section__title">
         {t("index.title")}
       </h1>
