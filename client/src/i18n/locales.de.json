@@ -15,6 +15,7 @@
   "index.search": "Suche im Katalog…",
   "index.search.filter.open": "Filter anzeigen",
   "index.search.filter.close": "Filter ausblenden",
+  "index.tools": "OSS Hilfsmittel",
   "select.noresults": "Keine Organisation gefunden.",
   "select.actions": "Aktionen",
   "select.all": "Alle auswählen",
@@ -39,6 +40,5 @@
   "footer.commit": "Commit",
   "impressum.title": "Impressum",
   "impressum.content": "Herausgeber und Redaktion",
-  "impressum.design": "Konzept, Design, Usability und technische Umsetzung",
-  "footer.tools": "OSS Hilfsmittel"
+  "impressum.design": "Konzept, Design, Usability und technische Umsetzung"
 }

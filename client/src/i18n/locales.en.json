@@ -15,6 +15,7 @@
   "index.search": "Search the catalogue…",
   "index.search.filter.open": "Show filters",
   "index.search.filter.close": "Hide filters",
+  "index.tools": "OSS Tools",
   "select.noresults": "No organisation found.",
   "select.actions": "Actions",
   "select.all": "Select all",
@@ -39,6 +40,5 @@
   "footer.commit": "Commit",
   "impressum.title": "Impressum",
   "impressum.content": "Publishing and content",
-  "impressum.design": "Concept, design, usability and technical realisation",
-  "footer.tools": "OSS Tools"
+  "impressum.design": "Concept, design, usability and technical realisation"
 }

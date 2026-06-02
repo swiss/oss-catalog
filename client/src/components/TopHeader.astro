@@ -32,12 +32,17 @@ const ossToolsUrl = `https://www.bk.admin.ch/bk/${Astro.currentLocale}/home/digi
         <nav class="meta-navigation main-navigation--desktop" aria-label="Meta">
           <ul>
             <li>
+              <a class="meta-navigation__item" href="https://swiss.github.io/publiccode-editor/" target="_blank">
+                {t("index.publiccode")}
+              </a>
+            </li>
+            <li>
               <a
                 class="meta-navigation__item"
                 href={ossToolsUrl}
                 target="_blank"
               >
-                {t("footer.tools")}
+                {t("index.tools")}
               </a>
             </li>
           </ul>

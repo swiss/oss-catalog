@@ -15,6 +15,7 @@
   "index.search": "Rechercher dans le catalogue…",
   "index.search.filter.open": "Afficher les filtres",
   "index.search.filter.close": "Masquer les filtres",
+  "index.tools": "Outils d’aide OSS",
   "select.noresults": "Aucune organisation trouvée.",
   "select.actions": "Actions",
   "select.all": "Tout sélectionner",
@@ -39,6 +40,5 @@
   "footer.commit": "Commit",
   "impressum.title": "Impressum",
   "impressum.content": "Édition et rédaction",
-  "impressum.design": "Conception, design, fonctionnalités et réalisation technique",
-  "footer.tools": "Outils d’aide OSS"
+  "impressum.design": "Conception, design, fonctionnalités et réalisation technique"
 }
