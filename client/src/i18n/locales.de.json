@@ -2,9 +2,9 @@
   "header.logo.title": "Bundeskanzlei BK",
   "header.title": "Open Source Software Katalog",
   "header.lastUpdated": "Letzte Aktualisierung",
+  "header.menu": "Menü",
   "index.title": "OSS-Katalog",
   "index.subtitle": "Dieser Katalog bietet eine Übersicht über die seit dem 1. Januar 2024 von den Bundesbehörden entwickelte und als Open Source veröffentlichte Software.",
-  "index.description": "Die Bundesbehörden sind verpflichtet, den Quellcode der Software zu veröffentlichen, die sie zur Erfüllung ihrer Aufgaben entwickeln oder entwickeln lassen. Dies entspricht den Vorgaben von Artikel 9 des Bundesgesetzes über den Einsatz elektronischer Mittel zur Erfüllung von Behördenaufgaben (EMBAG). Für die Veröffentlichung ihres Quellcodes sind die einzelnen Behörden selbst verantwortlich.",
   "index.publiccode": "Software erfassen",
   "index.skip": "Zum Hauptinhalt springen",
   "index.filterByOrganisation": "Organisationseinheit",
@@ -13,6 +13,10 @@
   "index.filterByName": "Softwarename",
   "index.filterByName.placeholder": "Nach Name filtern",
   "index.results": "Suchergebnisse",
+  "index.search": "Suche im Katalog…",
+  "index.search.filter.open": "Filter anzeigen",
+  "index.search.filter.close": "Filter ausblenden",
+  "index.tools": "OSS Hilfsmittel",
   "select.noresults": "Keine Organisation gefunden.",
   "select.actions": "Aktionen",
   "select.all": "Alle auswählen",
@@ -37,6 +41,5 @@
   "footer.commit": "Commit",
   "impressum.title": "Impressum",
   "impressum.content": "Herausgeber und Redaktion",
-  "impressum.design": "Konzept, Design, Usability und technische Umsetzung",
-  "footer.tools": "OSS Hilfsmittel"
+  "impressum.design": "Konzept, Design, Usability und technische Umsetzung"
 }

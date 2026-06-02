@@ -2,9 +2,9 @@
   "header.logo.title": "Chancellerie fédérale ChF",
   "header.title": "Catalogue Open Source Software",
   "header.lastUpdated": "Dernière mise à jour",
+  "header.menu": "Menu",
   "index.title": "Catalogue OSS",
   "index.subtitle": "Ce catalogue présente un aperçu des logiciels développés par les autorités fédérales et publiés sous la forme de logiciels à code source ouvert depuis le 1er janvier 2024.",
-  "index.description": "Les autorités fédérales sont tenues de publier le code source des logiciels qu’elles développent ou font développer pour l’exécution de leurs tâches. C’est ce que prévoit l’art. 9 de la loi fédérale du 17 mars 2023 sur l’utilisation de moyens électroniques pour l’exécution des tâches des autorités (LMETA). Chaque autorité est responsable de la publication de son code source.",
   "index.publiccode": "Enregistrer le logiciel",
   "index.skip": "Aller au contenu principal",
   "index.filterByOrganisation": "Unité d'organisation",
@@ -13,6 +13,10 @@
   "index.filterByName": "Nom du logiciel",
   "index.filterByName.placeholder": "Filtrer par nom",
   "index.results": "résultats",
+  "index.search": "Rechercher dans le catalogue…",
+  "index.search.filter.open": "Afficher les filtres",
+  "index.search.filter.close": "Masquer les filtres",
+  "index.tools": "Outils d’aide OSS",
   "select.noresults": "Aucune organisation trouvée.",
   "select.actions": "Actions",
   "select.all": "Tout sélectionner",
@@ -37,6 +41,5 @@
   "footer.commit": "Commit",
   "impressum.title": "Impressum",
   "impressum.content": "Édition et rédaction",
-  "impressum.design": "Conception, design, fonctionnalités et réalisation technique",
-  "footer.tools": "Outils d’aide OSS"
+  "impressum.design": "Conception, design, fonctionnalités et réalisation technique"
 }

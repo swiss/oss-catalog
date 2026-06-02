@@ -1,9 +1,10 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import { type Lang, useTranslations, toFullLocale } from "../i18n/utils";
+import { type Lang, useTranslations } from "../i18n/utils";
 import LinkButton from "../components/LinkButton.astro";
 import organisations from "../data/organisations.json";
 import SoftwareCatalogIsland from "../components/SoftwareCatalogIsland";
+import SearchFiltersIsland from "../components/SearchFiltersIsland";
 import { type PubliccodeYml, type Software } from "../types/software";
 import yaml from "js-yaml";
 
@@ -48,46 +49,24 @@ try {
   console.error("failed to load softwares", e)
   softwares = [];
 }
-
-const dateLocale = toFullLocale(lang);
-const buildDate = new Date();
-const buildDateFormatted = `${buildDate.toLocaleDateString(dateLocale, {
-  day: "2-digit",
-  month: "2-digit",
-  year: "numeric",
-})} ${buildDate.toLocaleTimeString(dateLocale, {
-  hour: "2-digit",
-  minute: "2-digit",
-})}`;
 ---
 
 <Layout>
-  <section class="section bg--secondary-50">
+  <section class="section section--default bg--secondary-50">
     <div class="container">
-      <div class="text--xs color--text-600">{t("header.lastUpdated")}: {buildDateFormatted}</div>
       <h1 class="section__title">
         {t("index.title")}
       </h1>
       <h2 class="section__subtitle">{t("index.subtitle")}</h2>
-
-      <div class="card">
-        <div class="card__body">
-          {t("index.description")}
-        </div>
-      </div>
-      <div class="section__action">
-        <LinkButton
-          href="https://swiss.github.io/publiccode-editor/"
-          text={t("index.publiccode")}
-        />
-      </div>
+      <SearchFiltersIsland client:load
+                           lang={lang}
+                           organisations={organisations}/>
     </div>
   </section>
   <section class="section section--default">
     <SoftwareCatalogIsland
       client:load
       lang={lang}
-      organisations={organisations}
       softwares={softwares}
     />
   </section>

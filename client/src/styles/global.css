@@ -118,3 +118,8 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Override selected Swiss design system styles */
+.search--page-result {
+  width: 100%;
+}

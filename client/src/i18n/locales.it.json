@@ -2,9 +2,9 @@
   "header.logo.title": "Cancelleria federale CaF",
   "header.title": "Catalogo Open Source Software",
   "header.lastUpdated": "Ultimo aggiornamento",
+  "header.menu": "Menu",
   "index.title": "Catalogo OSS",
   "index.subtitle": "Il catalogo fonisce una panoramica dei software sviluppati dal 1° gennaio 2024 dalle autorità federali e pubblicati come software a codice sorgente aperto (open source software, OSS).",
-  "index.description": "Conformemente all’articolo 9 della legge federale concernente l’impiego di mezzi elettronici per l’adempimento dei compiti della autorità (LMeCA), le autorità federali sono tenute a pubblicare il codice sorgente dei software che sviluppano o fanno sviluppare. Ogni autorità è direttamente responsabile della pubblicazione dei propri codici sorgente.",
   "index.publiccode": "Registrare software",
   "index.skip": "Vai al contenuto principale",
   "index.filterByOrganisation": "Unità organizzativa",
@@ -13,6 +13,10 @@
   "index.filterByName": "Nome del software",
   "index.filterByName.placeholder": "Filtra per nome",
   "index.results": "risultati",
+  "index.search": "Cerca nel catalogo…",
+  "index.search.filter.open": "Mostra filtri",
+  "index.search.filter.close": "Nascondi filtri",
+  "index.tools": "Guida OSS",
   "select.noresults": "Nessuna organizzazione trovata.",
   "select.actions": "Azioni",
   "select.all": "Seleziona tutto",
@@ -37,6 +41,5 @@
   "footer.commit": "Commit",
   "impressum.title": "Impressum",
   "impressum.content": "Editore e redazione",
-  "impressum.design": "Concetto, design, usability e realizzazione tecnica",
-  "footer.tools": "Guida OSS"
+  "impressum.design": "Concetto, design, usability e realizzazione tecnica"
 }

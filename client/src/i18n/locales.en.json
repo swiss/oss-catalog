@@ -2,9 +2,9 @@
   "header.logo.title": "Federal Chancellery FCh",
   "header.title": "Open Source Software Catalog",
   "header.lastUpdated": "Last updated",
+  "header.menu": "Menu",
   "index.title": "OSS Catalogue",
   "index.subtitle": "This catalogue provides an overview of the software developed by the federal authorities and published as open source since 1 January 2024.",
-  "index.description": "The federal authorities are required to publish the source code of software they develop or commission for the performance of their work. This requirement is laid down in Article 9 of the Federal Act on the Use of Electronic Means to Carry Out Official Tasks (EMOTA). Each authority is responsible for publishing its own source code.",
   "index.publiccode": "Add software",
   "index.skip": "Skip to main content",
   "index.filterByOrganisation": "Organisational unit",
@@ -13,6 +13,10 @@
   "index.results": "results",
   "index.filterByName": "Software name",
   "index.filterByName.placeholder": "Filter by name",
+  "index.search": "Search the catalogue…",
+  "index.search.filter.open": "Show filters",
+  "index.search.filter.close": "Hide filters",
+  "index.tools": "OSS Tools",
   "select.noresults": "No organisation found.",
   "select.actions": "Actions",
   "select.all": "Select all",
@@ -37,6 +41,5 @@
   "footer.commit": "Commit",
   "impressum.title": "Impressum",
   "impressum.content": "Publishing and content",
-  "impressum.design": "Concept, design, usability and technical realisation",
-  "footer.tools": "OSS Tools"
+  "impressum.design": "Concept, design, usability and technical realisation"
 }
