@@ -80,16 +80,14 @@ export default function SearchFiltersIsland({ lang, organisations }: Props) {
           </span>
         </button>
 
-        {isOpen && (
-          <div className="search__filters__drawer">
-            <div className="form__group__select">
-              <SoftwareFilters
-                lang={lang}
-                organisations={organisations}
-              />
-            </div>
+        <div className="search__filters__drawer" hidden={!isOpen}>
+          <div className="form__group__select">
+            <SoftwareFilters
+              lang={lang}
+              organisations={organisations}
+            />
           </div>
-        )}
+        </div>
       </div>
     </>
   );
