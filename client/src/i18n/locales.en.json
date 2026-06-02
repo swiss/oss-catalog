@@ -2,6 +2,7 @@
   "header.logo.title": "Federal Chancellery FCh",
   "header.title": "Open Source Software Catalog",
   "header.lastUpdated": "Last updated",
+  "header.menu": "Menu",
   "index.title": "OSS Catalogue",
   "index.subtitle": "This catalogue provides an overview of the software developed by the federal authorities and published as open source since 1 January 2024.",
   "index.publiccode": "Add software",

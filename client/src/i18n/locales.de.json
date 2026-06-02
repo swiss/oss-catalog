@@ -2,6 +2,7 @@
   "header.logo.title": "Bundeskanzlei BK",
   "header.title": "Open Source Software Katalog",
   "header.lastUpdated": "Letzte Aktualisierung",
+  "header.menu": "Menü",
   "index.title": "OSS-Katalog",
   "index.subtitle": "Dieser Katalog bietet eine Übersicht über die seit dem 1. Januar 2024 von den Bundesbehörden entwickelte und als Open Source veröffentlichte Software.",
   "index.publiccode": "Software erfassen",

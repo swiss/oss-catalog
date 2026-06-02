@@ -2,6 +2,7 @@
   "header.logo.title": "Chancellerie fédérale ChF",
   "header.title": "Catalogue Open Source Software",
   "header.lastUpdated": "Dernière mise à jour",
+  "header.menu": "Menu",
   "index.title": "Catalogue OSS",
   "index.subtitle": "Ce catalogue présente un aperçu des logiciels développés par les autorités fédérales et publiés sous la forme de logiciels à code source ouvert depuis le 1er janvier 2024.",
   "index.publiccode": "Enregistrer le logiciel",

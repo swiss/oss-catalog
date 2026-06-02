@@ -27,6 +27,7 @@ const ossToolsUrl = `https://www.bk.admin.ch/bk/${Astro.currentLocale}/home/digi
         </div>
       </div>
     </a>
+
     <div class="top-header__right">
       <div class="meta-navigation-container">
         <nav class="meta-navigation meta-navigation--desktop" aria-label="Meta">
@@ -48,6 +49,61 @@ const ossToolsUrl = `https://www.bk.admin.ch/bk/${Astro.currentLocale}/home/digi
           </ul>
         </nav>
       </div>
+      <button id="mobile-menu-burger" aria-label={t('header.menu')} class="burger" aria-expanded="false" aria-controls="mobile-menu">
+        <span class="burger__icon">
+          <span class="burger__bar"></span>
+          <span class="burger__bar"></span>
+          <span class="burger__bar"></span>
+        </span>
+      </button>
     </div>
   </div>
 </div>
+
+<div id="mobile-menu" style="z-index: 100;" class="mobile-menu" aria-hidden="true">
+  <div class="navy">
+    <div class="navy__level-0 navy-menu__level-0">
+      <nav class="meta-navigation meta-navigation--mobile" aria-label="Meta">
+        <ul>
+          <li>
+            <a class="meta-navigation__item" href="https://swiss.github.io/publiccode-editor/"
+               target="_blank">
+              {t("index.publiccode")}
+            </a>
+          </li>
+          <li>
+            <a class="meta-navigation__item"
+               href={ossToolsUrl}
+               target="_blank">
+              {t("index.tools")}
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+<script>
+  const menuButton = document.getElementById("mobile-menu-burger");
+  const menu = document.getElementById("mobile-menu");
+
+  menuButton.addEventListener("click", () => {
+    const isOpen = menuButton.getAttribute('aria-expanded') === 'true';
+
+    menuButton.setAttribute("aria-expanded", String(!isOpen));
+    menuButton.classList.toggle("burger--is-open", !isOpen);
+    menu.setAttribute("aria-hidden", String(isOpen));
+    menu.classList.toggle('mobile-menu--is-open', !isOpen);
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && menuButton.getAttribute('aria-expanded') === 'true') {
+      menuButton.setAttribute('aria-expanded', 'false');
+      menuButton.classList.toggle("burger--is-open", false);
+      menu.setAttribute('aria-hidden', 'true');
+      menu.classList.toggle('mobile-menu--is-open', false);
+      menuButton.focus();
+    }
+  });
+</script>
