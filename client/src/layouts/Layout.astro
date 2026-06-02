@@ -72,6 +72,7 @@ const buildDateFormatted = `${buildDate.toLocaleDateString(dateLocale, {
             <li>
               <a href={impressumUrl} class="footer__link">{t("footer.impressum")}</a>
             </li>
+            <li class="grow"></li>
             <li>
               <a class="footer__link" href={`https://github.com/swiss/oss-catalog/commit/${commitHash}`} target="_blank">
                 {t("header.lastUpdated")}: {buildDateFormatted}
@@ -83,3 +84,4 @@ const buildDateFormatted = `${buildDate.toLocaleDateString(dateLocale, {
     </footer>
   </body>
 </html>
+
