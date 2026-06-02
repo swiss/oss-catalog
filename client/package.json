@@ -6,10 +6,11 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "typecheck": "astro check"
   },
   "dependencies": {
-    "@astrojs/react": "^4.4.2",
+    "@astrojs/check": "^0.9.9",
     "@astrojs/react": "^5.0.6",
     "@nanostores/react": "^1.1.0",
     "@radix-ui/react-dialog": "^1.1.15",
@@ -29,7 +30,8 @@
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
     "tailwind-merge": "^3.6.0",
-    "tailwindcss": "^4.3.0"
+    "tailwindcss": "^4.3.0",
+    "typescript": "^6.0.3"
   },
   "devDependencies": {
     "@types/js-yaml": "^4.0.9",
