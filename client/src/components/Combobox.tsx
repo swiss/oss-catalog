@@ -97,12 +97,12 @@ export function Combobox({ groups, lang, onChange }: ComboboxProps) {
         <button
           type="button"
           className="select block w-full bg-transparent border-0 p-0 text-left cursor-pointer"
+          aria-haspopup="listbox"
+          aria-expanded={open}
         >
           <div
             dir="auto"
             className="v-select vs--multiple vs--searchable input--outline input--base bg-white"
-            role="combobox"
-            aria-expanded={open}
           >
             <div className="vs__dropdown-toggle">
               <div className="vs__selected-options vs--single">
