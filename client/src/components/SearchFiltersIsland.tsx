@@ -6,7 +6,7 @@ import {
   SoftwareFilters,
 } from "@/components/SoftwareFilters.tsx";
 import { useStore } from "@nanostores/react";
-import { nameQuery as nameQuery$ } from "../stores/filters";
+import { nameQuery } from "@/stores/filters";
 
 interface Props {
   lang: Lang;
@@ -16,7 +16,7 @@ interface Props {
 export default function SearchFiltersIsland({ lang, organisations }: Props) {
   const t = useTranslations(lang);
   const [isOpen, setIsOpen] = useState(false);
-  const nameQuery = useStore(nameQuery$);
+  const $nameQuery = useStore(nameQuery);
 
   return (
     <>
@@ -28,8 +28,8 @@ export default function SearchFiltersIsland({ lang, organisations }: Props) {
             aria-labelledby="search-button"
             placeholder={t("index.search")}
             autoComplete="off"
-            value={nameQuery}
-            onChange={(e) => nameQuery$.set(e.target.value)}
+            value={$nameQuery}
+            onChange={(e) => nameQuery.set(e.target.value)}
           />
           <button
             type="button"

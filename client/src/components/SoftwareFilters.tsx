@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Combobox } from "@/components/Combobox.tsx";
 import { useTranslations } from "../i18n/utils";
-import { selectedOrganisations as selectedOrganisations$ } from "@/stores/filters.ts";
+import { selectedOrganisations } from "@/stores/filters.ts";
 
 export type Locale = "en" | "de" | "fr" | "it";
 
@@ -81,7 +81,7 @@ export function SoftwareFilters({
       <Combobox
         groups={groupedOptions}
         lang={lang}
-        onChange={(values) => selectedOrganisations$.set(values)}
+        onChange={(values) => selectedOrganisations.set(values)}
       />
     </>
   );

@@ -6,7 +6,7 @@ import {
 } from "./SoftwareFilters";
 import { SoftwareList } from "./SoftwareList";
 import { useStore } from "@nanostores/react";
-import { nameQuery as nameQuery$, selectedOrganisations as selectedOrganisations$ } from "../stores/filters";
+import { nameQuery, selectedOrganisations } from "@/stores/filters";
 
 type Props = {
   lang: Locale;
@@ -17,18 +17,18 @@ export default function SoftwareCatalogIsland({
   lang,
   softwares,
 }: Props) {
-  const selectedOrganisations = useStore(selectedOrganisations$);
-  const nameQuery = useStore(nameQuery$);
+  const $selectedOrganisations = useStore(selectedOrganisations);
+  const $nameQuery = useStore(nameQuery);
   const t = useTranslations(lang);
 
   const filteredSoftwares = useMemo(() => {
     const hasOrganisationFilter =
-      selectedOrganisations && selectedOrganisations.length > 0;
+      $selectedOrganisations && $selectedOrganisations.length > 0;
     const organisationSet = hasOrganisationFilter
-      ? new Set(selectedOrganisations)
+      ? new Set($selectedOrganisations)
       : null;
 
-    const trimmedNameQuery = nameQuery.trim().toLowerCase();
+    const trimmedNameQuery = $nameQuery.trim().toLowerCase();
     const hasNameFilter = trimmedNameQuery.length > 0;
 
     if (!hasOrganisationFilter && !hasNameFilter) return softwares;
@@ -48,7 +48,7 @@ export default function SoftwareCatalogIsland({
 
       return matchesOrganisation && matchesName;
     });
-  }, [softwares, selectedOrganisations, nameQuery]);
+  }, [softwares, $selectedOrganisations, $nameQuery]);
 
   return (
       <SoftwareList lang={lang} softwares={filteredSoftwares} t={t} />
