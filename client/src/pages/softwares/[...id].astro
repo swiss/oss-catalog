@@ -1,7 +1,7 @@
 ---
 // src/pages/software/[...id].astro
 import { getRelativeLocaleUrl } from 'astro:i18n';
-import { hashUrl } from '../../utils/hash';
+import { hashUrl } from '@/utils/hash';
 import type { Software } from '@/types/software';
 
 export async function getStaticPaths() {
