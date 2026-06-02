@@ -1,11 +1,19 @@
 services:
   api:
-    extends:
-      file: developers-italia-api/docker-compose.yml
-      service: api
+    image: ghcr.io/italia/developers-italia-api:v1.3.0
     env_file: ".env" # Must define PASETO_KEY
     environment:
-      - GOFLAGS=-buildvcs=false
+      DATABASE_DSN: "host=db user=postgres password=postgres dbname=postgres port=5432"
+      ENVIRONMENT: local
+      GOFLAGS: -buildvcs=false
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    networks:
+      - default
+    volumes:
+      - .:/opt/app/api
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000/v1/publishers"]
       interval: 5s
@@ -14,13 +22,16 @@ services:
       start_period: 10s
 
   db:
-    extends:
-      file: developers-italia-api/docker-compose.yml
-      service: db
+    image: postgres:14.3-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
 
   crawler:
-    build:
-      context: ./publiccode-crawler
+    image: italia/publiccode-crawler:ca638869
     depends_on:
       - api
     networks:

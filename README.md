@@ -44,7 +44,6 @@ What you will do:
 - Start catalog web application
 - Add publisher(s) via catalog web application
 - Run crawler
-- Observe the collected softwares in the catalog web application
 - Build and run the new astro based client
 
 ### Preparation
@@ -54,14 +53,6 @@ Clone this repository:
 ```bash
 git clone git@github.com:swiss/oss-catalog.git
 cd oss-catalog/
-git submodule init
-git submodule update
-```
-
-To update the submodules:
-
-```bash
-git submodule update --remote --merge
 ```
 
 Generate PASETO key:
@@ -75,6 +66,7 @@ Create GitHub API Token with the `public_repo` Permission under https://github.c
 ```bash
 echo "GITHUB_TOKEN=<your access token>" >> .env
 ```
+
 Install and enable pnpm (see [pnpm docs](https://pnpm.io/installation#using-corepack)):
 
 ```bash
