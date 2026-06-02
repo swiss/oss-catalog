@@ -94,7 +94,10 @@ export function Combobox({ groups, lang, onChange }: ComboboxProps) {
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <div className="select">
+        <button
+          type="button"
+          className="select block w-full bg-transparent border-0 p-0 text-left cursor-pointer"
+        >
           <div
             dir="auto"
             className="v-select vs--multiple vs--searchable input--outline input--base bg-white"
@@ -117,7 +120,7 @@ export function Combobox({ groups, lang, onChange }: ComboboxProps) {
               <path d="m5.706 10.015 6.669 3.85 6.669-3.85.375.649-7.044 4.067-7.044-4.067z" />
             </svg>
           </div>
-        </div>
+        </button>
       </PopoverTrigger>
       <PopoverContent className="w-[min(64rem,90vw)] p-0">
         <Command>
