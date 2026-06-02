@@ -1,9 +1,7 @@
-import { useMemo } from "react";
-import type { Software } from "../types/software";
-import { useTranslations } from "../i18n/utils";
-import {
-  type Locale,
-} from "./SoftwareFilters";
+import { useMemo, useState } from "react";
+import type { Software } from "@/lib/software";
+import { useTranslations } from "@/i18n/utils";
+import { type Locale } from "./SoftwareFilters";
 import { SoftwareList } from "./SoftwareList";
 import { useStore } from "@nanostores/react";
 import { nameQuery, selectedOrganisations } from "@/stores/filters";
@@ -13,10 +11,7 @@ type Props = {
   softwares: Software[];
 };
 
-export default function SoftwareCatalogIsland({
-  lang,
-  softwares,
-}: Props) {
+export default function SoftwareCatalogIsland({ lang, softwares }: Props) {
   const $selectedOrganisations = useStore(selectedOrganisations);
   const $nameQuery = useStore(nameQuery);
   const t = useTranslations(lang);
@@ -50,7 +45,5 @@ export default function SoftwareCatalogIsland({
     });
   }, [softwares, $selectedOrganisations, $nameQuery]);
 
-  return (
-      <SoftwareList lang={lang} softwares={filteredSoftwares} t={t} />
-  );
+  return <SoftwareList lang={lang} softwares={filteredSoftwares} t={t} />;
 }
