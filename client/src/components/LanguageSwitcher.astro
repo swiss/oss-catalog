@@ -4,7 +4,7 @@ import { languages } from "../i18n/locales";
 
 const currentLang = Astro.currentLocale || "en";
 
-// get the current path without the language prefix: /de/softwares/m2kcbm -> /softwares/m2kcbm
+// get the current path without the language prefix: /de/softwares/m2kcbm -> softwares/m2kcbm
 const currentPath = Astro.url.pathname
   .replace(new RegExp(`^\\/${currentLang}(\\/|$)`), "")
   .replace(/^\//, "");
