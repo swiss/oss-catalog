@@ -7,13 +7,13 @@ import type { PubliccodeYml, Software } from "@/lib/software";
 import yaml from "js-yaml";
 import { hashUrl } from "@/utils/hash";
 import { getSoftwares } from "@/lib/software";
+import { locales } from "@/i18n/locales";
 
 export async function getStaticPaths() {
   const softwares = await getSoftwares();
-  const locales = ["en", "de", "fr", "it"];
 
   return softwares.flatMap((software) =>
-    locales.map((locale) => ({
+    Object.keys(locales).map((locale) => ({
       params: {
         locale,
         id: hashUrl(software.url),

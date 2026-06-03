@@ -7,6 +7,7 @@ import SoftwareCatalogIsland from "@/components/SoftwareCatalogIsland";
 import { type PubliccodeYml, type Software } from "@/lib/software";
 import yaml from "js-yaml";
 import { getSoftwares } from "@/lib/software";
+import { locales } from "@/i18n/locales";
 
 const lang = Astro.currentLocale as Lang;
 const t = useTranslations(lang);
@@ -46,9 +47,7 @@ const buildDateFormatted = `${buildDate.toLocaleDateString(dateLocale, {
 })}`;
 
 export async function getStaticPaths() {
-  const locales = ["en", "de", "fr", "it"];
-
-  return locales.map((locale) => {
+  return Object.keys(locales).map((locale) => {
     return {
       params: { locale },
     };
