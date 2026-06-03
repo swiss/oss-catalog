@@ -88,6 +88,10 @@ const ossToolsUrl = `https://www.bk.admin.ch/bk/${Astro.currentLocale}/home/digi
   const menuButton = document.getElementById("mobile-menu-burger");
   const menu = document.getElementById("mobile-menu");
 
+  if (!menuButton || !menu) {
+    return;
+  }
+
   menuButton.addEventListener("click", () => {
     const isOpen = menuButton.getAttribute('aria-expanded') === 'true';
 
