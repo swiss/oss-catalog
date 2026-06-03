@@ -1,20 +1,31 @@
 ---
 import { getRelativeLocaleUrl } from "astro:i18n";
+import { hashUrl } from "@/utils/hash";
+import { getSoftwares } from "@/lib/software";
 
-// DO NOT use Astro.request or Astro.preferredLocale here.
-// Instead, just generate the static URLs using the safe helpers:
-const fallbackUrl = getRelativeLocaleUrl("en", "");
+export async function getStaticPaths() {
+  const softwares = await getSoftwares();
+
+  return softwares.map((software) => ({
+    params: { id: hashUrl(software.url) },
+  }));
+}
+
+const { id } = Astro.params;
+const routePath = id ? `softwares/${id}` : "";
 
 const targetUrls = {
-  en: getRelativeLocaleUrl("en", ""),
-  de: getRelativeLocaleUrl("de", ""),
-  fr: getRelativeLocaleUrl("fr", ""),
-  it: getRelativeLocaleUrl("it", ""),
+  en: getRelativeLocaleUrl("en", routePath),
+  de: getRelativeLocaleUrl("de", routePath),
+  fr: getRelativeLocaleUrl("fr", routePath),
+  it: getRelativeLocaleUrl("it", routePath),
 };
+const fallbackUrl = targetUrls.en;
 ---
 
 <html lang="en">
   <head>
+    <meta charset="utf-8" />
     <title>Redirecting...</title>
     <noscript>
       <meta http-equiv="refresh" content={`0;url=${fallbackUrl}`} />
@@ -26,7 +37,7 @@ const targetUrls = {
       let matchedUrl = null;
 
       for (const lang of userLanguages) {
-        const shortLang = lang.split("-")[0].toLowerCase(); // e.g., 'de-CH' -> 'de'
+        const shortLang = lang.split("-")[0].toLowerCase();
         if (targetUrls[shortLang]) {
           matchedUrl = targetUrls[shortLang];
           break;

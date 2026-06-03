@@ -1,39 +1,35 @@
 ---
-import Layout from "../../layouts/Layout.astro";
-import SoftwareDetail from "../../components/SoftwareDetail.astro";
+import Layout from "@/layouts/Layout.astro";
+import SoftwareDetail from "@/components/SoftwareDetail.astro";
 import { getRelativeLocaleUrl } from "astro:i18n";
-import  { type Lang, useTranslations} from "../../i18n/utils";
-import type { PubliccodeYml, Software } from "@/types/software";
+import { type Lang, useTranslations } from "@/i18n/utils";
+import type { PubliccodeYml, Software } from "@/lib/software";
 import yaml from "js-yaml";
-import { hashUrl } from "../../utils/hash";
-
-const apiBaseUrl = import.meta.env.API_BASEURL || "http://localhost:3000/v1";
-console.log("apiBaseUrl", apiBaseUrl)
+import { hashUrl } from "@/utils/hash";
+import { getSoftwares } from "@/lib/software";
+import { locales } from "@/i18n/locales";
 
 export async function getStaticPaths() {
-  const apiBaseUrl = import.meta.env.API_BASEURL || "http://localhost:3000/v1";
+  const softwares = await getSoftwares();
 
-  const response = await fetch(`${apiBaseUrl}/software?page[size]=10000`);
-  const data = await response.json();
-  const softwares: Software[] = data.data;
-
-  return softwares.map((software) => {
-    return {
+  return softwares.flatMap((software) =>
+    Object.keys(locales).map((locale) => ({
       params: {
+        locale,
         id: hashUrl(software.url),
       },
       props: {
         software,
       },
-    };
-  });
+    })),
+  );
 }
 
-const rawSoftware = Astro.props.software;
-
 const software: Software = {
-  ...rawSoftware,
-  publiccode: yaml.load(rawSoftware.publiccodeYml as unknown as string) as PubliccodeYml,
+  ...Astro.props.software,
+  publiccode: yaml.load(
+    Astro.props.software.publiccodeYml as unknown as string,
+  ) as PubliccodeYml,
 };
 
 const lang = Astro.currentLocale as Lang;
@@ -58,11 +54,11 @@ const homeUrl = getRelativeLocaleUrl(lang);
           xmlns="http://www.w3.org/2000/svg"
           d="m8.306 5.116-4.066 7.044 4.066 7.044.65-.375-3.633-6.294h15.187v-.75h-15.187l3.633-6.294z"
         ></path></svg
-      ><span class="btn__text">{t('software.back')}</span></a
+      ><span class="btn__text">{t("software.back")}</span></a
     >
   </div>
   <div class="container vertical-spacing">
-    <h1 class="h2">{t('software.title')}</h1>
+    <h1 class="h2">{t("software.title")}</h1>
     <SoftwareDetail software={software} />
   </div>
 </Layout>

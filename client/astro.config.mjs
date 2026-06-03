@@ -12,20 +12,19 @@ export default defineConfig({
   site: process.env.SITE_URL || "https://swiss.github.io",
   i18n: {
     locales: ["en", "de", "fr", "it"],
-    defaultLocale: "en",
+    defaultLocale: "de",
     fallback: {
-      de: "en",
-      fr: "en",
-      it: "en",
+      fr: "de",
+      en: "de",
+      it: "de",
     },
+
     routing: {
-      prefixDefaultLocale: false,
-      redirectToDefaultLocale: false,
-      fallbackType: "rewrite",
+      prefixDefaultLocale: true,
     },
   },
   integrations: [react()],
   vite: {
-    plugins: [tailwindcss()]
-  }
+    plugins: [tailwindcss()],
+  },
 });

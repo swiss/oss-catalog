@@ -1,0 +1,90 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import { type Lang, useTranslations, toFullLocale } from "@/i18n/utils";
+import LinkButton from "@/components/LinkButton.astro";
+import organisations from "@/data/organisations.json";
+import SoftwareCatalogIsland from "@/components/SoftwareCatalogIsland";
+import { type PubliccodeYml, type Software } from "@/lib/software";
+import yaml from "js-yaml";
+import { getSoftwares } from "@/lib/software";
+import { locales } from "@/i18n/locales";
+
+const lang = Astro.currentLocale as Lang;
+const t = useTranslations(lang);
+
+let softwares: Software[] = [];
+
+const rawSoftwares = await getSoftwares();
+
+softwares = rawSoftwares.map((software: Software) => {
+  return {
+    ...software,
+    publiccode: yaml.load(software.publiccodeYml) as PubliccodeYml,
+  };
+});
+
+// Sort by name, then by organisation uri
+softwares.sort((a, b) => {
+  const nameA = a.publiccode?.name || "";
+  const nameB = b.publiccode?.name || "";
+  const nameComparison = nameA.localeCompare(nameB);
+  if (nameComparison !== 0) return nameComparison;
+
+  const uriA = a.publiccode?.organisation?.uri || "";
+  const uriB = b.publiccode?.organisation?.uri || "";
+  return uriA.localeCompare(uriB);
+});
+
+const dateLocale = toFullLocale(lang);
+const buildDate = new Date();
+const buildDateFormatted = `${buildDate.toLocaleDateString(dateLocale, {
+  day: "2-digit",
+  month: "2-digit",
+  year: "numeric",
+})} ${buildDate.toLocaleTimeString(dateLocale, {
+  hour: "2-digit",
+  minute: "2-digit",
+})}`;
+
+export async function getStaticPaths() {
+  return Object.keys(locales).map((locale) => {
+    return {
+      params: { locale },
+    };
+  });
+}
+---
+
+<Layout>
+  <section class="section bg--secondary-50">
+    <div class="container">
+      <div class="text--xs color--text-600">
+        {t("header.lastUpdated")}: {buildDateFormatted}
+      </div>
+      <h1 class="section__title">
+        {t("index.title")}
+      </h1>
+      <h2 class="section__subtitle">{t("index.subtitle")}</h2>
+
+      <div class="card">
+        <div class="card__body">
+          {t("index.description")}
+        </div>
+      </div>
+      <div class="section__action">
+        <LinkButton
+          href="https://swiss.github.io/publiccode-editor/"
+          text={t("index.publiccode")}
+        />
+      </div>
+    </div>
+  </section>
+  <section class="section section--default">
+    <SoftwareCatalogIsland
+      client:load
+      lang={lang}
+      organisations={organisations}
+      softwares={softwares}
+    />
+  </section>
+</Layout>
