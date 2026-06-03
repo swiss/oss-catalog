@@ -57,7 +57,7 @@ export default function OrganisationTypeFilter({ lang, organisations }: Props) {
     <div
       className="flex flex-wrap items-stretch gap-2 mb-4"
       role="group"
-      aria-label={t("index.filter.kind")}
+      aria-label={t("index.filter.type")}
     >
       <button
         type="button"
