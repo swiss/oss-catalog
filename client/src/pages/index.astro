@@ -22,8 +22,6 @@ const targetUrls = {
   </head>
   <body>
     <script is:inline define:vars={{ targetUrls, fallbackUrl }}>
-      // This code runs strictly inside the user's browser, where headers aren't needed
-      // because we can read the browser's language setting directly!
       const userLanguages = navigator.languages || [navigator.language];
       let matchedUrl = null;
 
@@ -35,7 +33,6 @@ const targetUrls = {
         }
       }
 
-      // Instantly push the user to their language folder
       window.location.replace(matchedUrl || fallbackUrl);
     </script>
   </body>

@@ -1,52 +1,50 @@
 ---
-// src/pages/software/[...id].astro
-import { getRelativeLocaleUrl } from 'astro:i18n';
-import { hashUrl } from '@/utils/hash';
-import { getSoftwares } from '@/lib/software';
+import { getRelativeLocaleUrl } from "astro:i18n";
+import { hashUrl } from "@/utils/hash";
+import { getSoftwares } from "@/lib/software";
 
 export async function getStaticPaths() {
-    
-    const softwares = await getSoftwares();
+  const softwares = await getSoftwares();
 
-    return softwares.map((software) => ({
-      params: { id: hashUrl(software.url) }
-    }));
+  return softwares.map((software) => ({
+    params: { id: hashUrl(software.url) },
+  }));
 }
 
 const { id } = Astro.params;
-const routePath = id ? `softwares/${id}` : '';
+const routePath = id ? `softwares/${id}` : "";
 
 const targetUrls = {
-  en: getRelativeLocaleUrl('en', routePath),
-  de: getRelativeLocaleUrl('de', routePath),
-  fr: getRelativeLocaleUrl('fr', routePath),
-  it: getRelativeLocaleUrl('it', routePath),
+  en: getRelativeLocaleUrl("en", routePath),
+  de: getRelativeLocaleUrl("de", routePath),
+  fr: getRelativeLocaleUrl("fr", routePath),
+  it: getRelativeLocaleUrl("it", routePath),
 };
 const fallbackUrl = targetUrls.en;
 ---
 
 <html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <title>Redirecting...</title>
-  <noscript>
-    <meta http-equiv="refresh" content={`0;url=${fallbackUrl}`} />
-  </noscript>
-</head>
-<body>
-  <script is:inline define:vars={{ targetUrls, fallbackUrl }}>
-    const userLanguages = navigator.languages || [navigator.language];
-    let matchedUrl = null;
+  <head>
+    <meta charset="utf-8" />
+    <title>Redirecting...</title>
+    <noscript>
+      <meta http-equiv="refresh" content={`0;url=${fallbackUrl}`} />
+    </noscript>
+  </head>
+  <body>
+    <script is:inline define:vars={{ targetUrls, fallbackUrl }}>
+      const userLanguages = navigator.languages || [navigator.language];
+      let matchedUrl = null;
 
-    for (const lang of userLanguages) {
-      const shortLang = lang.split('-')[0].toLowerCase();
-      if (targetUrls[shortLang]) {
-        matchedUrl = targetUrls[shortLang];
-        break;
+      for (const lang of userLanguages) {
+        const shortLang = lang.split("-")[0].toLowerCase();
+        if (targetUrls[shortLang]) {
+          matchedUrl = targetUrls[shortLang];
+          break;
+        }
       }
-    }
 
-    window.location.replace(matchedUrl || fallbackUrl);
-  </script>
-</body>
+      window.location.replace(matchedUrl || fallbackUrl);
+    </script>
+  </body>
 </html>
