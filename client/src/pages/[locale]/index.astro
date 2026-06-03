@@ -1,13 +1,13 @@
 ---
 import Layout from "@/layouts/Layout.astro";
 import { type Lang, useTranslations, toFullLocale } from "@/i18n/utils";
-import LinkButton from "@/components/LinkButton.astro";
 import organisations from "@/data/organisations.json";
 import SoftwareCatalogIsland from "@/components/SoftwareCatalogIsland";
 import { type PubliccodeYml, type Software } from "@/lib/software";
 import yaml from "js-yaml";
 import { getSoftwares } from "@/lib/software";
 import { locales } from "@/i18n/locales";
+import SearchFiltersIsland from "@/components/SearchFiltersIsland";
 
 const lang = Astro.currentLocale as Lang;
 const t = useTranslations(lang);
@@ -56,34 +56,21 @@ export async function getStaticPaths() {
 ---
 
 <Layout>
-  <section class="section bg--secondary-50">
+  <section class="section section--default bg--secondary-50">
     <div class="container">
-      <div class="text--xs color--text-600">
-        {t("header.lastUpdated")}: {buildDateFormatted}
-      </div>
       <h1 class="section__title">
         {t("index.title")}
       </h1>
       <h2 class="section__subtitle">{t("index.subtitle")}</h2>
-
-      <div class="card">
-        <div class="card__body">
-          {t("index.description")}
-        </div>
-      </div>
-      <div class="section__action">
-        <LinkButton
-          href="https://swiss.github.io/publiccode-editor/"
-          text={t("index.publiccode")}
-        />
-      </div>
+      <SearchFiltersIsland client:load
+                           lang={lang}
+                           organisations={organisations}/>
     </div>
   </section>
   <section class="section section--default">
     <SoftwareCatalogIsland
       client:load
       lang={lang}
-      organisations={organisations}
       softwares={softwares}
     />
   </section>
