@@ -28,8 +28,6 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@v6
-        with:
-          submodules: recursive
       - name: Install pnpm
         uses: pnpm/action-setup@v6
       - name: Setup Node
