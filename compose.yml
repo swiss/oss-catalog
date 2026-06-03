@@ -1,11 +1,18 @@
 services:
   api:
-    extends:
-      file: developers-italia-api/docker-compose.yml
-      service: api
+    image: ghcr.io/italia/developers-italia-api:v1.3.0
     env_file: ".env" # Must define PASETO_KEY
     environment:
-      - GOFLAGS=-buildvcs=false
+      DATABASE_DSN: "host=db user=postgres password=postgres dbname=postgres port=5432"
+      ENVIRONMENT: local
+      GOFLAGS: -buildvcs=false
+    ports:
+      - "3000:3000"
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - .:/opt/app/api
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000/v1/publishers"]
       interval: 5s
@@ -14,20 +21,27 @@ services:
       start_period: 10s
 
   db:
-    extends:
-      file: developers-italia-api/docker-compose.yml
-      service: db
+    image: postgres:14.3-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
 
   crawler:
-    build:
-      context: ./publiccode-crawler
+    image: italia/publiccode-crawler:0cdce559 # should match the version used in the build workflow
     depends_on:
       - api
-    networks:
-      - default
+
     env_file: ".env" # Must define PASETO_KEY and GITHUB_TOKEN
     environment:
-      # - API_BASEURL=https://oss-catalog-api.ocp.cloudscale.puzzle.ch/v1
       - API_BASEURL=http://api:3000/v1/
       - API_BEARER_TOKEN=${API_BEARER_TOKEN}
 
@@ -40,8 +54,6 @@ services:
         - API_BASEURL=http://localhost:3000/v1
     depends_on:
       - api
-    networks:
-      - default
     ports:
       - "4321:8080"
 volumes:
