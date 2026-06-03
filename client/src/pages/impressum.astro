@@ -1,0 +1,42 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+
+// DO NOT use Astro.request or Astro.preferredLocale here.
+// Instead, just generate the static URLs using the safe helpers:
+const fallbackUrl = getRelativeLocaleUrl("en", "impressum");
+
+const targetUrls = {
+  en: getRelativeLocaleUrl("en", "impressum"),
+  de: getRelativeLocaleUrl("de", "impressum"),
+  fr: getRelativeLocaleUrl("fr", "impressum"),
+  it: getRelativeLocaleUrl("it", "impressum"),
+};
+---
+
+<html lang="en">
+  <head>
+    <title>Redirecting...</title>
+    <noscript>
+      <meta http-equiv="refresh" content={`0;url=${fallbackUrl}`} />
+    </noscript>
+  </head>
+  <body>
+    <script is:inline define:vars={{ targetUrls, fallbackUrl }}>
+      // This code runs strictly inside the user's browser, where headers aren't needed
+      // because we can read the browser's language setting directly!
+      const userLanguages = navigator.languages || [navigator.language];
+      let matchedUrl = null;
+
+      for (const lang of userLanguages) {
+        const shortLang = lang.split("-")[0].toLowerCase(); // e.g., 'de-CH' -> 'de'
+        if (targetUrls[shortLang]) {
+          matchedUrl = targetUrls[shortLang];
+          break;
+        }
+      }
+
+      // Instantly push the user to their language folder
+      window.location.replace(matchedUrl || fallbackUrl);
+    </script>
+  </body>
+</html>

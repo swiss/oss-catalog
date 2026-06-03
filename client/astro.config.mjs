@@ -12,19 +12,16 @@ export default defineConfig({
   site: process.env.SITE_URL || "https://swiss.github.io",
   i18n: {
     locales: ["en", "de", "fr", "it"],
-    defaultLocale: "en",
+    defaultLocale: "de",
     fallback: {
-      fr: "en",
-      de: "en",
-      it: "en",
+      fr: "de",
+      en: "de",
+      it: "de",
     },
 
     routing: {
       prefixDefaultLocale: true,
     },
-  },
-  redirects: {
-    "/impressum": "[locale]/impressum",
   },
   integrations: [react()],
   vite: {
