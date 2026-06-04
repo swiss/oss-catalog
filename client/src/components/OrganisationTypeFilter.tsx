@@ -85,26 +85,7 @@ export default function OrganisationTypeFilter({ lang, organisations }: Props) {
         aria-pressed={$type === "bund"}
         onClick={() => setType("bund")}
       >
-        <svg
-          className="btn__icon icon--base logo__flag"
-          viewBox="0 0 40 44"
-          role="img"
-          aria-hidden="true"
-          style={{
-            width: "16px",
-            height: "16px",
-          }}
-        >
-          <path
-            d="m38.5778 3.2s-7.2-3.2-19.3-3.2c-12.00002 0-19.2000222 3.2-19.2000222 3.2s-.6999998 14.1 2.1000022 22.1c4.8 14 17.20002 18 17.20002 18s12.3-3.9 17.2-18c2.6-8 2-22.1 2-22.1z"
-            fill="#ff0000"
-          />
-          <path
-            d="m32.0779 15.4v7.8h-9v9.1h-7.7v-9.1h-8.99997v-7.8h8.99997v-9.09995h7.7v9.09995z"
-            fill="#ffffff"
-          />
-        </svg>
-        <span className="btn__text pl-2">{t("index.filter.option.bund")}</span>
+        <span className="btn__text">{t("index.filter.option.bund")}</span>
       </button>
       <div className="flex items-stretch">
         <button
