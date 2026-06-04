@@ -21,6 +21,7 @@
   "index.search.filter.open": "Filter anzeigen",
   "index.search.filter.close": "Filter ausblenden",
   "index.tools": "OSS Hilfsmittel",
+  "select.open": "Auswählen",
   "select.noresults": "Keine Organisation gefunden.",
   "select.actions": "Aktionen",
   "select.all": "Alle auswählen",

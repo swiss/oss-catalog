@@ -21,6 +21,7 @@
   "index.search.filter.open": "Afficher les filtres",
   "index.search.filter.close": "Masquer les filtres",
   "index.tools": "Outils d’aide OSS",
+  "select.open": "Sélectionner",
   "select.noresults": "Aucune organisation trouvée.",
   "select.actions": "Actions",
   "select.all": "Tout sélectionner",
