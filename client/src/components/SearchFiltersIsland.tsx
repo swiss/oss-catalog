@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { Lang } from "../i18n/utils";
 import { useTranslations } from "../i18n/utils";
 import {
@@ -19,6 +19,12 @@ export default function SearchFiltersIsland({ lang, organisations }: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const $nameQuery = useStore(nameQuery);
   const $organisationType = useStore(organisationType)
+
+  useEffect(() => {
+    if ($organisationType === "cantons") {
+      setIsOpen(false)
+    }
+  }, [$organisationType])
 
   return (
     <>
