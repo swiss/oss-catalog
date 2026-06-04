@@ -8,13 +8,15 @@ import {
 import OrganisationTypeFilter from "@/components/OrganisationTypeFilter.tsx";
 import { useStore } from "@nanostores/react";
 import { nameQuery, organisationType } from "@/stores/filters";
+import type { Software } from "@/types/software.ts";
 
 interface Props {
   lang: Lang;
   organisations: Department[];
+  softwares: Software[];
 }
 
-export default function SearchFiltersIsland({ lang, organisations }: Props) {
+export default function SearchFiltersIsland({ lang, organisations, softwares }: Props) {
   const t = useTranslations(lang);
   const [isOpen, setIsOpen] = useState(false);
   const $nameQuery = useStore(nameQuery);
@@ -28,7 +30,7 @@ export default function SearchFiltersIsland({ lang, organisations }: Props) {
 
   return (
     <>
-      <OrganisationTypeFilter lang={lang} organisations={organisations} />
+      <OrganisationTypeFilter lang={lang} organisations={organisations} softwares={softwares} />
       <div className="search search--large search--page-result">
         <div className="search__group">
           <input

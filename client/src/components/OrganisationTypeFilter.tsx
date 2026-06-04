@@ -1,6 +1,10 @@
 import { useMemo } from "react";
 import { useStore } from "@nanostores/react";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { type Department, type Locale } from "@/components/SoftwareFilters";
 import {
   CANTON_URI_PREFIX,
@@ -10,13 +14,19 @@ import {
   selectedOrganisations,
 } from "@/stores/filters";
 import { useTranslations } from "@/i18n/utils";
+import type { Software } from "@/types/software.ts";
 
 type Props = {
   lang: Locale;
   organisations: Department[];
+  softwares: Software[];
 };
 
-export default function OrganisationTypeFilter({ lang, organisations }: Props) {
+export default function OrganisationTypeFilter({
+  lang,
+  organisations,
+  softwares,
+}: Props) {
   const t = useTranslations(lang);
   const $type = useStore(organisationType);
   const $selected = useStore(selectedCantons);
@@ -34,6 +44,16 @@ export default function OrganisationTypeFilter({ lang, organisations }: Props) {
       }))
       .sort((a, b) => a.label.localeCompare(b.label, lang));
   }, [organisations, lang]);
+
+  const softwareCounts = useMemo(() => {
+    return softwares.reduce((counts, software) => {
+      const uri = software.publiccode?.organisation?.uri;
+      if (uri?.startsWith(CANTON_URI_PREFIX)) {
+        counts.set(uri, (counts.get(uri) ?? 0) + 1);
+      }
+      return counts;
+    }, new Map<string, number>());
+  }, [softwares]);
 
   const selected = useMemo(
     () => $selected.filter((s) => s.startsWith(CANTON_URI_PREFIX)),
@@ -154,6 +174,7 @@ export default function OrganisationTypeFilter({ lang, organisations }: Props) {
             >
               {cantons.map((c) => {
                 const checked = selected.includes(c.id);
+                const count = softwareCounts.get(c.id);
                 return (
                   <li key={c.id}>
                     <label className="flex items-center gap-2 px-3 py-1 cursor-pointer hover:bg-gray-50">
@@ -162,7 +183,13 @@ export default function OrganisationTypeFilter({ lang, organisations }: Props) {
                         checked={checked}
                         onChange={() => toggleCanton(c.id)}
                       />
-                      <span className="text--sm">{c.label}</span>
+                      <span className="pr-0.5 py-1">{c.label} </span>
+                      {count &&
+                        (<div className="badge badge--sm badge--gray">
+                          {count}
+                        </div>)
+                      }
+
                     </label>
                   </li>
                 );
