@@ -147,14 +147,24 @@ export default function OrganisationTypeFilter({ lang, organisations }: Props) {
               <span className="text--sm font-bold">
                 {t("index.filter.option.cantons.open")}
               </span>
-              <button
-                type="button"
-                className="btn btn--bare btn--sm"
-                onClick={() => selectedCantons.set([])}
-                disabled={selected.length === 0}
-              >
-                <span className="btn__text">{t("select.clear")}</span>
-              </button>
+              <div className="flex items-center gap-1">
+                <button
+                  type="button"
+                  className="btn btn--bare btn--sm"
+                  onClick={() => selectedCantons.set(cantons.map((c) => c.id))}
+                  disabled={selected.length === cantons.length}
+                >
+                  <span className="btn__text">{t("select.all")}</span>
+                </button>
+                <button
+                  type="button"
+                  className="btn btn--bare btn--sm"
+                  onClick={() => selectedCantons.set([])}
+                  disabled={selected.length === 0}
+                >
+                  <span className="btn__text">{t("select.clear")}</span>
+                </button>
+              </div>
             </div>
             <ul
               role="listbox"
