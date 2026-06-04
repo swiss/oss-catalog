@@ -33,11 +33,6 @@ export function SoftwareCard({
                 {getYear(software.publiccode.releaseDate)}
               </span>
             )}
-            {software.publiccode.softwareVersion && (
-              <span className="meta-info__item">
-                {software.publiccode.softwareVersion}
-              </span>
-            )}
             {software.publiccode.legal?.license && (
               <span className="meta-info__item">
                 {software.publiccode.legal?.license}
