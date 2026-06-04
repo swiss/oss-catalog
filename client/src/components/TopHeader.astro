@@ -88,18 +88,15 @@ const ossToolsUrl = `https://www.bk.admin.ch/bk/${Astro.currentLocale}/home/digi
   const menuButton = document.getElementById("mobile-menu-burger");
   const menu = document.getElementById("mobile-menu");
 
-  if (!menuButton || !menu) {
-    return;
-  }
+  if (menuButton && menu) {
+    menuButton.addEventListener("click", () => {
+      const isOpen = menuButton.getAttribute('aria-expanded') === 'true';
 
-  menuButton.addEventListener("click", () => {
-    const isOpen = menuButton.getAttribute('aria-expanded') === 'true';
-
-    menuButton.setAttribute("aria-expanded", String(!isOpen));
-    menuButton.classList.toggle("burger--is-open", !isOpen);
-    menu.setAttribute("aria-hidden", String(isOpen));
-    menu.classList.toggle('mobile-menu--is-open', !isOpen);
-  });
+      menuButton.setAttribute("aria-expanded", String(!isOpen));
+      menuButton.classList.toggle("burger--is-open", !isOpen);
+      menu.setAttribute("aria-hidden", String(isOpen));
+      menu.classList.toggle('mobile-menu--is-open', !isOpen);
+    });
 
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && menuButton.getAttribute('aria-expanded') === 'true') {
@@ -110,4 +107,5 @@ const ossToolsUrl = `https://www.bk.admin.ch/bk/${Astro.currentLocale}/home/digi
       menuButton.focus();
     }
   });
+}
 </script>
