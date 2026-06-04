@@ -167,34 +167,28 @@ export default function OrganisationTypeFilter({
                 </button>
               </div>
             </div>
-            <ul
-              role="listbox"
-              aria-multiselectable="true"
-              className="max-h-80 overflow-y-auto py-2"
-            >
+            <fieldset className="max-h-80 overflow-y-auto py-2 border-0">
+              <legend className="sr-only">{t("index.filter.option.cantons.open")}</legend>
               {cantons.map((c) => {
                 const checked = selected.includes(c.id);
                 const count = softwareCounts.get(c.id);
                 return (
-                  <li key={c.id}>
-                    <label className="flex items-center gap-2 px-3 py-1 cursor-pointer hover:bg-gray-50">
+                  <div key={c.id} className="px-3 py-1 hover:bg-gray-50">
+                    <label className="flex items-center gap-2 cursor-pointer">
                       <input
                         type="checkbox"
                         checked={checked}
                         onChange={() => toggleCanton(c.id)}
                       />
-                      <span className="pr-0.5 py-1">{c.label} </span>
-                      {count &&
-                        (<div className="badge badge--sm badge--gray">
-                          {count}
-                        </div>)
-                      }
-
+                      <span className="pr-0.5 py-1">{c.label}</span>
+                      {count && (
+                        <span className="badge badge--sm badge--gray">{count}</span>
+                      )}
                     </label>
-                  </li>
+                  </div>
                 );
               })}
-            </ul>
+            </fieldset>
           </PopoverContent>
         </Popover>
       </div>
