@@ -2,7 +2,13 @@ import { useMemo } from "react";
 import { useStore } from "@nanostores/react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { type Department, type Locale } from "@/components/SoftwareFilters";
-import { CANTON_URI_PREFIX, type OrganisationType, organisationType, selectedOrganisations } from "@/stores/filters";
+import {
+  CANTON_URI_PREFIX,
+  type OrganisationType,
+  organisationType,
+  selectedCantons,
+  selectedOrganisations,
+} from "@/stores/filters";
 import { useTranslations } from "@/i18n/utils";
 
 type Props = {
@@ -13,7 +19,7 @@ type Props = {
 export default function OrganisationTypeFilter({ lang, organisations }: Props) {
   const t = useTranslations(lang);
   const $type = useStore(organisationType);
-  const $selected = useStore(selectedOrganisations);
+  const $selected = useStore(selectedCantons);
 
   const cantons = useMemo(() => {
     const departement = organisations.find((d) =>
@@ -29,7 +35,7 @@ export default function OrganisationTypeFilter({ lang, organisations }: Props) {
       .sort((a, b) => a.label.localeCompare(b.label, lang));
   }, [organisations, lang]);
 
-  const selectedCantons = useMemo(
+  const selected = useMemo(
     () => $selected.filter((s) => s.startsWith(CANTON_URI_PREFIX)),
     [$selected],
   );
@@ -37,20 +43,25 @@ export default function OrganisationTypeFilter({ lang, organisations }: Props) {
   const setType = (selected: OrganisationType) => {
     if (selected === $type) return;
     organisationType.set(selected);
-    selectedOrganisations.set([]);
+    if (selected === "cantons") {
+      selectedOrganisations.set([]);
+    }
+    if (selected === "bund" || selected === "all") {
+      selectedCantons.set([]);
+    }
   };
 
   const toggleCanton = (canton: string) => {
-    const selected = selectedOrganisations.get();
+    const selected = selectedCantons.get();
     const updated = selected.includes(canton)
       ? selected.filter((s) => s !== canton)
       : [...selected, canton];
-    selectedOrganisations.set(updated);
+    selectedCantons.set(updated);
   };
 
   const cantonsButtonLabel =
-    selectedCantons.length > 0
-      ? `${t("index.filter.option.cantons")} (${selectedCantons.length})`
+    selected.length > 0
+      ? `${t("index.filter.option.cantons")} (${selected.length})`
       : t("index.filter.option.cantons");
 
   return (
@@ -139,8 +150,8 @@ export default function OrganisationTypeFilter({ lang, organisations }: Props) {
               <button
                 type="button"
                 className="btn btn--bare btn--sm"
-                onClick={() => selectedOrganisations.set([])}
-                disabled={selectedCantons.length === 0}
+                onClick={() => selectedCantons.set([])}
+                disabled={selected.length === 0}
               >
                 <span className="btn__text">{t("select.clear")}</span>
               </button>
@@ -151,7 +162,7 @@ export default function OrganisationTypeFilter({ lang, organisations }: Props) {
               className="max-h-80 overflow-y-auto py-2"
             >
               {cantons.map((c) => {
-                const checked = selectedCantons.includes(c.id);
+                const checked = selected.includes(c.id);
                 return (
                   <li key={c.id}>
                     <label className="flex items-center gap-2 px-3 py-1 cursor-pointer hover:bg-gray-50">
