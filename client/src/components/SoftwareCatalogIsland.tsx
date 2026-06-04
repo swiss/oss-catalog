@@ -24,73 +24,49 @@ export default function SoftwareCatalogIsland({ lang, softwares }: Props) {
   const $nameQuery = useStore(nameQuery);
   const t = useTranslations(lang);
 
+  const trimmedNameQuery = $nameQuery.trim().toLowerCase();
+
   const filteredSoftwares = useMemo(() => {
-    const hasOrganisationFilter =
-      $selectedOrganisations && $selectedOrganisations.length > 0;
-    const selectedOrganisationUnits = hasOrganisationFilter
-      ? new Set($selectedOrganisations)
-      : null;
-
-    const hasCantonFilter = $selectedCantons && $selectedCantons.length > 0;
-    const selectedCantons = hasCantonFilter ? new Set($selectedCantons) : null;
-
-    const trimmedNameQuery = $nameQuery.trim().toLowerCase();
-    const hasNameFilter = trimmedNameQuery.length > 0;
-
     if (
       $organisationType === "all" &&
-      !hasOrganisationFilter &&
-      !hasCantonFilter &&
-      !hasNameFilter
-    )
+      !$selectedOrganisations?.length &&
+      !$selectedCantons?.length &&
+      !trimmedNameQuery
+    ) {
       return softwares;
+    }
+
+    const selectedOrganisations = $selectedOrganisations?.length
+      ? new Set($selectedOrganisations)
+      : null;
+    const selectedCantons = $selectedCantons?.length
+      ? new Set($selectedCantons)
+      : null;
 
     return softwares.filter((s) => {
       const organisationUri = s.publiccode?.organisation?.uri;
 
-      let matchesCanton = true;
-      if (hasCantonFilter && selectedCantons) {
-        matchesCanton = organisationUri
-          ? selectedCantons.has(organisationUri)
-          : false;
-      }
-
-      let matchesOrganisation = true;
-      if (hasOrganisationFilter && selectedOrganisationUnits) {
-        matchesOrganisation = organisationUri
-          ? selectedOrganisationUnits.has(organisationUri)
-          : false;
-      }
-
-      let matchesName = true;
-      if (hasNameFilter) {
-        const nameValue = (s.publiccode?.name ?? "").toString().toLowerCase();
-        matchesName = nameValue.includes(trimmedNameQuery);
-      }
+      const matchesCanton = selectedCantons
+        ? organisationUri?.startsWith(CANTON_URI_PREFIX) && selectedCantons.has(organisationUri)
+        : true;
+      const matchesOrganisation = selectedOrganisations
+        ? selectedOrganisations.has(organisationUri)
+        : true;
+      const matchesName = trimmedNameQuery
+        ? (s.publiccode?.name ?? "").toString().toLowerCase().includes(trimmedNameQuery)
+        : true;
 
       if ($organisationType === "cantons") {
-        return (
-          matchesName &&
-          matchesCanton &&
-          organisationUri.startsWith(CANTON_URI_PREFIX)
-        );
+        return matchesName && matchesCanton && organisationUri?.startsWith(CANTON_URI_PREFIX);
       }
 
       if ($organisationType === "bund") {
-        return (
-          matchesName &&
-          matchesOrganisation &&
-          !organisationUri.startsWith(CANTON_URI_PREFIX)
-        );
+        return matchesName && matchesOrganisation && !organisationUri?.startsWith(CANTON_URI_PREFIX);
       }
 
-      if ($organisationType === "all") {
-        return matchesName && matchesOrganisation;
-      }
-
-      return true;
+      return matchesName && matchesOrganisation;
     });
-  }, [softwares, $selectedOrganisations, $selectedCantons, $nameQuery, $organisationType]);
+  }, [softwares, $selectedOrganisations, $selectedCantons, trimmedNameQuery, $organisationType]);
 
   return (
     <SoftwareList lang={lang} softwares={filteredSoftwares} t={t} />
