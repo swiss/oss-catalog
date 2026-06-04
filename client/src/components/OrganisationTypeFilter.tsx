@@ -14,7 +14,7 @@ import {
   selectedOrganisations,
 } from "@/stores/filters";
 import { useTranslations } from "@/i18n/utils";
-import type { Software } from "@/types/software.ts";
+import type { Software } from "@/lib/software.ts";
 
 type Props = {
   lang: Locale;

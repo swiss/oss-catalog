@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import type { Software } from "@/types/software";
+import type { Software } from "@/lib/software";
 import { useTranslations } from "@/i18n/utils";
 import { type Locale } from "./SoftwareFilters";
 import { SoftwareList } from "./SoftwareList";

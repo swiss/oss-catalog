@@ -8,7 +8,7 @@ import {
 import OrganisationTypeFilter from "@/components/OrganisationTypeFilter.tsx";
 import { useStore } from "@nanostores/react";
 import { nameQuery, organisationType } from "@/stores/filters";
-import type { Software } from "@/types/software.ts";
+import type { Software } from "@/lib/software.ts";
 
 interface Props {
   lang: Lang;
