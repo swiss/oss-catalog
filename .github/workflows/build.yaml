@@ -35,20 +35,20 @@ jobs:
           node-version: lts/krypton
           cache: pnpm
           cache-dependency-path: client/pnpm-lock.yaml
-      # - name: Verify software count threshold
-      #   run: |
-      #     echo "Waiting 10 seconds for software data to be populated..."
-      #     sleep 10
-      #     echo "Checking software count..."
-      #     response=$(curl -g -s https://oss-catalog-api.ocp.cloudscale.puzzle.ch/v1/software?page[size]=10000)
-      #     software_count=$(echo "$response" | jq -r ".data | length")
-      #     echo "Found $software_count software entries"
-      #     if [ "$software_count" -lt 80 ]; then
-      #       echo "Error: Software count ($software_count) is below threshold of 80"
-      #       echo "Failing the pipeline to prevent deployment of incomplete catalog"
-      #       exit 1
-      #     fi
-      #     echo "Software count verification passed: $software_count >= 80"
+       - name: Verify software count threshold
+         run: |
+           echo "Waiting 10 seconds for software data to be populated..."
+           sleep 10
+           echo "Checking software count..."
+           response=$(curl -g -s https://oss-catalog-api.ocp.cloudscale.puzzle.ch/v1/software?page[size]=10000)
+           software_count=$(echo "$response" | jq -r ".data | length")
+           echo "Found $software_count software entries"
+           if [ "$software_count" -lt 80 ]; then
+             echo "Error: Software count ($software_count) is below threshold of 80"
+             echo "Failing the pipeline to prevent deployment of incomplete catalog"
+             exit 1
+           fi
+           echo "Software count verification passed: $software_count >= 80"
       - name: Build client with pnpm
         run: |
           cd client
