@@ -1,25 +1,36 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { Lang } from "../i18n/utils";
 import { useTranslations } from "../i18n/utils";
 import {
   type Department,
   SoftwareFilters,
 } from "@/components/SoftwareFilters.tsx";
+import OrganisationTypeFilter from "@/components/OrganisationTypeFilter.tsx";
 import { useStore } from "@nanostores/react";
-import { nameQuery } from "@/stores/filters";
+import { nameQuery, organisationType } from "@/stores/filters";
+import type { Software } from "@/lib/software.ts";
 
 interface Props {
   lang: Lang;
   organisations: Department[];
+  softwares: Software[];
 }
 
-export default function SearchFiltersIsland({ lang, organisations }: Props) {
+export default function SearchFiltersIsland({ lang, organisations, softwares }: Props) {
   const t = useTranslations(lang);
   const [isOpen, setIsOpen] = useState(false);
   const $nameQuery = useStore(nameQuery);
+  const $organisationType = useStore(organisationType)
+
+  useEffect(() => {
+    if ($organisationType === "cantons") {
+      setIsOpen(false)
+    }
+  }, [$organisationType])
 
   return (
     <>
+      <OrganisationTypeFilter lang={lang} organisations={organisations} softwares={softwares} />
       <div className="search search--large search--page-result">
         <div className="search__group">
           <input
@@ -56,39 +67,38 @@ export default function SearchFiltersIsland({ lang, organisations }: Props) {
         </div>
       </div>
 
-      <div className={`search__filters ${isOpen ? "filters--are-open" : ""}`}>
-        <button
-          type="button"
-          onClick={() => setIsOpen(!isOpen)}
-          className={`btn btn--bare btn--sm btn--icon-left ${isOpen ? "btn--icon-180" : ""}`}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            className="icon icon--base icon--ChevronDown btn__icon"
-            aria-hidden="true"
+      {$organisationType !== "cantons" && (
+        <div className={`search__filters ${isOpen ? "filters--are-open" : ""}`}>
+          <button
+            type="button"
+            onClick={() => setIsOpen(!isOpen)}
+            className={`btn btn--bare btn--sm btn--icon-left ${isOpen ? "btn--icon-180" : ""}`}
           >
-            <path
+            <svg
               xmlns="http://www.w3.org/2000/svg"
-              d="m5.706 10.015 6.669 3.85 6.669-3.85.375.649-7.044 4.067-7.044-4.067z"
-            />
-          </svg>
-          <span className="btn__text">
-            {isOpen
-              ? t("index.search.filter.close")
-              : t("index.search.filter.open")}
-          </span>
-        </button>
+              viewBox="0 0 24 24"
+              className="icon icon--base icon--ChevronDown btn__icon"
+              aria-hidden="true"
+            >
+              <path
+                xmlns="http://www.w3.org/2000/svg"
+                d="m5.706 10.015 6.669 3.85 6.669-3.85.375.649-7.044 4.067-7.044-4.067z"
+              />
+            </svg>
+            <span className="btn__text">
+              {isOpen
+                ? t("index.search.filter.close")
+                : t("index.search.filter.open")}
+            </span>
+          </button>
 
-        <div className="search__filters__drawer" hidden={!isOpen}>
-          <div className="form__group__select">
-            <SoftwareFilters
-              lang={lang}
-              organisations={organisations}
-            />
+          <div className="search__filters__drawer" hidden={!isOpen}>
+            <div className="form__group__select">
+              <SoftwareFilters lang={lang} organisations={organisations} />
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </>
   );
 }

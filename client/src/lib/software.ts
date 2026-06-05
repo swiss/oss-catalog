@@ -32,6 +32,7 @@ export type PubliccodeYml = {
   };
   organisation: {
     uri: string;
+    name?: string;
   };
   description: Record<
     string,

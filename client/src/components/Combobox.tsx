@@ -99,6 +99,7 @@ export function Combobox({ groups, lang, onChange }: ComboboxProps) {
           className="select block w-full bg-transparent border-0 p-0 text-left cursor-pointer"
           aria-haspopup="listbox"
           aria-expanded={open}
+          aria-label={t("select.open")}
         >
           <div
             dir="auto"

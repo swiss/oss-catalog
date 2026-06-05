@@ -64,7 +64,8 @@ export async function getStaticPaths() {
       <h2 class="section__subtitle">{t("index.subtitle")}</h2>
       <SearchFiltersIsland client:load
                            lang={lang}
-                           organisations={organisations}/>
+                           organisations={organisations}
+                           softwares={softwares}/>
     </div>
   </section>
   <section class="section section--default">

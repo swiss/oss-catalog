@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Combobox } from "@/components/Combobox.tsx";
 import { useTranslations } from "../i18n/utils";
-import { selectedOrganisations } from "@/stores/filters.ts";
+import { CANTON_URI_PREFIX, selectedOrganisations } from "@/stores/filters.ts";
 
 export type Locale = "en" | "de" | "fr" | "it";
 
@@ -41,6 +41,7 @@ export function SoftwareFilters({
   const groupedOptions = useMemo(() => {
     const q = query.trim().toLowerCase();
     return organisations
+      .filter((departement) => !departement.id.startsWith(CANTON_URI_PREFIX))
       .map((departement) => {
         const filteredOrganisations = departement.organisations.filter(
           (organisation) => {
