@@ -41,10 +41,9 @@ What you will do:
 - Clone this repo
 - Generate PASETO key & create GitHub API token
 - Start API service (and DB)
-- Start catalog web application
-- Add publisher(s) via catalog web application
+- Add publisher(s) using curl
 - Run crawler
-- Build and run the new astro based client
+- Build and run the client
 
 ### Preparation
 
@@ -55,13 +54,14 @@ git clone git@github.com:swiss/oss-catalog.git
 cd oss-catalog/
 ```
 
-Generate PASETO key:
+The API uses a paseto key for authentication. Generate it with:
 
 ```bash
 ./paseto/generate-paseto-key.sh
 ```
 
-Create GitHub API Token with the `public_repo` Permission under https://github.com/settings/tokens and add it to the .env file:
+Create GitHub API Token with the `public_repo` Permission under https://github.com/settings/tokens and add it to the .env file.
+The crawler needs this token to access GitHub repositories.
 
 ```bash
 echo "GITHUB_TOKEN=<your access token>" >> .env
@@ -73,6 +73,8 @@ Install and enable pnpm (see [pnpm docs](https://pnpm.io/installation#using-core
 corepack enable pnpm
 ```
 
+**Note**: If you use Node 26+, corepack is not available anymore. You need to install pnpm manually, see https://pnpm.io/installation
+
 ### API Service
 
 Start API with database:
@@ -83,7 +85,7 @@ Start API with database:
 
 #### Use API via Curl (optional)
 
-Generate PASETO token (valid for 24h):
+The API uses PASETO for authentication. Generate a PASETO token (valid for 24h):
 
 ```bash
 source .env
@@ -103,17 +105,6 @@ Create a publisher:
 curl -X POST -H "Authorization: Bearer $PASETO_TOKEN" -H "Content-Type: application/json" -d '{"codeHosting": [{"url": "https://github.com/swiss/", "group": true}], "description": "Swiss Government"}' http://localhost:3000/v1/publishers
 ```
 
-### Import Publishers
-
-The [Federal Open Source GitHub Index](https://github.com/swiss/index/blob/main/README.md) contains the list of relevant publishers that are added to the catalog. There is an import script that reads this list and creates publishers in the catalog.
-
-Run the script:
-
-```bash
-cd publisher-importer/
-PASETO_TOKEN=$PASETO_TOKEN API_ENDPOINT=http://localhost:3000 pnpm start
-```
-
 ### Crawler
 
 Run crawler - this will crawl all repositories in the API, checks for publiccode.yml and add them to the database if available and valid.
@@ -124,13 +115,13 @@ Run crawler - this will crawl all repositories in the API, checks for publiccode
 
 ### Catalog Client Application
 
-Start the catalog client application:
+Start the catalog client application at http://localhost:8080:
 
 ```bash
 ./start-client
 ```
 
-Or start outside of Docker in development mode:
+Or for development mode:
 
 ```bash
 pnpm install
@@ -138,22 +129,6 @@ pnpm scope:client dev
 ```
 
 Then visit http://localhost:4321
-
-## Add new repositories to remote API in production
-
-- Grab PASETO key from production, e.g. from your vault.
-- Set PASETO_KEY environment variable
-  `PASETO_KEY="<your paseto key>"`
-- Generate the paseto token
-  ```
-  cd paseto/go
-  PASETO_TOKEN="$(go run paseto-generate.go $PASETO_KEY)"
-  ```
-- Run the repository script (it's safe to push repos multiple times!)
-  ```
-  cd publisher-importer/
-  PASETO_TOKEN=$PASETO_TOKEN API_ENDPOINT=<your api endpoint> pnpm start
-  ```
 
 ### Known Issues
 
