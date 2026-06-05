@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - "feat/build-app-with-public-api"
+      - "main"
     tags:
       - "v*.*.*"
 
