@@ -1,6 +1,6 @@
 *
 !./client/
-
+!./pnpm-workspace.yaml
 
 ./client/node_modules
 ./client/dist

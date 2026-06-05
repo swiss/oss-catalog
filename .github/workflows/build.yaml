@@ -24,7 +24,6 @@ jobs:
   build:
     name: Standalone build
     runs-on: ubuntu-latest
-
     steps:
       - name: Check out repository code
         uses: actions/checkout@v6
@@ -36,56 +35,12 @@ jobs:
           node-version: lts/krypton
           cache: pnpm
           cache-dependency-path: client/pnpm-lock.yaml
-      - name: Create .env file
-        run: |
-          echo "PASETO_KEY=${{ secrets.PASETO_KEY }}" > .env
-      - name: Start the backend api and database
-        run: |
-          docker compose up -d api
-      - name: Wait for API to be ready
-        run: |
-          timeout 60 sh -c 'until docker compose ps api | grep -q "healthy"; do echo "Waiting for API..."; sleep 2; done'
-          echo "API is ready!"
-      - name: create paseto token
-        run: |
-          cd paseto/go
-          PASETO_TOKEN="$(go run paseto-generate.go ${{ secrets.PASETO_KEY }})"
-          echo "::add-mask::$PASETO_TOKEN"
-          echo "PASETO_TOKEN=$PASETO_TOKEN" >> "$GITHUB_ENV"
-      - name: Register Swiss GitHub Organizations
-        run: |
-          cd publisher-importer
-          API_ENDPOINT=http://localhost:3000 PASETO_TOKEN=${{ env.PASETO_TOKEN }} node process-swiss-index.js
-      - name: Wait for publishers data
-        run: |
-          echo "Waiting for publishers data to appear..."
-          timeout 60 sh -c '
-            while true; do
-              response=$(curl -s http://localhost:3000/v1/publishers)
-              data=$(echo "$response" | jq -r ".data // []")
-              if [ "$data" != "[]" ]; then
-                echo "Publishers data found!"
-                echo "$response"
-                exit 0
-              fi
-              echo "No data found, waiting..."
-              sleep 2
-            done
-          ' || {
-            echo "Timeout reached: No publishers data found after 60 seconds"
-            echo "Final response:"
-            curl -s http://localhost:3000/v1/publishers
-            exit 1
-          }
-      - name: Run crawler
-        run: |
-          docker run --add-host=host.docker.internal:host-gateway -e API_BEARER_TOKEN=${{ env.PASETO_TOKEN }} -e API_BASEURL=http://host.docker.internal:3000/v1 -e GITHUB_TOKEN=${{ secrets.PAT_TOKEN_GITHUB }} -e SKIP_VITALITY=true italia/publiccode-crawler:0cdce559
       - name: Verify software count threshold
         run: |
           echo "Waiting 10 seconds for software data to be populated..."
           sleep 10
           echo "Checking software count..."
-          response=$(curl -g -s http://localhost:3000/v1/software?page[size]=10000)
+          response=$(curl -g -s https://oss-catalog-api.ocp.cloudscale.puzzle.ch/v1/software?page[size]=10000)
           software_count=$(echo "$response" | jq -r ".data | length")
           echo "Found $software_count software entries"
           if [ "$software_count" -lt 80 ]; then
@@ -100,10 +55,9 @@ jobs:
           pnpm install --frozen-lockfile --strict-peer-dependencies
           pnpm build
         env:
-          API_BASEURL: http://localhost:3000/v1
+          API_BASEURL: https://oss-catalog-api.ocp.cloudscale.puzzle.ch/v1
           GIT_COMMIT_HASH: ${{ github.sha }}
       - name: Upload artifact
-        if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./client/dist
