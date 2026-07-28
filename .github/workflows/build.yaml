@@ -7,7 +7,6 @@ on:
   push:
     branches:
       - "main"
-      - "chore/upgrade-github-actions"
     tags:
       - "v*.*.*"
 
