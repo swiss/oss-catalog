@@ -30,7 +30,7 @@ services:
       start_period: 10s
 
   crawler:
-    image: italia/publiccode-crawler:0cdce559 # should match the version used in the build workflow
+    image: italia/publiccode-crawler:aad6661f # should match the version used in the build workflow
     depends_on:
       - api
 
