@@ -1,4 +1,3 @@
-import yaml from "js-yaml";
 import { getRelativeLocaleUrl } from "astro:i18n";
 import type { Software } from "@/lib/software";
 import { SoftwareCard } from "./SoftwareCard.tsx";

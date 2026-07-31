@@ -4,7 +4,7 @@ import SoftwareDetail from "@/components/SoftwareDetail.astro";
 import { getRelativeLocaleUrl } from "astro:i18n";
 import { type Lang, useTranslations } from "@/i18n/utils";
 import type { PubliccodeYml, Software } from "@/lib/software";
-import yaml from "js-yaml";
+import { load } from "js-yaml";
 import { hashUrl } from "@/utils/hash";
 import { getSoftwares } from "@/lib/software";
 import { locales } from "@/i18n/locales";
@@ -27,7 +27,7 @@ export async function getStaticPaths() {
 
 const software: Software = {
   ...Astro.props.software,
-  publiccode: yaml.load(
+  publiccode: load(
     Astro.props.software.publiccodeYml as unknown as string,
   ) as PubliccodeYml,
 };
