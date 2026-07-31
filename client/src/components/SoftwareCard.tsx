@@ -5,7 +5,7 @@ import { getYear } from "date-fns";
 import { type Lang, useTranslations } from "@/i18n/utils";
 import organisations from "@/data/organisations.json";
 import { getCantonFlag } from "@/utils/cantonFlags";
-import  schweizFlag  from "@/images/Wappen-Schweiz.svg";
+import schweizFlag from "@/images/Wappen-Schweiz.svg";
 import { CANTON_URI_PREFIX } from "@/stores/filters";
 
 export function SoftwareCard({
@@ -32,7 +32,7 @@ export function SoftwareCard({
     : schweizFlag;
   const flagLabel = uri?.startsWith(CANTON_URI_PREFIX)
     ? toOrganisationName(uri)
-    : t('index.filter.option.bund');
+    : t("index.filter.option.bund");
 
   return (
     <div className="card card--default" has-icon="false">
@@ -61,7 +61,7 @@ export function SoftwareCard({
               {toOrganisationName(software.publiccode.organisation?.uri)}
             </span>
           </div>
-          <p>{software.publiccode.description[lang]?.shortDescription}</p>
+          <p>{software.publiccode.description?.[lang]?.shortDescription}</p>
         </div>
         <div className="card__footer">
           <div className="card__footer__info">

@@ -24,20 +24,31 @@ export type Software = {
 };
 
 export type PubliccodeYml = {
+  publiccodeYmlVersion?: string;
   name: string;
-  releaseDate: string;
-  softwareVersion: string;
+  url?: string;
+  landingURL?: string;
+  releaseDate?: string;
+  softwareVersion?: string;
+  platforms?: string[];
+  categories?: string[];
+  developmentStatus?: string;
+  softwareType?: string;
   legal: {
-    license: string;
+    license?: string;
   };
   organisation: {
-    uri: string;
+    uri?: string;
     name?: string;
   };
-  description: Record<
+  description?: Record<
     string,
     {
-      shortDescription: string;
+      shortDescription?: string;
+      longDescription?: string;
+      documentation?: string;
+      apiDocumentation?: string;
+      features?: string[];
     }
   >;
 };
