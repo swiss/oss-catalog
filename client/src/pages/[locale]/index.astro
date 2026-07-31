@@ -4,7 +4,7 @@ import { type Lang, useTranslations, toFullLocale } from "@/i18n/utils";
 import organisations from "@/data/organisations.json";
 import SoftwareCatalogIsland from "@/components/SoftwareCatalogIsland";
 import { type PubliccodeYml, type Software } from "@/lib/software";
-import yaml from "js-yaml";
+import { load } from "js-yaml";
 import { getSoftwares } from "@/lib/software";
 import { locales } from "@/i18n/locales";
 import SearchFiltersIsland from "@/components/SearchFiltersIsland";
@@ -19,7 +19,7 @@ const rawSoftwares = await getSoftwares();
 softwares = rawSoftwares.map((software: Software) => {
   return {
     ...software,
-    publiccode: yaml.load(software.publiccodeYml) as PubliccodeYml,
+    publiccode: load(software.publiccodeYml) as PubliccodeYml,
   };
 });
 
@@ -62,17 +62,15 @@ export async function getStaticPaths() {
         {t("index.title")}
       </h1>
       <h2 class="section__subtitle">{t("index.subtitle")}</h2>
-      <SearchFiltersIsland client:load
-                           lang={lang}
-                           organisations={organisations}
-                           softwares={softwares}/>
+      <SearchFiltersIsland
+        client:load
+        lang={lang}
+        organisations={organisations}
+        softwares={softwares}
+      />
     </div>
   </section>
   <section class="section section--default">
-    <SoftwareCatalogIsland
-      client:load
-      lang={lang}
-      softwares={softwares}
-    />
+    <SoftwareCatalogIsland client:load lang={lang} softwares={softwares} />
   </section>
 </Layout>
