@@ -27,6 +27,11 @@ export default function SoftwareCatalogIsland({ lang, softwares }: Props) {
 
   const trimmedNameQuery = $nameQuery.trim().toLowerCase();
 
+  const queryTokens = useMemo(
+    () => trimmedNameQuery.split(/\s+/).filter(Boolean),
+    [trimmedNameQuery],
+  );
+
   const searchTexts = useMemo(
     () => new Map(softwares.map((s) => [s, buildSearchText(s, lang)])),
     [softwares, lang],
@@ -60,8 +65,9 @@ export default function SoftwareCatalogIsland({ lang, softwares }: Props) {
         ? organisationUri !== undefined &&
           selectedOrganisations.has(organisationUri)
         : true;
-      const matchesQuery = trimmedNameQuery
-        ? (searchTexts.get(s)?.includes(trimmedNameQuery) ?? false)
+      const searchText = searchTexts.get(s);
+      const matchesQuery = queryTokens.length
+        ? queryTokens.every((token) => searchText?.includes(token) ?? false)
         : true;
 
       if ($organisationType === "cantons") {
@@ -87,6 +93,7 @@ export default function SoftwareCatalogIsland({ lang, softwares }: Props) {
     $selectedOrganisations,
     $selectedCantons,
     trimmedNameQuery,
+    queryTokens,
     $organisationType,
     searchTexts,
   ]);
