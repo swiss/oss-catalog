@@ -5,7 +5,7 @@ import { SoftwareList } from "./SoftwareList";
 import { useStore } from "@nanostores/react";
 import {
   CANTON_URI_PREFIX,
-  nameQuery,
+  searchTerm,
   organisationType,
   selectedCantons,
   selectedOrganisations,
@@ -22,14 +22,14 @@ export default function SoftwareCatalogIsland({ lang, softwares }: Props) {
   const $organisationType = useStore(organisationType);
   const $selectedOrganisations = useStore(selectedOrganisations);
   const $selectedCantons = useStore(selectedCantons);
-  const $nameQuery = useStore(nameQuery);
+  const $searchQuery = useStore(searchTerm);
   const t = useTranslations(lang);
 
-  const trimmedNameQuery = $nameQuery.trim().toLowerCase();
+  const trimmerSearchQuery = $searchQuery.trim().toLowerCase();
 
   const queryTokens = useMemo(
-    () => trimmedNameQuery.split(/\s+/).filter(Boolean),
-    [trimmedNameQuery],
+    () => trimmerSearchQuery.split(/\s+/).filter(Boolean),
+    [trimmerSearchQuery],
   );
 
   const searchTexts = useMemo(
@@ -42,7 +42,7 @@ export default function SoftwareCatalogIsland({ lang, softwares }: Props) {
       $organisationType === "all" &&
       !$selectedOrganisations?.length &&
       !$selectedCantons?.length &&
-      !trimmedNameQuery
+      !trimmerSearchQuery
     ) {
       return softwares;
     }
@@ -92,7 +92,7 @@ export default function SoftwareCatalogIsland({ lang, softwares }: Props) {
     softwares,
     $selectedOrganisations,
     $selectedCantons,
-    trimmedNameQuery,
+    trimmerSearchQuery,
     queryTokens,
     $organisationType,
     searchTexts,
