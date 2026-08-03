@@ -22,14 +22,14 @@ export default function SoftwareCatalogIsland({ lang, softwares }: Props) {
   const $organisationType = useStore(organisationType);
   const $selectedOrganisations = useStore(selectedOrganisations);
   const $selectedCantons = useStore(selectedCantons);
-  const $searchQuery = useStore(searchTerm);
+  const $searchTerm = useStore(searchTerm);
   const t = useTranslations(lang);
 
-  const trimmerSearchQuery = $searchQuery.trim().toLowerCase();
+  const trimmedSearchTerm = $searchTerm.trim().toLowerCase();
 
   const queryTokens = useMemo(
-    () => trimmerSearchQuery.split(/\s+/).filter(Boolean),
-    [trimmerSearchQuery],
+    () => trimmedSearchTerm.split(/\s+/).filter(Boolean),
+    [trimmedSearchTerm],
   );
 
   const searchTexts = useMemo(
@@ -42,7 +42,7 @@ export default function SoftwareCatalogIsland({ lang, softwares }: Props) {
       $organisationType === "all" &&
       !$selectedOrganisations?.length &&
       !$selectedCantons?.length &&
-      !trimmerSearchQuery
+      !trimmedSearchTerm
     ) {
       return softwares;
     }
@@ -92,7 +92,7 @@ export default function SoftwareCatalogIsland({ lang, softwares }: Props) {
     softwares,
     $selectedOrganisations,
     $selectedCantons,
-    trimmerSearchQuery,
+    trimmedSearchTerm,
     queryTokens,
     $organisationType,
     searchTexts,

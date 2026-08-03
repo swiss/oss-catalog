@@ -23,7 +23,7 @@ export default function SearchFiltersIsland({
 }: Props) {
   const t = useTranslations(lang);
   const [isOpen, setIsOpen] = useState(false);
-  const $searchQuery = useStore(searchTerm);
+  const $searchTerm = useStore(searchTerm);
   const $organisationType = useStore(organisationType);
 
   useEffect(() => {
@@ -47,7 +47,7 @@ export default function SearchFiltersIsland({
             aria-labelledby="search-button"
             placeholder={t("index.search")}
             autoComplete="off"
-            value={$searchQuery}
+            value={$searchTerm}
             onChange={(e) => searchTerm.set(e.target.value)}
           />
           <button
