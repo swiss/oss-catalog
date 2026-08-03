@@ -7,7 +7,7 @@ import {
 } from "@/components/SoftwareFilters.tsx";
 import OrganisationTypeFilter from "@/components/OrganisationTypeFilter.tsx";
 import { useStore } from "@nanostores/react";
-import { nameQuery, organisationType } from "@/stores/filters";
+import { searchTerm, organisationType } from "@/stores/filters";
 import type { Software } from "@/lib/software.ts";
 
 interface Props {
@@ -16,21 +16,29 @@ interface Props {
   softwares: Software[];
 }
 
-export default function SearchFiltersIsland({ lang, organisations, softwares }: Props) {
+export default function SearchFiltersIsland({
+  lang,
+  organisations,
+  softwares,
+}: Props) {
   const t = useTranslations(lang);
   const [isOpen, setIsOpen] = useState(false);
-  const $nameQuery = useStore(nameQuery);
-  const $organisationType = useStore(organisationType)
+  const $searchTerm = useStore(searchTerm);
+  const $organisationType = useStore(organisationType);
 
   useEffect(() => {
     if ($organisationType === "cantons") {
-      setIsOpen(false)
+      setIsOpen(false);
     }
-  }, [$organisationType])
+  }, [$organisationType]);
 
   return (
     <>
-      <OrganisationTypeFilter lang={lang} organisations={organisations} softwares={softwares} />
+      <OrganisationTypeFilter
+        lang={lang}
+        organisations={organisations}
+        softwares={softwares}
+      />
       <div className="search search--large search--page-result">
         <div className="search__group">
           <input
@@ -39,8 +47,8 @@ export default function SearchFiltersIsland({ lang, organisations, softwares }: 
             aria-labelledby="search-button"
             placeholder={t("index.search")}
             autoComplete="off"
-            value={$nameQuery}
-            onChange={(e) => nameQuery.set(e.target.value)}
+            value={$searchTerm}
+            onChange={(e) => searchTerm.set(e.target.value)}
           />
           <button
             type="button"

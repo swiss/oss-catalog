@@ -1,19 +1,20 @@
 import { useMemo } from "react";
 import type { Software } from "@/lib/software";
 import { useTranslations } from "@/i18n/utils";
-import { type Locale } from "./SoftwareFilters";
 import { SoftwareList } from "./SoftwareList";
 import { useStore } from "@nanostores/react";
 import {
   CANTON_URI_PREFIX,
-  nameQuery,
+  searchTerm,
   organisationType,
   selectedCantons,
   selectedOrganisations,
 } from "@/stores/filters";
+import { buildSearchText } from "@/lib/searchText";
+import type { Lang } from "@/i18n/utils";
 
 type Props = {
-  lang: Locale;
+  lang: Lang;
   softwares: Software[];
 };
 
@@ -21,17 +22,27 @@ export default function SoftwareCatalogIsland({ lang, softwares }: Props) {
   const $organisationType = useStore(organisationType);
   const $selectedOrganisations = useStore(selectedOrganisations);
   const $selectedCantons = useStore(selectedCantons);
-  const $nameQuery = useStore(nameQuery);
+  const $searchTerm = useStore(searchTerm);
   const t = useTranslations(lang);
 
-  const trimmedNameQuery = $nameQuery.trim().toLowerCase();
+  const trimmedSearchTerm = $searchTerm.trim().toLowerCase();
+
+  const queryTokens = useMemo(
+    () => trimmedSearchTerm.split(/\s+/).filter(Boolean),
+    [trimmedSearchTerm],
+  );
+
+  const searchTexts = useMemo(
+    () => new Map(softwares.map((s) => [s, buildSearchText(s, lang)])),
+    [softwares, lang],
+  );
 
   const filteredSoftwares = useMemo(() => {
     if (
       $organisationType === "all" &&
       !$selectedOrganisations?.length &&
       !$selectedCantons?.length &&
-      !trimmedNameQuery
+      !trimmedSearchTerm
     ) {
       return softwares;
     }
@@ -47,28 +58,45 @@ export default function SoftwareCatalogIsland({ lang, softwares }: Props) {
       const organisationUri = s.publiccode?.organisation?.uri;
 
       const matchesCanton = selectedCantons
-        ? organisationUri?.startsWith(CANTON_URI_PREFIX) && selectedCantons.has(organisationUri)
+        ? organisationUri?.startsWith(CANTON_URI_PREFIX) &&
+          selectedCantons.has(organisationUri)
         : true;
       const matchesOrganisation = selectedOrganisations
-        ? selectedOrganisations.has(organisationUri)
+        ? organisationUri !== undefined &&
+          selectedOrganisations.has(organisationUri)
         : true;
-      const matchesName = trimmedNameQuery
-        ? (s.publiccode?.name ?? "").toString().toLowerCase().includes(trimmedNameQuery)
+      const searchText = searchTexts.get(s);
+      const matchesQuery = queryTokens.length
+        ? queryTokens.every((token) => searchText?.includes(token) ?? false)
         : true;
 
       if ($organisationType === "cantons") {
-        return matchesName && matchesCanton && organisationUri?.startsWith(CANTON_URI_PREFIX);
+        return (
+          matchesQuery &&
+          matchesCanton &&
+          organisationUri?.startsWith(CANTON_URI_PREFIX)
+        );
       }
 
       if ($organisationType === "bund") {
-        return matchesName && matchesOrganisation && !organisationUri?.startsWith(CANTON_URI_PREFIX);
+        return (
+          matchesQuery &&
+          matchesOrganisation &&
+          !organisationUri?.startsWith(CANTON_URI_PREFIX)
+        );
       }
 
-      return matchesName && matchesOrganisation;
+      return matchesQuery && matchesOrganisation;
     });
-  }, [softwares, $selectedOrganisations, $selectedCantons, trimmedNameQuery, $organisationType]);
+  }, [
+    softwares,
+    $selectedOrganisations,
+    $selectedCantons,
+    trimmedSearchTerm,
+    queryTokens,
+    $organisationType,
+    searchTexts,
+  ]);
 
-  return (
-    <SoftwareList lang={lang} softwares={filteredSoftwares} t={t} />
-  );
+  return <SoftwareList lang={lang} softwares={filteredSoftwares} t={t} />;
 }
