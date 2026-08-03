@@ -1,6 +1,6 @@
 ---
 import Layout from "@/layouts/Layout.astro";
-import { type Lang, useTranslations, toFullLocale } from "@/i18n/utils";
+import { type Lang, useTranslations } from "@/i18n/utils";
 import organisations from "@/data/organisations.json";
 import SoftwareCatalogIsland from "@/components/SoftwareCatalogIsland";
 import { type PubliccodeYml, type Software } from "@/lib/software";
@@ -34,17 +34,6 @@ softwares.sort((a, b) => {
   const uriB = b.publiccode?.organisation?.uri || "";
   return uriA.localeCompare(uriB);
 });
-
-const dateLocale = toFullLocale(lang);
-const buildDate = new Date();
-const buildDateFormatted = `${buildDate.toLocaleDateString(dateLocale, {
-  day: "2-digit",
-  month: "2-digit",
-  year: "numeric",
-})} ${buildDate.toLocaleTimeString(dateLocale, {
-  hour: "2-digit",
-  minute: "2-digit",
-})}`;
 
 export async function getStaticPaths() {
   return Object.keys(locales).map((locale) => {

@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo } from "react";
 import { Combobox } from "@/components/Combobox.tsx";
-import { useTranslations } from "../i18n/utils";
+import { useTranslations } from "@/i18n/utils";
 import { CANTON_URI_PREFIX, selectedOrganisations } from "@/stores/filters.ts";
 
 export type Locale = "en" | "de" | "fr" | "it";
@@ -25,54 +25,31 @@ type Props = {
   organisations: Department[];
 };
 
-export function SoftwareFilters({
-  lang,
-  organisations,
-}: Props) {
-  const [query] = useState("");
-  const [_open, setOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement | null>(null);
+export function SoftwareFilters({ lang, organisations }: Props) {
   const t = useTranslations(lang);
 
-  const toLabel = (unit: Organisation | Department, suffix: Organisation['alternativeName'] | Department['abbreviation']) => {
-    return `${unit.name[lang] || unit.name.de || ""} ${suffix ? ` (${suffix[lang] || suffix.de})` : ""}`;
+  const toLabel = (
+    unit: Organisation | Department,
+    suffix: Organisation["alternativeName"] | Department["abbreviation"],
+  ) => {
+    const name = unit.name[lang] || unit.name.de || "";
+    const suffixText = suffix?.[lang] || suffix?.de;
+    return `${name}${suffixText ? ` (${suffixText})` : ""}`.trim();
   };
 
   const groupedOptions = useMemo(() => {
-    const q = query.trim().toLowerCase();
     return organisations
       .filter((departement) => !departement.id.startsWith(CANTON_URI_PREFIX))
-      .map((departement) => {
-        const filteredOrganisations = departement.organisations.filter(
-          (organisation) => {
-            if (!q) return true;
-            return (organisation.name[lang] || organisation.name.de || "")
-              .toLowerCase()
-              .includes(q);
-          },
-        );
-        return {
-          id: departement.id,
-          label: toLabel(departement, departement.abbreviation),
-          organisations: filteredOrganisations.map((organisation) => ({
-            value: organisation.id,
-            label: toLabel(organisation, organisation.alternativeName),
-          })),
-        };
-      })
+      .map((departement) => ({
+        id: departement.id,
+        label: toLabel(departement, departement.abbreviation),
+        organisations: departement.organisations.map((organisation) => ({
+          value: organisation.id,
+          label: toLabel(organisation, organisation.alternativeName),
+        })),
+      }))
       .filter((d) => d.organisations.length > 0);
-  }, [organisations, query, lang]);
-
-  useEffect(() => {
-    function onClickOutside(e: MouseEvent) {
-      if (!dropdownRef.current) return;
-      if (!dropdownRef.current.contains(e.target as Node)) {
-        setOpen(false);
-      }
-    }
-    document.addEventListener("mousedown", onClickOutside);
-    return () => document.removeEventListener("mousedown", onClickOutside);
-  }, []);
+  }, [organisations, lang]);
 
   return (
     <>

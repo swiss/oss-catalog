@@ -107,9 +107,7 @@ export function Combobox({ groups, lang, onChange }: ComboboxProps) {
           >
             <div className="vs__dropdown-toggle">
               <div className="vs__selected-options vs--single">
-                <span className="vs__selected">
-                  {buttonLabel || "\u00a0"}
-                </span>
+                <span className="vs__selected">{buttonLabel || "\u00a0"}</span>
               </div>
               <div className="vs__actions">
                 {/* actions like clear or spinner are not used here */}
@@ -124,7 +122,11 @@ export function Combobox({ groups, lang, onChange }: ComboboxProps) {
         </button>
       </PopoverTrigger>
       <PopoverContent className="w-[min(64rem,90vw)] p-0">
-        <Command>
+        <Command
+          filter={(value, search) =>
+            value.toLowerCase().includes(search.toLowerCase()) ? 1 : 0
+          }
+        >
           <CommandInput />
           {values.length > 0 && (
             <div className="flex flex-wrap gap-2 px-3 py-2 v-select">
