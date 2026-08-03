@@ -32,7 +32,9 @@ export function SoftwareFilters({ lang, organisations }: Props) {
     unit: Organisation | Department,
     suffix: Organisation["alternativeName"] | Department["abbreviation"],
   ) => {
-    return `${unit.name[lang] || unit.name.de || ""} ${suffix ? ` (${suffix[lang] || suffix.de})` : ""}`;
+    const name = unit.name[lang] || unit.name.de || "";
+    const suffixText = suffix?.[lang] || suffix?.de;
+    return `${name}${suffixText ? ` (${suffixText})` : ""}`.trim();
   };
 
   const groupedOptions = useMemo(() => {
