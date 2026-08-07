@@ -53,7 +53,7 @@ jobs:
       - name: Build client with pnpm
         run: |
           pnpm install --frozen-lockfile --strict-peer-dependencies
-          pnpm build
+          pnpm scope:client build
         env:
           API_BASEURL: https://oss-catalog-api.ocp.cloudscale.puzzle.ch/v1
           GIT_COMMIT_HASH: ${{ github.sha }}
