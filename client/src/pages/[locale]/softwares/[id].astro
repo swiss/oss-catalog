@@ -8,6 +8,7 @@ import { load } from "js-yaml";
 import { hashUrl } from "@/utils/hash";
 import { getSoftwares } from "@/lib/software";
 import { locales } from "@/i18n/locales";
+import { LinkButton } from "@/components/LinkButton";
 
 export async function getStaticPaths() {
   const softwares = await getSoftwares();
