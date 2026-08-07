@@ -29,8 +29,7 @@ export default function SoftwareCatalogIsland({ lang, softwares }: Props) {
 
   useEffect(() => {
     applyFiltersFromUrl();
-    const unsubscribe = syncFiltersToUrl();
-    return unsubscribe;
+    syncFiltersToUrl();
   }, []);
 
   const trimmedSearchTerm = $searchTerm.trim().toLowerCase();

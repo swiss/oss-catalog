@@ -1,4 +1,5 @@
 import { atom } from "nanostores";
+import organisations from "@/data/organisations.json";
 
 export type OrganisationType = "all" | "bund" | "cantons";
 
@@ -17,6 +18,13 @@ const PARAM_KEYS = {
 } as const;
 
 const ALLOWED_TYPES: OrganisationType[] = ["all", "bund", "cantons"];
+
+const KNOWN_URIS = new Set(
+  organisations.flatMap((departement) => [
+    departement.id,
+    ...departement.organisations.map((organisation) => organisation.id),
+  ]),
+);
 
 function isOrganisationType(value: string): value is OrganisationType {
   return ALLOWED_TYPES.includes(value as OrganisationType);
@@ -40,22 +48,18 @@ export function applyFiltersFromUrl() {
   const params = new URLSearchParams(window.location.search);
 
   const type = params.get(PARAM_KEYS.type);
-  if (type && isOrganisationType(type)) {
-    organisationType.set(type);
-  } else if (type === null) {
-    organisationType.set("all");
-  }
+  organisationType.set(type && isOrganisationType(type) ? type : "all");
 
-  const organisations = params.get(PARAM_KEYS.organisations);
   selectedOrganisations.set(
-    organisations ? organisations.split(",").filter(Boolean) : [],
+    params
+      .getAll(PARAM_KEYS.organisations)
+      .filter((uri) => KNOWN_URIS.has(uri)),
+  );
+  selectedCantons.set(
+    params.getAll(PARAM_KEYS.cantons).filter((uri) => KNOWN_URIS.has(uri)),
   );
 
-  const cantons = params.get(PARAM_KEYS.cantons);
-  selectedCantons.set(cantons ? cantons.split(",").filter(Boolean) : []);
-
-  const q = params.get(PARAM_KEYS.q);
-  searchTerm.set(q ?? "");
+  searchTerm.set(params.get(PARAM_KEYS.q) ?? "");
 
   normaliseFilters();
 }
@@ -68,15 +72,12 @@ function buildUrlParams(): URLSearchParams {
     params.set(PARAM_KEYS.type, type);
   }
 
-  const organisations = selectedOrganisations.get();
-  if (organisations.length > 0) {
-    params.set(PARAM_KEYS.organisations, organisations.join(","));
-  }
-
-  const cantons = selectedCantons.get();
-  if (cantons.length > 0) {
-    params.set(PARAM_KEYS.cantons, cantons.join(","));
-  }
+  selectedOrganisations
+    .get()
+    .forEach((uri) => params.append(PARAM_KEYS.organisations, uri));
+  selectedCantons
+    .get()
+    .forEach((uri) => params.append(PARAM_KEYS.cantons, uri));
 
   const q = searchTerm.get();
   if (q) {
@@ -86,37 +87,38 @@ function buildUrlParams(): URLSearchParams {
   return params;
 }
 
-let searchDebounceTimer: ReturnType<typeof setTimeout> | null = null;
-
 function updateUrl() {
-  if (typeof window === "undefined") return;
-  const params = buildUrlParams();
-  const query = params.toString();
+  const query = buildUrlParams().toString();
   const newUrl = query
     ? `${window.location.pathname}?${query}`
     : window.location.pathname;
   window.history.replaceState(null, "", newUrl);
 }
 
-function updateUrlDebounced() {
-  if (searchDebounceTimer) clearTimeout(searchDebounceTimer);
-  searchDebounceTimer = setTimeout(updateUrl, 300);
+// A single user action can change several atoms (e.g. switching the
+// organisation type also clears the opposite selection). Coalescing into a
+// microtask keeps that a single history entry rewrite.
+let updateScheduled = false;
+
+function scheduleUrlUpdate() {
+  if (updateScheduled) return;
+  updateScheduled = true;
+  queueMicrotask(() => {
+    updateScheduled = false;
+    updateUrl();
+  });
 }
 
 let urlSyncInitialised = false;
 
+// The subscriptions intentionally live for the lifetime of the page: the atoms
+// are module singletons and every navigation is a full page load.
 export function syncFiltersToUrl() {
   if (urlSyncInitialised || typeof window === "undefined") return;
   urlSyncInitialised = true;
 
-  const unsubscribes = [
-    organisationType.subscribe(updateUrl),
-    selectedOrganisations.subscribe(updateUrl),
-    selectedCantons.subscribe(updateUrl),
-    searchTerm.subscribe(updateUrlDebounced),
-  ];
-
-  return () => {
-    unsubscribes.forEach((unsubscribe) => unsubscribe());
-  };
+  organisationType.subscribe(scheduleUrlUpdate);
+  selectedOrganisations.subscribe(scheduleUrlUpdate);
+  selectedCantons.subscribe(scheduleUrlUpdate);
+  searchTerm.subscribe(scheduleUrlUpdate);
 }

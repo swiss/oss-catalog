@@ -39,8 +39,7 @@ export default function SearchFiltersIsland({
 
   useEffect(() => {
     applyFiltersFromUrl();
-    const unsubscribe = syncFiltersToUrl();
-    return unsubscribe;
+    syncFiltersToUrl();
   }, []);
 
   return (

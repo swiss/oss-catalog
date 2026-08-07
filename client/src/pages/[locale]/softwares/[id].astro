@@ -42,8 +42,8 @@ const homeUrl = getRelativeLocaleUrl(lang);
 <Layout>
   <div class="container pt-8">
     <a
+      id="back-to-catalog"
       href={homeUrl}
-      onclick="if (history.length > 1) { history.back(); return false; }"
       class="btn btn--outline btn--sm btn--icon-left btn--back"
       ><svg
         viewBox="0 0 24 24"
@@ -61,3 +61,20 @@ const homeUrl = getRelativeLocaleUrl(lang);
     <SoftwareDetail software={software} />
   </div>
 </Layout>
+
+<script>
+  // Going back through the history preserves the filters the user had set on
+  // the catalog. Only do so when we actually came from this site, otherwise
+  // fall back to the plain catalog link in the href.
+  const backLink = document.getElementById("back-to-catalog");
+  const cameFromThisSite =
+    document.referrer !== "" &&
+    new URL(document.referrer).origin === location.origin;
+
+  if (backLink && cameFromThisSite && history.length > 1) {
+    backLink.addEventListener("click", (event) => {
+      event.preventDefault();
+      history.back();
+    });
+  }
+</script>
