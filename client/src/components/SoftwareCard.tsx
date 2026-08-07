@@ -15,7 +15,6 @@ export function SoftwareCard({
   software: Software;
   detailUrl: string;
   lang: Lang;
-  organisationName?: string;
 }) {
   const t = useTranslations(lang);
 
@@ -34,7 +33,7 @@ export function SoftwareCard({
     : t("index.filter.option.bund");
 
   return (
-    <div className="card card--default" has-icon="false">
+    <div className="card card--default">
       <div className="card__content">
         <div className="card__body">
           <div className="flex items-center">
