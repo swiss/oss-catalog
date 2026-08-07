@@ -2,7 +2,7 @@
   "name": "oss-catalog",
   "type": "module",
   "version": "0.0.1",
-  "engines": {
+  "devEngines": {
     "runtime": {
       "name": "node",
       "version": "24.15.0",
