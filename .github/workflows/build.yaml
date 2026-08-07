@@ -54,14 +54,15 @@ jobs:
     name: Build client
     runs-on: ubuntu-latest
     needs: setup
-    - run: pnpm scope:client build
+    steps:
+      - run: pnpm scope:client build
         env:
           API_BASEURL: https://oss-catalog-api.ocp.cloudscale.puzzle.ch/v1
           GIT_COMMIT_HASH: ${{ github.sha }}
-    - name: Upload artifact
-      uses: actions/upload-pages-artifact@v5
-      with:
-        path: ./client/dist
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: ./client/dist
 
   deploy:
     name: Deploy to GitHub Pages
