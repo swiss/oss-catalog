@@ -33,7 +33,7 @@ interface ComboboxProps {
   groups: Departement[];
   lang: Lang;
   onChange?: (values: string[]) => void;
-  id?: string;
+  id: string;
 }
 
 export function Combobox({ groups, lang, onChange, id }: ComboboxProps) {
