@@ -22,8 +22,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  name: Verify API
   verify:
+    name: Verify API
     runs-on: ubuntu-latest
     steps:
       - name: Verify software count threshold
