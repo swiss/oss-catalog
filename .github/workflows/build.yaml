@@ -22,17 +22,11 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build:
-    name: Build client
+  verify:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out repository code
-        uses: actions/checkout@v7
-
       - name: Verify software count threshold
         run: |
-          echo "Waiting 10 seconds for software data to be populated..."
-          sleep 10
           echo "Checking software count..."
           response=$(curl -g -s https://oss-catalog-api.ocp.cloudscale.puzzle.ch/v1/software?page[size]=10000)
           software_count=$(echo "$response" | jq -r ".data | length")
@@ -43,18 +37,31 @@ jobs:
             exit 1
           fi
           echo "Software count verification passed: $software_count >= 80"
+
+  setup:
+    name: Setup
+    runs-on: ubuntu-latest
+    needs: verify
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v7
       - uses: pnpm/setup@v2
         with:
           install: false
       - run: pnpm install --frozen-lockfile --strict-peer-dependencies
-      - run: pnpm scope:client build
+
+  build:
+    name: Build client
+    runs-on: ubuntu-latest
+    needs: setup
+    - run: pnpm scope:client build
         env:
           API_BASEURL: https://oss-catalog-api.ocp.cloudscale.puzzle.ch/v1
           GIT_COMMIT_HASH: ${{ github.sha }}
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v5
-        with:
-          path: ./client/dist
+    - name: Upload artifact
+      uses: actions/upload-pages-artifact@v5
+      with:
+        path: ./client/dist
 
   deploy:
     name: Deploy to GitHub Pages
