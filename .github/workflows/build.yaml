@@ -38,8 +38,8 @@ jobs:
           fi
           echo "Software count verification passed: $software_count >= 80"
 
-  setup:
-    name: Setup
+  build:
+    name: Build client
     runs-on: ubuntu-latest
     needs: verify
     steps:
@@ -49,12 +49,6 @@ jobs:
         with:
           install: false
       - run: pnpm install --frozen-lockfile --strict-peer-dependencies
-
-  build:
-    name: Build client
-    runs-on: ubuntu-latest
-    needs: setup
-    steps:
       - run: pnpm scope:client build
         env:
           API_BASEURL: https://oss-catalog-api.ocp.cloudscale.puzzle.ch/v1
