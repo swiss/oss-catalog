@@ -44,6 +44,9 @@ jobs:
           fi
           echo "Software count verification passed: $software_count >= 80"
       - uses: pnpm/setup@v2
+        with:
+          install: false
+      - run: pnpm install --frozen-lockfile --strict-peer-dependencies
       - run: pnpm scope:client build
         env:
           API_BASEURL: https://oss-catalog-api.ocp.cloudscale.puzzle.ch/v1
