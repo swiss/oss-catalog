@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { useStore } from "@nanostores/react";
 import { Combobox } from "@/components/Combobox.tsx";
 import { useTranslations } from "@/i18n/utils";
 import { CANTON_URI_PREFIX, selectedOrganisations } from "@/stores/filters.ts";
@@ -27,6 +28,7 @@ type Props = {
 
 export function SoftwareFilters({ lang, organisations }: Props) {
   const t = useTranslations(lang);
+  const $selectedOrganisations = useStore(selectedOrganisations);
 
   const toLabel = (
     unit: Organisation | Department,
@@ -60,6 +62,7 @@ export function SoftwareFilters({ lang, organisations }: Props) {
         id="organization-filter"
         groups={groupedOptions}
         lang={lang}
+        value={$selectedOrganisations}
         onChange={(values) => selectedOrganisations.set(values)}
       />
     </>

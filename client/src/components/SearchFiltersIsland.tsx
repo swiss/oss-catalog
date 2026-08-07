@@ -7,7 +7,12 @@ import {
 } from "@/components/SoftwareFilters.tsx";
 import OrganisationTypeFilter from "@/components/OrganisationTypeFilter.tsx";
 import { useStore } from "@nanostores/react";
-import { searchTerm, organisationType } from "@/stores/filters";
+import {
+  applyFiltersFromUrl,
+  searchTerm,
+  organisationType,
+  syncFiltersToUrl,
+} from "@/stores/filters";
 import type { Software } from "@/lib/software.ts";
 
 interface Props {
@@ -31,6 +36,12 @@ export default function SearchFiltersIsland({
       setIsOpen(false);
     }
   }, [$organisationType]);
+
+  useEffect(() => {
+    applyFiltersFromUrl();
+    const unsubscribe = syncFiltersToUrl();
+    return unsubscribe;
+  }, []);
 
   return (
     <>

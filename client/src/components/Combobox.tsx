@@ -34,11 +34,17 @@ interface ComboboxProps {
   lang: Lang;
   onChange?: (values: string[]) => void;
   id: string;
+  value?: string[];
 }
 
-export function Combobox({ groups, lang, onChange, id }: ComboboxProps) {
+export function Combobox({
+  groups,
+  lang,
+  onChange,
+  id,
+  value = [],
+}: ComboboxProps) {
   const [open, setOpen] = React.useState(false);
-  const [values, setValues] = React.useState<string[]>([]);
   const t = useTranslations(lang);
 
   const allOptions = React.useMemo(
@@ -47,39 +53,32 @@ export function Combobox({ groups, lang, onChange, id }: ComboboxProps) {
   );
 
   const toggleValue = (val: string) => {
-    setValues((prev) => {
-      const exists = prev.includes(val);
-      const next = exists ? prev.filter((v) => v !== val) : [...prev, val];
-      onChange?.(next);
-      return next;
-    });
+    const exists = value.includes(val);
+    const next = exists ? value.filter((v) => v !== val) : [...value, val];
+    onChange?.(next);
   };
 
   const toggleValues = (organisations: Organisation[]) => {
     const ids = organisations.map((o) => o.value);
+    const allSelected = ids.every((id) => value.includes(id));
 
-    setValues((prev) => {
-      const allSelected = ids.every((id) => prev.includes(id));
+    let next: string[];
+    if (allSelected) {
+      // Unselect all organisations in this group
+      next = value.filter((v) => !ids.includes(v));
+    } else {
+      // Select all organisations in this group (preserve others)
+      const set = new Set(value);
+      ids.forEach((id) => set.add(id));
+      next = Array.from(set);
+    }
 
-      let next: string[];
-      if (allSelected) {
-        // Unselect all organisations in this group
-        next = prev.filter((v) => !ids.includes(v));
-      } else {
-        // Select all organisations in this group (preserve others)
-        const set = new Set(prev);
-        ids.forEach((id) => set.add(id));
-        next = Array.from(set);
-      }
-
-      onChange?.(next);
-      return next;
-    });
+    onChange?.(next);
   };
 
   const buttonLabel = React.useMemo(() => {
-    if (values.length === 0) return "";
-    const labels = values
+    if (value.length === 0) return "";
+    const labels = value
       .map((v) => allOptions.find((o) => o.value === v)?.label)
       .filter(Boolean) as string[];
 
@@ -90,7 +89,7 @@ export function Combobox({ groups, lang, onChange, id }: ComboboxProps) {
     if (labels.length <= 2) return labels.join(", ");
 
     return `${labels.slice(0, 2).join(", ")} +${labels.length - 2}`;
-  }, [values, allOptions]);
+  }, [value, allOptions]);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -129,9 +128,9 @@ export function Combobox({ groups, lang, onChange, id }: ComboboxProps) {
           }
         >
           <CommandInput />
-          {values.length > 0 && (
+          {value.length > 0 && (
             <div className="flex flex-wrap gap-2 px-3 py-2 v-select">
-              {values.map((v) => {
+              {value.map((v) => {
                 const label = allOptions.find((o) => o.value === v)?.label || v;
                 return (
                   <span key={v} className="vs__selected text-base">
@@ -160,7 +159,6 @@ export function Combobox({ groups, lang, onChange, id }: ComboboxProps) {
                 value={t("select.all")}
                 onSelect={() => {
                   const all = allOptions.map((o) => o.value);
-                  setValues(all);
                   onChange?.(all);
                 }}
               >
@@ -169,7 +167,6 @@ export function Combobox({ groups, lang, onChange, id }: ComboboxProps) {
               <CommandItem
                 value={t("select.clear")}
                 onSelect={() => {
-                  setValues([]);
                   onChange?.([]);
                 }}
               >
@@ -189,7 +186,7 @@ export function Combobox({ groups, lang, onChange, id }: ComboboxProps) {
                     <input
                       type="checkbox"
                       checked={group.organisations.every((o) =>
-                        values.includes(o.value),
+                        value.includes(o.value),
                       )}
                       onChange={(e) => {
                         e.stopPropagation();
@@ -211,7 +208,7 @@ export function Combobox({ groups, lang, onChange, id }: ComboboxProps) {
                     <CheckIcon
                       className={cn(
                         "mr-2 h-4 w-4",
-                        values.includes(organisation.value)
+                        value.includes(organisation.value)
                           ? "opacity-100"
                           : "opacity-0",
                       )}
