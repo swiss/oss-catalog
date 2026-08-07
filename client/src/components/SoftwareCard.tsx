@@ -1,5 +1,4 @@
 import type { Software } from "@/lib/software";
-import { LinkButton } from "./LinkButton.tsx";
 import { RepositoryPlatformLogo } from "./RepositoryPlatformLogo.tsx";
 import { getYear } from "date-fns";
 import { type Lang, useTranslations } from "@/i18n/utils";
@@ -16,7 +15,6 @@ export function SoftwareCard({
   software: Software;
   detailUrl: string;
   lang: Lang;
-  organisationName?: string;
 }) {
   const t = useTranslations(lang);
 
@@ -35,7 +33,7 @@ export function SoftwareCard({
     : t("index.filter.option.bund");
 
   return (
-    <div className="card card--default" has-icon="false">
+    <div className="card card--default">
       <div className="card__content">
         <div className="card__body">
           <div className="flex items-center">
@@ -75,7 +73,22 @@ export function SoftwareCard({
             </a>
           </div>
           <div className="card__footer__action">
-            <LinkButton href={detailUrl} text={t("software.more")} />
+            <a
+              href={detailUrl}
+              rel="noopener noreferrer"
+              className="btn btn--base btn--outline"
+            >
+              <span className="btn__text">
+                {t("software.more")}
+                <span className="sr-only"> {software.publiccode.name}</span>
+              </span>
+              <svg
+                viewBox="0 0 24 24"
+                className="btn__icon icon icon--base icon--ArrowRight"
+              >
+                <path d="m16.444 19.204 4.066-7.044-4.066-7.044-.65.375 3.633 6.294h-15.187v.75h15.187l-3.633 6.294z"></path>
+              </svg>
+            </a>
           </div>
         </div>
       </div>

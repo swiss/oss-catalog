@@ -33,9 +33,10 @@ interface ComboboxProps {
   groups: Departement[];
   lang: Lang;
   onChange?: (values: string[]) => void;
+  id: string;
 }
 
-export function Combobox({ groups, lang, onChange }: ComboboxProps) {
+export function Combobox({ groups, lang, onChange, id }: ComboboxProps) {
   const [open, setOpen] = React.useState(false);
   const [values, setValues] = React.useState<string[]>([]);
   const t = useTranslations(lang);
@@ -95,11 +96,11 @@ export function Combobox({ groups, lang, onChange }: ComboboxProps) {
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <button
+          id={id}
           type="button"
           className="select block w-full bg-transparent border-0 p-0 text-left cursor-pointer"
           aria-haspopup="listbox"
           aria-expanded={open}
-          aria-label={t("select.open")}
         >
           <div
             dir="auto"
