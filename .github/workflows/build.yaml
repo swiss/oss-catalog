@@ -28,14 +28,7 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@v7
-      - name: Install pnpm
-        uses: pnpm/action-setup@v6
-      - name: Setup Node
-        uses: actions/setup-node@v7
-        with:
-          node-version: lts/krypton
-          cache: pnpm
-          cache-dependency-path: pnpm-lock.yaml
+
       - name: Verify software count threshold
         run: |
           echo "Waiting 10 seconds for software data to be populated..."
@@ -50,10 +43,8 @@ jobs:
             exit 1
           fi
           echo "Software count verification passed: $software_count >= 80"
-      - name: Build client with pnpm
-        run: |
-          pnpm install --frozen-lockfile --strict-peer-dependencies
-          pnpm scope:client build
+      - uses: pnpm/setup@v2
+      - run: pnpm scope:client build
         env:
           API_BASEURL: https://oss-catalog-api.ocp.cloudscale.puzzle.ch/v1
           GIT_COMMIT_HASH: ${{ github.sha }}
