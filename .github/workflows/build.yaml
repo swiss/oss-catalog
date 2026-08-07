@@ -4,7 +4,12 @@ on:
     - cron: "42 */6 * * *"
   push:
     branches:
-      - "**"
+      - "main"
+    tags:
+      - "v*.*.*"
+  pull_request:
+    branches:
+      - "main"
   workflow_dispatch:
 
 permissions:
@@ -13,8 +18,8 @@ permissions:
   id-token: write
 
 concurrency:
-  group: "pages"
-  cancel-in-progress: false
+  group: pages-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -30,7 +35,7 @@ jobs:
         with:
           node-version: lts/krypton
           cache: pnpm
-          cache-dependency-path: client/pnpm-lock.yaml
+          cache-dependency-path: pnpm-lock.yaml
       - name: Verify software count threshold
         run: |
           echo "Waiting 10 seconds for software data to be populated..."
@@ -47,7 +52,6 @@ jobs:
           echo "Software count verification passed: $software_count >= 80"
       - name: Build client with pnpm
         run: |
-          cd client
           pnpm install --frozen-lockfile --strict-peer-dependencies
           pnpm build
         env:
