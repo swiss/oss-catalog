@@ -73,8 +73,6 @@ Install and enable pnpm (see [pnpm docs](https://pnpm.io/installation)):
 curl -fsSL https://get.pnpm.io/install.sh | sh -
 ```
 
-**Note**: If you use Node 26+, corepack is not available anymore. You need to install pnpm manually, see https://pnpm.io/installation
-
 ### API Service
 
 Start API with database:
