@@ -11,6 +11,7 @@ import {
   applyFiltersFromUrl,
   searchTerm,
   organisationType,
+  selectedOrganisations,
   syncFiltersToUrl,
 } from "@/stores/filters";
 import type { Software } from "@/lib/software.ts";
@@ -30,12 +31,21 @@ export default function SearchFiltersIsland({
   const [isOpen, setIsOpen] = useState(false);
   const $searchTerm = useStore(searchTerm);
   const $organisationType = useStore(organisationType);
+  const hasSelectedOrganisations = useStore(selectedOrganisations).length > 0;
 
   useEffect(() => {
     if ($organisationType === "cantons") {
       setIsOpen(false);
     }
   }, [$organisationType]);
+
+  // Organisations can be preselected from the url (e.g. coming from a software
+  // detail page), so reveal the drawer instead of hiding an active filter.
+  useEffect(() => {
+    if (hasSelectedOrganisations) {
+      setIsOpen(true);
+    }
+  }, [hasSelectedOrganisations]);
 
   useEffect(() => {
     applyFiltersFromUrl();
