@@ -63,3 +63,10 @@ alias sf := start-frontend
 start-frontend:
     pnpm install
     pnpm scope:client dev
+
+alias bf := build-frontend
+[group('frontend')]
+[doc('Build the frontend')]
+build-frontend:
+    pnpm install
+    pnpm scope:client build
