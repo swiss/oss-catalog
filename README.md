@@ -105,10 +105,18 @@ List publishers (no authentication needed):
 curl http://localhost:3000/v1/publishers
 ```
 
-Create a publisher:
+Create some publishers:
 
 ```bash
 curl -X POST -H "Authorization: Bearer $PASETO_TOKEN" -H "Content-Type: application/json" -d '{"codeHosting": [{"url": "https://github.com/swiss/", "group": true}], "description": "Swiss Government"}' http://localhost:3000/v1/publishers
+```
+
+```bash
+curl -X POST -H "Authorization: Bearer $PASETO_TOKEN" -H "Content-Type: application/json" -d '{"codeHosting": [{"url": "https://github.com/DCC-BS", "group": true}], "description": "Basel-Stadt"}' http://localhost:3000/v1/publishers
+```
+
+```bash
+curl -X POST -H "Authorization: Bearer $PASETO_TOKEN" -H "Content-Type: application/json" -d '{"codeHosting": [{"url": "https://github.com/agridata-ch", "group": true}], "description": "agridata-ch"}' http://localhost:3000/v1/publishers
 ```
 
 ### Crawler
