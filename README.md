@@ -67,13 +67,11 @@ The crawler needs this token to access GitHub repositories.
 echo "GITHUB_TOKEN=<your access token>" >> .env
 ```
 
-Install and enable pnpm (see [pnpm docs](https://pnpm.io/installation#using-corepack)):
+Install and enable pnpm (see [pnpm docs](https://pnpm.io/installation)):
 
 ```bash
-corepack enable pnpm
+curl -fsSL https://get.pnpm.io/install.sh | sh -
 ```
-
-**Note**: If you use Node 26+, corepack is not available anymore. You need to install pnpm manually, see https://pnpm.io/installation
 
 ### API Service
 
@@ -93,16 +91,30 @@ cd paseto/go
 PASETO_TOKEN="$(go run paseto-generate.go $PASETO_KEY)"
 ```
 
+or, using `just`:
+
+```bash
+export PASETO_TOKEN="$(just pt)"
+```
+
 List publishers (no authentication needed):
 
 ```bash
 curl http://localhost:3000/v1/publishers
 ```
 
-Create a publisher:
+Create some publishers:
 
 ```bash
 curl -X POST -H "Authorization: Bearer $PASETO_TOKEN" -H "Content-Type: application/json" -d '{"codeHosting": [{"url": "https://github.com/swiss/", "group": true}], "description": "Swiss Government"}' http://localhost:3000/v1/publishers
+```
+
+```bash
+curl -X POST -H "Authorization: Bearer $PASETO_TOKEN" -H "Content-Type: application/json" -d '{"codeHosting": [{"url": "https://github.com/DCC-BS", "group": true}], "description": "Basel-Stadt"}' http://localhost:3000/v1/publishers
+```
+
+```bash
+curl -X POST -H "Authorization: Bearer $PASETO_TOKEN" -H "Content-Type: application/json" -d '{"codeHosting": [{"url": "https://github.com/agridata-ch", "group": true}], "description": "agridata-ch"}' http://localhost:3000/v1/publishers
 ```
 
 ### Crawler

@@ -1,13 +1,15 @@
 ---
-import  { type Lang, resolveLanguage, useTranslations } from "../i18n/utils";
+import { getRelativeLocaleUrl } from "astro:i18n";
+import { type Lang, resolveLanguage, useTranslations } from "../i18n/utils";
+import { CANTON_URI_PREFIX } from "../stores/filters";
 import organisations from "../data/organisations.json";
 
-
 const { software } = Astro.props;
-const lang = Astro.currentLocale as Lang
+const lang = Astro.currentLocale as Lang;
 const t = useTranslations(lang);
 const availableLanguages = Object.keys(software.publiccode?.description ?? {});
-const description = software.publiccode?.description[resolveLanguage(lang, availableLanguages)];
+const description =
+  software.publiccode?.description[resolveLanguage(lang, availableLanguages)];
 
 type OrganisationsRoot = typeof organisations;
 
@@ -15,7 +17,9 @@ type OrganisationEntry =
   | OrganisationsRoot[number]
   | OrganisationsRoot[number]["organisations"][number];
 
-const findOrganisationByUri = (uri: string | undefined): OrganisationEntry | undefined => {
+const findOrganisationByUri = (
+  uri: string | undefined,
+): OrganisationEntry | undefined => {
   if (!uri) return undefined;
 
   for (const dept of organisations) {
@@ -32,18 +36,51 @@ const findOrganisationByUri = (uri: string | undefined): OrganisationEntry | und
 
 const toLocalizedName = (organisationEntry: OrganisationEntry | undefined) => {
   if (!organisationEntry) return undefined;
-  const name = organisationEntry.name[resolveLanguage(lang, Object.keys(organisationEntry.name)) as keyof typeof organisationEntry.name]
-  const abbrevation = "abbreviation" in organisationEntry && organisationEntry.abbreviation
-    ? organisationEntry.abbreviation[resolveLanguage(lang, Object.keys(organisationEntry.abbreviation)) as keyof typeof organisationEntry.abbreviation]
-    : undefined;
-  const alternativeName = "alternativeName" in organisationEntry && organisationEntry.alternativeName
-    ? organisationEntry.alternativeName[resolveLanguage(lang, Object.keys(organisationEntry.alternativeName)) as keyof typeof organisationEntry.alternativeName]
-    : undefined;
+  const name =
+    organisationEntry.name[
+      resolveLanguage(
+        lang,
+        Object.keys(organisationEntry.name),
+      ) as keyof typeof organisationEntry.name
+    ];
+  const abbrevation =
+    "abbreviation" in organisationEntry && organisationEntry.abbreviation
+      ? organisationEntry.abbreviation[
+          resolveLanguage(
+            lang,
+            Object.keys(organisationEntry.abbreviation),
+          ) as keyof typeof organisationEntry.abbreviation
+        ]
+      : undefined;
+  const alternativeName =
+    "alternativeName" in organisationEntry && organisationEntry.alternativeName
+      ? organisationEntry.alternativeName[
+          resolveLanguage(
+            lang,
+            Object.keys(organisationEntry.alternativeName),
+          ) as keyof typeof organisationEntry.alternativeName
+        ]
+      : undefined;
   return `${name}${alternativeName ? ` (${alternativeName})` : ""}${abbrevation ? ` (${abbrevation})` : ""}`;
-}
+};
 
-const organisationEntry = findOrganisationByUri(software.publiccode.organisation?.uri);
+const organisationEntry = findOrganisationByUri(
+  software.publiccode.organisation?.uri,
+);
 const organisationName = toLocalizedName(organisationEntry);
+
+const homeUrl = getRelativeLocaleUrl(lang, "");
+const orgUri = software.publiccode.organisation?.uri;
+const orgFilterParams = new URLSearchParams();
+if (orgUri?.startsWith(`${CANTON_URI_PREFIX}/`)) {
+  orgFilterParams.set("type", "cantons");
+  orgFilterParams.append("cantons", orgUri);
+} else if (orgUri) {
+  orgFilterParams.append("organisations", orgUri);
+}
+const organisationUrl = orgFilterParams.toString()
+  ? `${homeUrl}?${orgFilterParams.toString()}`
+  : homeUrl;
 ---
 
 <div>
@@ -55,42 +92,64 @@ const organisationName = toLocalizedName(organisationEntry);
   </div>
   <div class="info-block border-t">
     <h2 class="info-block__title">{t("softwaredetail.repositoryUrl")}</h2><div>
-    <div><a target="_blank" href={software.url}>{software.url}</a></div>
-  </div>
-  </div>
-  {software.publiccode.landingURL && <div class="info-block border-t">
-    <h2 class="info-block__title">{t("softwaredetail.landingPage")}</h2><div>
-    <div><a target="_blank" href={software.publiccode.landingURL}>{software.publiccode.landingURL}</a></div>
-  </div>
-  </div>}
-  {software.publiccode.organisation?.uri && organisationName && (
-    <div class="info-block border-t">
-      <h2 class="info-block__title">{t("softwaredetail.organisation")}</h2><div>
-      <div><a target="_blank" href={software.publiccode.organisation.uri}>{organisationName}</a></div>
+      <div><a target="_blank" href={software.url}>{software.url}</a></div>
     </div>
-    </div>
-  )}
+  </div>
+  {
+    software.publiccode.landingURL && (
+      <div class="info-block border-t">
+        <>
+          <h2 class="info-block__title">{t("softwaredetail.landingPage")}</h2>
+          <div>
+            <div>
+              <a target="_blank" href={software.publiccode.landingURL}>
+                {software.publiccode.landingURL}
+              </a>
+            </div>
+          </div>
+        </>
+      </div>
+    )
+  }
+  {
+    software.publiccode.organisation?.uri && organisationName && (
+      <div class="info-block border-t">
+        <>
+          <h2 class="info-block__title">{t("softwaredetail.organisation")}</h2>
+          <div>
+            <div>
+              <a href={organisationUrl}>{organisationName}</a>
+            </div>
+          </div>
+        </>
+      </div>
+    )
+  }
   <div class="info-block border-t">
-    <h2 class="info-block__title">{t("softwaredetail.shortDescription")}</h2><div>
-    <div>{description?.shortDescription}</div>
-  </div>
+    <h2 class="info-block__title">
+      {t("softwaredetail.shortDescription")}
+    </h2><div>
+      <div>{description?.shortDescription}</div>
+    </div>
   </div>
   <div class="info-block border-t">
     <h2 class="info-block__title">{t("softwaredetail.documentation")}</h2><div>
-    <div>{description?.longDescription}</div>
-  </div>
+      <div>{description?.longDescription}</div>
+    </div>
   </div><div class="info-block border-t">
-  <h2 class="info-block__title">{t("softwaredetail.version")}</h2><div>
-  {software.publiccode.softwareVersion}
-</div>
-</div><div class="info-block border-t">
-  <h2 class="info-block__title">{t("softwaredetail.license")}</h2><div>
-  <div>{software.publiccode.legal.license}</div>
-</div>
-</div>
-  <div class="info-block border-t">
-    <h2 class="info-block__title">{t("softwaredetail.publiccodeVersion")}</h2><div>
-    <div>{software.publiccode.publiccodeYmlVersion}</div>
+    <h2 class="info-block__title">{t("softwaredetail.version")}</h2><div>
+      {software.publiccode.softwareVersion}
+    </div>
+  </div><div class="info-block border-t">
+    <h2 class="info-block__title">{t("softwaredetail.license")}</h2><div>
+      <div>{software.publiccode.legal.license}</div>
+    </div>
   </div>
+  <div class="info-block border-t">
+    <h2 class="info-block__title">
+      {t("softwaredetail.publiccodeVersion")}
+    </h2><div>
+      <div>{software.publiccode.publiccodeYmlVersion}</div>
+    </div>
   </div>
 </div>

@@ -1,14 +1,16 @@
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import type { Software } from "@/lib/software";
 import { useTranslations } from "@/i18n/utils";
 import { SoftwareList } from "./SoftwareList";
 import { useStore } from "@nanostores/react";
 import {
   CANTON_URI_PREFIX,
+  applyFiltersFromUrl,
   searchTerm,
   organisationType,
   selectedCantons,
   selectedOrganisations,
+  syncFiltersToUrl,
 } from "@/stores/filters";
 import { buildSearchText } from "@/lib/searchText";
 import type { Lang } from "@/i18n/utils";
@@ -24,6 +26,11 @@ export default function SoftwareCatalogIsland({ lang, softwares }: Props) {
   const $selectedCantons = useStore(selectedCantons);
   const $searchTerm = useStore(searchTerm);
   const t = useTranslations(lang);
+
+  useEffect(() => {
+    applyFiltersFromUrl();
+    syncFiltersToUrl();
+  }, []);
 
   const trimmedSearchTerm = $searchTerm.trim().toLowerCase();
 
