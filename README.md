@@ -67,10 +67,10 @@ The crawler needs this token to access GitHub repositories.
 echo "GITHUB_TOKEN=<your access token>" >> .env
 ```
 
-Install and enable pnpm (see [pnpm docs](https://pnpm.io/installation#using-corepack)):
+Install and enable pnpm (see [pnpm docs](https://pnpm.io/installation)):
 
 ```bash
-corepack enable pnpm
+curl -fsSL https://get.pnpm.io/install.sh | sh -
 ```
 
 **Note**: If you use Node 26+, corepack is not available anymore. You need to install pnpm manually, see https://pnpm.io/installation
@@ -91,6 +91,12 @@ The API uses PASETO for authentication. Generate a PASETO token (valid for 24h):
 source .env
 cd paseto/go
 PASETO_TOKEN="$(go run paseto-generate.go $PASETO_KEY)"
+```
+
+or, using `just`:
+
+```bash
+export PASETO_TOKEN="$(just pt)"
 ```
 
 List publishers (no authentication needed):
