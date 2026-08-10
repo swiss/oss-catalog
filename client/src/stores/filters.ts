@@ -30,6 +30,10 @@ function isOrganisationType(value: string): value is OrganisationType {
   return ALLOWED_TYPES.includes(value as OrganisationType);
 }
 
+function isCantonUri(uri: string) {
+  return uri.startsWith(`${CANTON_URI_PREFIX}/`);
+}
+
 function normaliseFilters() {
   const type = organisationType.get();
   if (type === "cantons") {
@@ -53,10 +57,12 @@ export function applyFiltersFromUrl() {
   selectedOrganisations.set(
     params
       .getAll(PARAM_KEYS.organisations)
-      .filter((uri) => KNOWN_URIS.has(uri)),
+      .filter((uri) => KNOWN_URIS.has(uri) && !isCantonUri(uri)),
   );
   selectedCantons.set(
-    params.getAll(PARAM_KEYS.cantons).filter((uri) => KNOWN_URIS.has(uri)),
+    params
+      .getAll(PARAM_KEYS.cantons)
+      .filter((uri) => KNOWN_URIS.has(uri) && isCantonUri(uri)),
   );
 
   searchTerm.set(params.get(PARAM_KEYS.q) ?? "");

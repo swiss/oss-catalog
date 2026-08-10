@@ -69,10 +69,10 @@ const organisationEntry = findOrganisationByUri(
 );
 const organisationName = toLocalizedName(organisationEntry);
 
-const homeUrl = getRelativeLocaleUrl(lang);
+const homeUrl = getRelativeLocaleUrl(lang, "");
 const orgUri = software.publiccode.organisation?.uri;
 const orgFilterParams = new URLSearchParams();
-if (orgUri?.startsWith(CANTON_URI_PREFIX)) {
+if (orgUri?.startsWith(`${CANTON_URI_PREFIX}/`)) {
   orgFilterParams.set("type", "cantons");
   orgFilterParams.append("cantons", orgUri);
 } else if (orgUri) {

@@ -75,7 +75,7 @@ export function SoftwareCard({
           <div className="card__footer__action">
             <a
               href={detailUrl}
-              rel="noopener noreferrer"
+              rel="noopener"
               className="btn btn--base btn--outline"
             >
               <span className="btn__text">
