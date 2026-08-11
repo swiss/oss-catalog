@@ -2,7 +2,7 @@
 import Layout from "@/layouts/Layout.astro";
 import SoftwareDetail from "@/components/SoftwareDetail.astro";
 import { getRelativeLocaleUrl } from "astro:i18n";
-import { type Lang, useTranslations } from "@/i18n/utils";
+import { type Lang, resolveLanguage, useTranslations } from "@/i18n/utils";
 import type { PubliccodeYml, Software } from "@/lib/software";
 import { load } from "js-yaml";
 import { hashUrl } from "@/utils/hash";
@@ -40,6 +40,23 @@ const homeUrl = getRelativeLocaleUrl(lang);
 <style></style>
 
 <Layout>
+  <Fragment slot="opengraph">
+    <title>{software.publiccode.name}</title>
+    <meta property="og:title" content={`${software.publiccode.name}`} />
+    <meta
+      property="og:description"
+      content={software.publiccode.description?.[lang]?.shortDescription ?? ""}
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={Astro.url.toString()} />
+    <meta
+      property="og:image"
+      content={Astro.url.origin + "/favicon-128x128.png"}
+    />
+    <meta property="og:image:width" content="128" />
+    <meta property="og:image:height" content="128" />
+    <meta property="og:image:alt" content={t("index.title")} />
+  </Fragment>
   <div class="container pt-8">
     <a
       id="back-to-catalog"
