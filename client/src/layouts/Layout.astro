@@ -22,7 +22,7 @@ const impressumUrl = getRelativeLocaleUrl(
 
 const title = Astro.props.title ?? t("index.title");
 const description = Astro.props.description ?? t("index.subtitle");
-const defaultImage = Astro.url.origin + "/favicon-128x128.png";
+const defaultImage = Astro.url.toString + "/favicon-128x128.png";
 const image = Astro.props.image ?? defaultImage;
 const imageAlt = Astro.props.imageAlt ?? title;
 const type = Astro.props.type ?? "website";
