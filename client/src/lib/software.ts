@@ -44,11 +44,14 @@ export type PubliccodeYml = {
   description?: Record<
     string,
     {
+      localisedName?: string;
+      genericName?: string;
       shortDescription?: string;
       longDescription?: string;
       documentation?: string;
       apiDocumentation?: string;
       features?: string[];
+      screenshots?: string[];
     }
   >;
 };

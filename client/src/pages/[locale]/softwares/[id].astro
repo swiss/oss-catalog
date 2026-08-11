@@ -2,7 +2,7 @@
 import Layout from "@/layouts/Layout.astro";
 import SoftwareDetail from "@/components/SoftwareDetail.astro";
 import { getRelativeLocaleUrl } from "astro:i18n";
-import { type Lang, useTranslations } from "@/i18n/utils";
+import { type Lang, resolveLanguage, useTranslations } from "@/i18n/utils";
 import type { PubliccodeYml, Software } from "@/lib/software";
 import { load } from "js-yaml";
 import { hashUrl } from "@/utils/hash";
@@ -35,28 +35,22 @@ const software: Software = {
 const lang = Astro.currentLocale as Lang;
 const t = useTranslations(lang);
 const homeUrl = getRelativeLocaleUrl(lang);
+
+const availableLanguages = Object.keys(software.publiccode?.description ?? {});
+const softwareDescription =
+  software.publiccode?.description?.[resolveLanguage(lang, availableLanguages)];
+const softwareName = software.publiccode.name;
+const softwareImage = softwareDescription?.screenshots?.[0];
 ---
 
 <style></style>
 
-<Layout>
-  <Fragment slot="opengraph">
-    <title>{software.publiccode.name}</title>
-    <meta property="og:title" content={`${software.publiccode.name}`} />
-    <meta
-      property="og:description"
-      content={software.publiccode.description?.[lang]?.shortDescription ?? ""}
-    />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content={Astro.url.toString()} />
-    <meta
-      property="og:image"
-      content={Astro.url.origin + "/favicon-128x128.png"}
-    />
-    <meta property="og:image:width" content="128" />
-    <meta property="og:image:height" content="128" />
-    <meta property="og:image:alt" content={software.publiccode.name} />
-  </Fragment>
+<Layout
+  title={softwareName}
+  description={softwareDescription?.shortDescription ?? ""}
+  image={softwareImage}
+  imageAlt={softwareName}
+>
   <div class="container pt-8">
     <a
       id="back-to-catalog"

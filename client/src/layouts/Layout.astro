@@ -5,12 +5,28 @@ import { type Lang, toFullLocale, useTranslations } from "../i18n/utils";
 import { getRelativeLocaleUrl } from "astro:i18n";
 import "../styles/global.css";
 
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  imageAlt?: string;
+  type?: "website" | "article";
+}
+
 const lang = Astro.currentLocale as Lang;
 const t = useTranslations(lang);
 const impressumUrl = getRelativeLocaleUrl(
   Astro.currentLocale as Lang,
   "impressum",
 );
+
+const title = Astro.props.title ?? t("index.title");
+const description = Astro.props.description ?? t("index.subtitle");
+const defaultImage = Astro.url.origin + "/favicon-128x128.png";
+const image = Astro.props.image ?? defaultImage;
+const imageAlt = Astro.props.imageAlt ?? title;
+const type = Astro.props.type ?? "website";
+const isDefaultImage = !Astro.props.image;
 
 const commitHash = import.meta.env.GIT_COMMIT_HASH
   ? String(import.meta.env.GIT_COMMIT_HASH).slice(0, 7)
@@ -61,7 +77,15 @@ const buildDateFormatted = `${buildDate.toLocaleDateString(dateLocale, {
     <meta name="msapplication-TileColor" content="#ffffff" />
     <meta name="theme-color" content="#ffffff" />
 
-    <slot name="opengraph" />
+    <title>{title}</title>
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content={type} />
+    <meta property="og:url" content={Astro.url.toString()} />
+    <meta property="og:image" content={image} />
+    {isDefaultImage && <meta property="og:image:width" content="128" />}
+    {isDefaultImage && <meta property="og:image:height" content="128" />}
+    <meta property="og:image:alt" content={imageAlt} />
   </head>
   <body>
     <header id="main-header">
