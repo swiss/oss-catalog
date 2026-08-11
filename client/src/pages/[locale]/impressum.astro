@@ -17,7 +17,7 @@ const t = useTranslations(Astro.currentLocale as Lang);
 <Layout>
   <Fragment slot="opengraph">
     <title>{t("impressum.title")}</title>
-    <meta property="og:title" content={t("index.title")} />
+    <meta property="og:title" content={t("impressum.title")} />
     <meta property="og:description" content={t("index.subtitle")} />
     <meta property="og:type" content="website" />
     <meta property="og:url" content={Astro.url.toString()} />
