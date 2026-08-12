@@ -50,6 +50,7 @@ jobs:
         with:
           install: false
       - run: pnpm install --frozen-lockfile --strict-peer-dependencies
+      - run: pnpm scope:client test
       - run: pnpm scope:client build
         env:
           API_BASEURL: https://oss-catalog-api.ocp.cloudscale.puzzle.ch/v1

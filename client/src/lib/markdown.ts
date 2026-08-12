@@ -37,10 +37,9 @@ renderer.link = function ({ href, title, tokens }) {
   return `<a ${attributes}>${text}</a>`;
 };
 
-marked.use({ renderer });
-
 export function renderMarkdown(raw: string): string {
   const html = marked.parse(raw, {
+    renderer,
     async: false,
     breaks: false,
     gfm: false,
