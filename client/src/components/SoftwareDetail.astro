@@ -1,6 +1,7 @@
 ---
 import { getRelativeLocaleUrl } from "astro:i18n";
 import { type Lang, resolveLanguage, useTranslations } from "../i18n/utils";
+import { renderMarkdown } from "../lib/markdown";
 import { CANTON_URI_PREFIX } from "../stores/filters";
 import organisations from "../data/organisations.json";
 
@@ -10,6 +11,10 @@ const t = useTranslations(lang);
 const availableLanguages = Object.keys(software.publiccode?.description ?? {});
 const description =
   software.publiccode?.description[resolveLanguage(lang, availableLanguages)];
+
+const longDescriptionHtml = description?.longDescription
+  ? renderMarkdown(description.longDescription)
+  : undefined;
 
 type OrganisationsRoot = typeof organisations;
 
@@ -132,11 +137,15 @@ const organisationUrl = orgFilterParams.toString()
       <div>{description?.shortDescription}</div>
     </div>
   </div>
+  {
+    longDescriptionHtml && (
+      <div class="info-block border-t">
+        <h2 class="info-block__title">{t("softwaredetail.documentation")}</h2>
+        <div class="markdown" set:html={longDescriptionHtml} />
+      </div>
+    )
+  }
   <div class="info-block border-t">
-    <h2 class="info-block__title">{t("softwaredetail.documentation")}</h2><div>
-      <div>{description?.longDescription}</div>
-    </div>
-  </div><div class="info-block border-t">
     <h2 class="info-block__title">{t("softwaredetail.version")}</h2><div>
       {software.publiccode.softwareVersion}
     </div>

@@ -1,5 +1,6 @@
 import type { Lang } from "@/i18n/utils";
 import type { Software } from "@/lib/software";
+import { renderMarkdown } from "@/lib/markdown";
 import organisations from "@/data/organisations.json";
 
 type Department = (typeof organisations)[number];
@@ -44,6 +45,13 @@ function findOrganisationLabel(uri: string | undefined, lang: Lang): string {
   return "";
 }
 
+function stripHtml(html: string): string {
+  return html
+    .replace(/<[^>]*>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 function uniqueCategoryCodes(software: Software): string[] {
   const codes = new Set<string>();
   for (const category of software.categories ?? []) {
@@ -75,7 +83,7 @@ export function buildSearchText(software: Software, lang: Lang): string {
     parts.push(description.shortDescription);
   }
   if (description?.longDescription) {
-    parts.push(description.longDescription);
+    parts.push(stripHtml(renderMarkdown(description.longDescription)));
   }
   if (description?.features?.length) {
     parts.push(...description.features);
