@@ -1,9 +1,12 @@
 ---
 import { getRelativeLocaleUrl } from "astro:i18n";
+import OpenGraph from "../components/OpenGraph.astro";
+import { useTranslations } from "../i18n/utils";
 
 // DO NOT use Astro.request or Astro.preferredLocale here.
 // Instead, just generate the static URLs using the safe helpers:
-const fallbackUrl = getRelativeLocaleUrl("en", "");
+const lang = "de";
+const fallbackUrl = getRelativeLocaleUrl(lang, "");
 
 const targetUrls = {
   en: getRelativeLocaleUrl("en", ""),
@@ -11,11 +14,24 @@ const targetUrls = {
   fr: getRelativeLocaleUrl("fr", ""),
   it: getRelativeLocaleUrl("it", ""),
 };
+
+const t = useTranslations(lang);
+const title = t("index.title");
+const description = t("index.subtitle");
+const canonicalUrl = new URL(fallbackUrl, Astro.url).href;
 ---
 
-<html lang="en">
+<html lang={lang}>
   <head>
-    <title>Redirecting...</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>{title}</title>
+    <OpenGraph
+      title={title}
+      description={description}
+      lang={lang}
+      url={canonicalUrl}
+    />
     <noscript>
       <meta http-equiv="refresh" content={`0;url=${fallbackUrl}`} />
     </noscript>

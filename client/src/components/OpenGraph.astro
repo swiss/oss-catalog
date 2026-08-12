@@ -1,0 +1,51 @@
+---
+import { type Lang, toOpenGraphLocale } from "../i18n/utils";
+
+interface Props {
+  title: string;
+  description: string;
+  lang: Lang;
+  url: string;
+  image?: string;
+  imageAlt?: string;
+  imageWidth?: number;
+  imageHeight?: number;
+  type?: "website" | "article";
+  siteName?: string;
+  twitterCard?: string;
+}
+
+const {
+  title,
+  description,
+  lang,
+  url,
+  image,
+  imageAlt = title,
+  imageWidth,
+  imageHeight,
+  type = "website",
+  siteName = "opensource.admin.ch",
+  twitterCard = "summary_large_image",
+} = Astro.props;
+
+const defaultImage = `/opengraph/oss-catalog-og-${lang}.png`;
+const imageUrl = new URL(image ?? defaultImage, Astro.url).href;
+
+const width = imageWidth ?? (image ? undefined : 1200);
+const height = imageHeight ?? (image ? undefined : 630);
+---
+
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:type" content={type} />
+<meta property="og:url" content={url} />
+<meta property="og:image" content={imageUrl} />
+{width !== undefined && <meta property="og:image:width" content={String(width)} />}
+{height !== undefined && (
+  <meta property="og:image:height" content={String(height)} />
+)}
+<meta property="og:image:alt" content={imageAlt} />
+<meta property="og:locale" content={toOpenGraphLocale(lang)} />
+<meta property="og:site_name" content={siteName} />
+<meta name="twitter:card" content={twitterCard} />

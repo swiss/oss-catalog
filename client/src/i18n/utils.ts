@@ -38,3 +38,13 @@ export function toFullLocale(lang: Lang): string {
         ? "it-CH"
         : "de-CH";
 }
+
+export function toOpenGraphLocale(lang: Lang): string {
+  return lang === "de"
+    ? "de_CH"
+    : lang === "fr"
+      ? "fr_CH"
+      : lang === "it"
+        ? "it_CH"
+        : "en_US";
+}

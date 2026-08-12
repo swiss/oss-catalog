@@ -2,6 +2,8 @@
 import { getRelativeLocaleUrl } from "astro:i18n";
 import { hashUrl } from "@/utils/hash";
 import { getSoftwares } from "@/lib/software";
+import OpenGraph from "@/components/OpenGraph.astro";
+import { useTranslations } from "@/i18n/utils";
 
 export async function getStaticPaths() {
   const softwares = await getSoftwares();
@@ -14,19 +16,32 @@ export async function getStaticPaths() {
 const { id } = Astro.params;
 const routePath = id ? `softwares/${id}` : "";
 
+const lang = "de";
 const targetUrls = {
   en: getRelativeLocaleUrl("en", routePath),
   de: getRelativeLocaleUrl("de", routePath),
   fr: getRelativeLocaleUrl("fr", routePath),
   it: getRelativeLocaleUrl("it", routePath),
 };
-const fallbackUrl = targetUrls.en;
+const fallbackUrl = targetUrls[lang];
+
+const t = useTranslations(lang);
+const title = t("index.title");
+const description = t("index.subtitle");
+const canonicalUrl = new URL(fallbackUrl, Astro.url).href;
 ---
 
-<html lang="en">
+<html lang={lang}>
   <head>
-    <meta charset="utf-8" />
-    <title>Redirecting...</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>{title}</title>
+    <OpenGraph
+      title={title}
+      description={description}
+      lang={lang}
+      url={canonicalUrl}
+    />
     <noscript>
       <meta http-equiv="refresh" content={`0;url=${fallbackUrl}`} />
     </noscript>
