@@ -40,7 +40,6 @@ const availableLanguages = Object.keys(software.publiccode?.description ?? {});
 const softwareDescription =
   software.publiccode?.description?.[resolveLanguage(lang, availableLanguages)];
 const softwareName = software.publiccode.name;
-const softwareImage = softwareDescription?.screenshots?.[0];
 ---
 
 <style></style>
@@ -48,8 +47,6 @@ const softwareImage = softwareDescription?.screenshots?.[0];
 <Layout
   title={softwareName}
   description={softwareDescription?.shortDescription ?? ""}
-  image={softwareImage}
-  imageAlt={softwareName}
 >
   <div class="container pt-8">
     <a

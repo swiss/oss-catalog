@@ -8,7 +8,6 @@ import "../styles/global.css";
 interface Props {
   title?: string;
   description?: string;
-  image?: string;
   imageAlt?: string;
   type?: "website" | "article";
 }
@@ -22,11 +21,9 @@ const impressumUrl = getRelativeLocaleUrl(
 
 const title = Astro.props.title ?? t("index.title");
 const description = Astro.props.description ?? t("index.subtitle");
-const defaultImage = Astro.url.origin + "/favicon-128x128.png";
-const image = Astro.props.image ?? defaultImage;
+const image = Astro.url.origin + `/opengraph/oss-catalog-og-${lang}.png`;
 const imageAlt = Astro.props.imageAlt ?? title;
 const type = Astro.props.type ?? "website";
-const isDefaultImage = !Astro.props.image;
 
 const commitHash = import.meta.env.GIT_COMMIT_HASH
   ? String(import.meta.env.GIT_COMMIT_HASH).slice(0, 7)
@@ -83,9 +80,10 @@ const buildDateFormatted = `${buildDate.toLocaleDateString(dateLocale, {
     <meta property="og:type" content={type} />
     <meta property="og:url" content={Astro.url.toString()} />
     <meta property="og:image" content={image} />
-    {isDefaultImage && <meta property="og:image:width" content="128" />}
-    {isDefaultImage && <meta property="og:image:height" content="128" />}
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content={imageAlt} />
+    <meta property="og:site_name" content="opensource.admin.ch" />
   </head>
   <body>
     <header id="main-header">
