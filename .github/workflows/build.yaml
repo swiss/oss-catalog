@@ -54,6 +54,7 @@ jobs:
         env:
           API_BASEURL: https://oss-catalog-api.ocp.cloudscale.puzzle.ch/v1
           GIT_COMMIT_HASH: ${{ github.sha }}
+          SITE_URL: https://www.opensource.admin.ch
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v5
         with:

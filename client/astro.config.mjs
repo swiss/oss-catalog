@@ -9,7 +9,7 @@ dotenv.config();
 
 // https://astro.build/config
 export default defineConfig({
-  site: process.env.SITE_URL || "https://swiss.github.io",
+  site: process.env.SITE_URL || "https://www.opensource.admin.ch",
   i18n: {
     locales: ["en", "de", "fr", "it"],
     defaultLocale: "de",
