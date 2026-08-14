@@ -1,12 +1,20 @@
 publiccodeYmlVersion: 0.5.0
 name: Open Source Software Catalogue
+applicationSuite: test
 url: https://github.com/swiss/oss-catalog
+landingURL: https://www.opensource.admin.ch
+releaseDate: 2025-12-01
 platforms:
   - web
 categories:
   - data-collection
-developmentStatus: concept
+  - collaboration
+  - other
+developmentStatus: stable
 softwareType: standalone/web
+intendedAudience:
+  countries:
+    - CH
 organisation:
   uri: https://ld.admin.ch/FCh
   name: Bundeskanzlei
@@ -14,19 +22,29 @@ description:
   en:
     shortDescription: Open Source Software Catalogue based on the Public Code standard.
     longDescription:
-      The **Open Source Software Catalogue** provides an overview of free
-      and open-source software developed by or for the Swiss Confederation. It
-      is based on the [Public Code](https://yml.publiccode.tools/) standard, which describes software in a
-      machine-readable way, making it discoverable and understandable for both
-      developers and non-technical users.
+      The **Open Source Software Catalogue** provides an overview of
+      free and open-source software developed by or for the Swiss Confederation.
+      It is based on the [publiccode.yml](https://yml.publiccode.tools/)
+      standard, which describes software in a machine-readable way, making it
+      discoverable and understandable for both developers and non-technical
+      users.
     features:
-      - Manage publishers
-      - List softwares
+      - find open source project developed by federal authorities
+    screenshots:
+      - https://raw.githubusercontent.com/swiss/oss-catalog/refs/heads/main/doc/screenshot.png
 legal:
   license: AGPL-3.0-or-later
 maintenance:
-  type: none
+  type: contract
+  contractors:
+    - name: Puzzle ITC Gmbh
+      until: 2026-12-31
+      email: info@puzzle.ch
+      website: https://www.puzzle.ch
 localisation:
-  localisationReady: false
+  localisationReady: true
   availableLanguages:
     - en
+    - de
+    - fr
+    - it
