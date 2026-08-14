@@ -1,3 +1,5 @@
+import { parseRepoUrl } from "./repoUrl";
+
 export function resolveMediaUrl(
   repoUrl: string | undefined,
   path: string | undefined,
@@ -25,20 +27,12 @@ export function resolveMediaUrl(
 
   const cleanPath = path.replace(/^\/+/, "");
 
-  const gitHubMatch = repoUrl.match(
-    /^(?:https?:\/\/)?(?:www\.)?github\.com\/([^/]+)\/([^/]+?)(?:\.git)?(?:\/.*)?$/i,
-  );
-  if (gitHubMatch) {
-    const [, owner, repo] = gitHubMatch;
-    return `https://raw.githubusercontent.com/${owner}/${repo}/HEAD/${cleanPath}`;
-  }
-
-  const gitLabMatch = repoUrl.match(
-    /^(?:https?:\/\/)?(?:www\.)?gitlab\.com\/([^/]+)\/([^/]+?)(?:\.git)?(?:\/.*)?$/i,
-  );
-  if (gitLabMatch) {
-    const [, owner, repo] = gitLabMatch;
-    return `https://gitlab.com/${owner}/${repo}/-/raw/HEAD/${cleanPath}`;
+  const repoInfo = parseRepoUrl(repoUrl);
+  if (repoInfo) {
+    if (repoInfo.type === "github") {
+      return `https://raw.githubusercontent.com/${repoInfo.owner}/${repoInfo.repo}/HEAD/${cleanPath}`;
+    }
+    return `https://gitlab.com/${repoInfo.owner}/${repoInfo.repo}/-/raw/HEAD/${cleanPath}`;
   }
 
   return undefined;
