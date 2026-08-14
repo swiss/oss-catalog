@@ -6,6 +6,7 @@ import { renderMarkdown } from "../lib/markdown";
 import { CANTON_URI_PREFIX } from "../stores/filters";
 import organisations from "../data/organisations.json";
 import { resolveMediaUrl, getVideoEmbed } from "../lib/publiccodeMedia";
+import { getPubliccodeYmlUrl } from "../lib/repoUrl";
 import type { Dependency, FundingSource, Software } from "../lib/software";
 
 interface Props {
@@ -104,10 +105,11 @@ const formatDate = (value: string | undefined): string | undefined => {
 };
 
 const repoUrl = software.url;
+const publiccodeYmlUrl = getPubliccodeYmlUrl(repoUrl);
 const isBasedOnUrls =
   typeof software.publiccode?.isBasedOn === "string"
     ? [software.publiccode.isBasedOn]
-    : software.publiccode?.isBasedOn ?? [];
+    : (software.publiccode?.isBasedOn ?? []);
 const logoUrl = resolveMediaUrl(repoUrl, software.publiccode?.logo);
 const screenshotUrls =
   description?.screenshots
@@ -179,11 +181,20 @@ const formatDependency = (dep: Dependency): string => {
   <div class="info-block border-t">
     <h2 class="info-block__title">{t("softwaredetail.repositoryUrl")}</h2>
     <div>
-      <div>
-        <a target="_blank" href={software.url} rel="noreferrer">
-          {software.url}
-        </a>
-      </div>
+      <a target="_blank" href={software.url} rel="noreferrer">
+        {software.url}
+      </a>
+      {
+        publiccodeYmlUrl && (
+          <span class="ml-2">
+            (
+            <a target="_blank" href={publiccodeYmlUrl} rel="noreferrer">
+              publiccode.yml
+            </a>
+            )
+          </span>
+        )
+      }
     </div>
   </div>
   {
@@ -251,9 +262,7 @@ const formatDependency = (dep: Dependency): string => {
   {
     longDescriptionHtml && (
       <div class="info-block border-t">
-        <h2 class="info-block__title">
-          {t("softwaredetail.longDescription")}
-        </h2>
+        <h2 class="info-block__title">{t("softwaredetail.longDescription")}</h2>
         <div class="markdown" set:html={longDescriptionHtml} />
       </div>
     )
@@ -397,20 +406,22 @@ const formatDependency = (dep: Dependency): string => {
     )
   }
   {
-    software.publiccode?.platforms && software.publiccode.platforms.length > 0 && (
-      <div class="info-block border-t">
-        <h2 class="info-block__title">{t("softwaredetail.platforms")}</h2>
-        <div>{software.publiccode.platforms.join(", ")}</div>
-      </div>
-    )
+    software.publiccode?.platforms &&
+      software.publiccode.platforms.length > 0 && (
+        <div class="info-block border-t">
+          <h2 class="info-block__title">{t("softwaredetail.platforms")}</h2>
+          <div>{software.publiccode.platforms.join(", ")}</div>
+        </div>
+      )
   }
   {
-    software.publiccode?.categories && software.publiccode.categories.length > 0 && (
-      <div class="info-block border-t">
-        <h2 class="info-block__title">{t("softwaredetail.categories")}</h2>
-        <div>{software.publiccode.categories.join(", ")}</div>
-      </div>
-    )
+    software.publiccode?.categories &&
+      software.publiccode.categories.length > 0 && (
+        <div class="info-block border-t">
+          <h2 class="info-block__title">{t("softwaredetail.categories")}</h2>
+          <div>{software.publiccode.categories.join(", ")}</div>
+        </div>
+      )
   }
   {
     software.publiccode?.usedBy && software.publiccode.usedBy.length > 0 && (
@@ -427,33 +438,38 @@ const formatDependency = (dep: Dependency): string => {
     )
   }
   {
-    software.publiccode?.fundedBy && software.publiccode.fundedBy.length > 0 && (
-      <div class="info-block border-t">
-        <h2 class="info-block__title">{t("softwaredetail.fundedBy")}</h2>
-        <div>
-          <ul class="list-disc ml-5">
-            {software.publiccode.fundedBy.map((funder: FundingSource) => (
-              <li>
-                {funder.uri ? (
-                  <a target="_blank" href={funder.uri} rel="noreferrer">
-                    {funder.name}
-                  </a>
-                ) : (
-                  funder.name
-                )}
-              </li>
-            ))}
-          </ul>
+    software.publiccode?.fundedBy &&
+      software.publiccode.fundedBy.length > 0 && (
+        <div class="info-block border-t">
+          <h2 class="info-block__title">{t("softwaredetail.fundedBy")}</h2>
+          <div>
+            <ul class="list-disc ml-5">
+              {software.publiccode.fundedBy.map((funder: FundingSource) => (
+                <li>
+                  {funder.uri ? (
+                    <a target="_blank" href={funder.uri} rel="noreferrer">
+                      {funder.name}
+                    </a>
+                  ) : (
+                    funder.name
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
-      </div>
-    )
+      )
   }
   {
     software.publiccode?.roadmap && (
       <div class="info-block border-t">
         <h2 class="info-block__title">{t("softwaredetail.roadmap")}</h2>
         <div>
-          <a target="_blank" href={software.publiccode.roadmap} rel="noreferrer">
+          <a
+            target="_blank"
+            href={software.publiccode.roadmap}
+            rel="noreferrer"
+          >
             {software.publiccode.roadmap}
           </a>
         </div>
@@ -461,12 +477,13 @@ const formatDependency = (dep: Dependency): string => {
     )
   }
   {
-    software.publiccode?.supports && software.publiccode.supports.length > 0 && (
-      <div class="info-block border-t">
-        <h2 class="info-block__title">{t("softwaredetail.supports")}</h2>
-        <div>{software.publiccode.supports.join(", ")}</div>
-      </div>
-    )
+    software.publiccode?.supports &&
+      software.publiccode.supports.length > 0 && (
+        <div class="info-block border-t">
+          <h2 class="info-block__title">{t("softwaredetail.supports")}</h2>
+          <div>{software.publiccode.supports.join(", ")}</div>
+        </div>
+      )
   }
   {
     software.publiccode?.intendedAudience && (
@@ -478,7 +495,9 @@ const formatDependency = (dep: Dependency): string => {
           {software.publiccode.intendedAudience.countries &&
             software.publiccode.intendedAudience.countries.length > 0 && (
               <div class="mb-2">
-                <strong>{t("softwaredetail.intendedAudience.countries")}:</strong>
+                <strong>
+                  {t("softwaredetail.intendedAudience.countries")}:
+                </strong>
                 <br />
                 {software.publiccode.intendedAudience.countries.join(", ")}
               </div>
@@ -558,7 +577,8 @@ const formatDependency = (dep: Dependency): string => {
                         {contractor.until && (
                           <>
                             {" "}
-                            ({t("softwaredetail.until")}: {formatDate(contractor.until)})
+                            ({t("softwaredetail.until")}:{" "}
+                            {formatDate(contractor.until)})
                           </>
                         )}
                       </li>
@@ -592,7 +612,8 @@ const formatDependency = (dep: Dependency): string => {
                       {contact.affiliation && (
                         <>
                           {" "}
-                          ({t("softwaredetail.affiliation")}: {contact.affiliation})
+                          ({t("softwaredetail.affiliation")}:{" "}
+                          {contact.affiliation})
                         </>
                       )}
                     </li>
