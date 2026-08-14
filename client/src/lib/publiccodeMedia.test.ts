@@ -10,10 +10,7 @@ describe("resolveMediaUrl", () => {
 
   it("returns data URLs unchanged", () => {
     expect(
-      resolveMediaUrl(
-        undefined,
-        "data:image/png;base64,iVBORw0KGgo=",
-      ),
+      resolveMediaUrl(undefined, "data:image/png;base64,iVBORw0KGgo="),
     ).toBe("data:image/png;base64,iVBORw0KGgo=");
   });
 
@@ -53,10 +50,7 @@ describe("resolveMediaUrl", () => {
 
   it("resolves GitLab raw URLs", () => {
     expect(
-      resolveMediaUrl(
-        "https://gitlab.com/owner/project.git",
-        "img/logo.png",
-      ),
+      resolveMediaUrl("https://gitlab.com/owner/project.git", "img/logo.png"),
     ).toBe("https://gitlab.com/owner/project/-/raw/HEAD/img/logo.png");
   });
 
@@ -64,6 +58,59 @@ describe("resolveMediaUrl", () => {
     expect(
       resolveMediaUrl("https://example.com/repo.git", "img/logo.png"),
     ).toBeUndefined();
+  });
+
+  it("converts GitHub blob URLs to raw refs/heads URLs", () => {
+    expect(
+      resolveMediaUrl(
+        undefined,
+        "https://github.com/DCC-BS/bericht-frontend/blob/main/_imgs/report.png",
+      ),
+    ).toBe(
+      "https://raw.githubusercontent.com/DCC-BS/bericht-frontend/refs/heads/main/_imgs/report.png",
+    );
+  });
+
+  it("converts GitHub blob URLs without protocol", () => {
+    expect(
+      resolveMediaUrl(
+        "https://github.com/DCC-BS/bericht-frontend.git",
+        "github.com/DCC-BS/bericht-frontend/blob/main/_imgs/report.png",
+      ),
+    ).toBe(
+      "https://raw.githubusercontent.com/DCC-BS/bericht-frontend/refs/heads/main/_imgs/report.png",
+    );
+  });
+
+  it("strips query strings and fragments from GitHub blob URLs", () => {
+    expect(
+      resolveMediaUrl(
+        undefined,
+        "https://github.com/DCC-BS/bericht-frontend/blob/main/_imgs/report.png?raw=true#anchor",
+      ),
+    ).toBe(
+      "https://raw.githubusercontent.com/DCC-BS/bericht-frontend/refs/heads/main/_imgs/report.png",
+    );
+  });
+
+  it("converts GitLab blob URLs to raw URLs", () => {
+    expect(
+      resolveMediaUrl(
+        undefined,
+        "https://gitlab.com/owner/project/-/blob/main/docs/image.png",
+      ),
+    ).toBe("https://gitlab.com/owner/project/-/raw/main/docs/image.png");
+  });
+
+  it("leaves already-raw GitHub URLs unchanged", () => {
+    expect(
+      resolveMediaUrl(
+        undefined,
+        "https://raw.githubusercontent.com/DCC-BS/bericht-frontend/main/_imgs/report.png",
+      ),
+    ).toBe(
+      "https://raw.githubusercontent.com/DCC-BS/bericht-frontend/main/_imgs/report.png",
+    );
   });
 });
 

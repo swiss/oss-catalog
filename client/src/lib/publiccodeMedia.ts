@@ -4,10 +4,23 @@ export function resolveMediaUrl(
 ): string | undefined {
   if (!path) return undefined;
 
-  if (/^https?:\/\//i.test(path) || /^data:/i.test(path)) {
-    return path;
+  const gitHubBlobMatch = path.match(
+    /^(?:https?:\/\/)?(?:www\.)?github\.com\/([^/]+)\/([^/]+?)\/blob\/([^/]+)\/([^?#]+)(?:[?#].*)?$/i,
+  );
+  if (gitHubBlobMatch) {
+    const [, owner, repo, branch, filePath] = gitHubBlobMatch;
+    return `https://raw.githubusercontent.com/${owner}/${repo}/refs/heads/${branch}/${filePath}`;
   }
 
+  const gitLabBlobMatch = path.match(
+    /^(?:https?:\/\/)?(?:www\.)?gitlab\.com\/([^/]+)\/([^/]+?)\/-\/blob\/([^/]+)\/([^?#]+)(?:[?#].*)?$/i,
+  );
+  if (gitLabBlobMatch) {
+    const [, owner, repo, branch, filePath] = gitLabBlobMatch;
+    return `https://gitlab.com/${owner}/${repo}/-/raw/${branch}/${filePath}`;
+  }
+
+  if (/^https?:\/\//i.test(path) || /^data:/i.test(path)) return path;
   if (!repoUrl) return undefined;
 
   const cleanPath = path.replace(/^\/+/, "");
