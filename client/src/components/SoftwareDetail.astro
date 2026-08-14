@@ -1,16 +1,23 @@
 ---
+import { format, parseISO } from "date-fns";
 import { getRelativeLocaleUrl } from "astro:i18n";
 import { type Lang, resolveLanguage, useTranslations } from "../i18n/utils";
 import { renderMarkdown } from "../lib/markdown";
 import { CANTON_URI_PREFIX } from "../stores/filters";
 import organisations from "../data/organisations.json";
+import { resolveMediaUrl, getVideoEmbed } from "../lib/publiccodeMedia";
+import type { Dependency, FundingSource, Software } from "../lib/software";
+
+interface Props {
+  software: Software;
+}
 
 const { software } = Astro.props;
 const lang = Astro.currentLocale as Lang;
 const t = useTranslations(lang);
 const availableLanguages = Object.keys(software.publiccode?.description ?? {});
 const description =
-  software.publiccode?.description[resolveLanguage(lang, availableLanguages)];
+  software.publiccode?.description?.[resolveLanguage(lang, availableLanguages)];
 
 const longDescriptionHtml = description?.longDescription
   ? renderMarkdown(description.longDescription)
@@ -70,12 +77,12 @@ const toLocalizedName = (organisationEntry: OrganisationEntry | undefined) => {
 };
 
 const organisationEntry = findOrganisationByUri(
-  software.publiccode.organisation?.uri,
+  software.publiccode?.organisation?.uri,
 );
 const organisationName = toLocalizedName(organisationEntry);
 
 const homeUrl = getRelativeLocaleUrl(lang, "");
-const orgUri = software.publiccode.organisation?.uri;
+const orgUri = software.publiccode?.organisation?.uri;
 const orgFilterParams = new URLSearchParams();
 if (orgUri?.startsWith(`${CANTON_URI_PREFIX}/`)) {
   orgFilterParams.set("type", "cantons");
@@ -86,79 +93,596 @@ if (orgUri?.startsWith(`${CANTON_URI_PREFIX}/`)) {
 const organisationUrl = orgFilterParams.toString()
   ? `${homeUrl}?${orgFilterParams.toString()}`
   : homeUrl;
+
+const formatDate = (value: string | undefined): string | undefined => {
+  if (!value) return undefined;
+  try {
+    return format(parseISO(value), "dd.MM.yyyy");
+  } catch {
+    return value;
+  }
+};
+
+const repoUrl = software.url;
+const isBasedOnUrls =
+  typeof software.publiccode?.isBasedOn === "string"
+    ? [software.publiccode.isBasedOn]
+    : software.publiccode?.isBasedOn ?? [];
+const logoUrl = resolveMediaUrl(repoUrl, software.publiccode?.logo);
+const screenshotUrls =
+  description?.screenshots
+    ?.map((path) => resolveMediaUrl(repoUrl, path))
+    .filter((url): url is string => Boolean(url)) ?? [];
+const videoEmbeds =
+  description?.videos
+    ?.map((url) => getVideoEmbed(url))
+    .filter((embed): embed is NonNullable<typeof embed> => Boolean(embed)) ??
+  [];
+
+const formatDependency = (dep: Dependency): string => {
+  let label = dep.name;
+  if (dep.optional) {
+    label += ` (${t("softwaredetail.optional")})`;
+  }
+  const versions: string[] = [];
+  if (dep.versionMin) versions.push(`≥${dep.versionMin}`);
+  if (dep.version) versions.push(dep.version);
+  if (dep.versionMax) versions.push(`<${dep.versionMax}`);
+  if (versions.length) {
+    label += ` ${versions.join(" ")}`;
+  }
+  return label;
+};
 ---
 
 <div>
+  {
+    logoUrl && (
+      <div class="info-block border-t">
+        <h2 class="info-block__title">{t("softwaredetail.logo")}</h2>
+        <div>
+          <img
+            src={logoUrl}
+            alt={software.publiccode?.name ?? ""}
+            loading="lazy"
+            decoding="async"
+            class="h-24 w-auto object-contain"
+          />
+        </div>
+      </div>
+    )
+  }
   <div class="info-block border-t">
     <h2 class="info-block__title">{t("softwaredetail.name")}</h2>
     <div>
-      <span>{software.publiccode.name}</span>
-    </div>
-  </div>
-  <div class="info-block border-t">
-    <h2 class="info-block__title">{t("softwaredetail.repositoryUrl")}</h2><div>
-      <div><a target="_blank" href={software.url}>{software.url}</a></div>
+      <span>{software.publiccode?.name}</span>
     </div>
   </div>
   {
-    software.publiccode.landingURL && (
+    description?.localisedName && (
       <div class="info-block border-t">
-        <>
-          <h2 class="info-block__title">{t("softwaredetail.landingPage")}</h2>
-          <div>
-            <div>
-              <a target="_blank" href={software.publiccode.landingURL}>
-                {software.publiccode.landingURL}
-              </a>
-            </div>
-          </div>
-        </>
+        <h2 class="info-block__title">{t("softwaredetail.localisedName")}</h2>
+        <div>{description.localisedName}</div>
       </div>
     )
   }
   {
-    software.publiccode.organisation?.uri && organisationName && (
+    software.publiccode?.applicationSuite && (
       <div class="info-block border-t">
-        <>
-          <h2 class="info-block__title">{t("softwaredetail.organisation")}</h2>
-          <div>
-            <div>
-              <a href={organisationUrl}>{organisationName}</a>
-            </div>
-          </div>
-        </>
+        <h2 class="info-block__title">
+          {t("softwaredetail.applicationSuite")}
+        </h2>
+        <div>{software.publiccode.applicationSuite}</div>
       </div>
     )
   }
   <div class="info-block border-t">
-    <h2 class="info-block__title">
-      {t("softwaredetail.shortDescription")}
-    </h2><div>
-      <div>{description?.shortDescription}</div>
+    <h2 class="info-block__title">{t("softwaredetail.repositoryUrl")}</h2>
+    <div>
+      <div>
+        <a target="_blank" href={software.url} rel="noreferrer">
+          {software.url}
+        </a>
+      </div>
     </div>
   </div>
+  {
+    software.publiccode?.landingURL && (
+      <div class="info-block border-t">
+        <h2 class="info-block__title">{t("softwaredetail.landingPage")}</h2>
+        <div>
+          <a
+            target="_blank"
+            href={software.publiccode.landingURL}
+            rel="noreferrer"
+          >
+            {software.publiccode.landingURL}
+          </a>
+        </div>
+      </div>
+    )
+  }
+  {
+    isBasedOnUrls.length > 0 && (
+      <div class="info-block border-t">
+        <h2 class="info-block__title">{t("softwaredetail.isBasedOn")}</h2>
+        <div>
+          <ul class="list-disc ml-5">
+            {isBasedOnUrls.map((url) => (
+              <li>
+                <a target="_blank" href={url} rel="noreferrer">
+                  {url}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    )
+  }
+  {
+    software.publiccode?.organisation?.uri && organisationName && (
+      <div class="info-block border-t">
+        <h2 class="info-block__title">{t("softwaredetail.organisation")}</h2>
+        <div>
+          <a href={organisationUrl}>{organisationName}</a>
+        </div>
+      </div>
+    )
+  }
+  {
+    software.publiccode?.organisation?.name && !organisationName && (
+      <div class="info-block border-t">
+        <h2 class="info-block__title">{t("softwaredetail.organisation")}</h2>
+        <div>{software.publiccode.organisation.name}</div>
+      </div>
+    )
+  }
+  {
+    description?.shortDescription && (
+      <div class="info-block border-t">
+        <h2 class="info-block__title">
+          {t("softwaredetail.shortDescription")}
+        </h2>
+        <div>{description.shortDescription}</div>
+      </div>
+    )
+  }
   {
     longDescriptionHtml && (
       <div class="info-block border-t">
-        <h2 class="info-block__title">{t("softwaredetail.documentation")}</h2>
+        <h2 class="info-block__title">
+          {t("softwaredetail.longDescription")}
+        </h2>
         <div class="markdown" set:html={longDescriptionHtml} />
       </div>
     )
   }
+  {
+    description?.documentation && (
+      <div class="info-block border-t">
+        <h2 class="info-block__title">{t("softwaredetail.documentation")}</h2>
+        <div>
+          <a target="_blank" href={description.documentation} rel="noreferrer">
+            {description.documentation}
+          </a>
+        </div>
+      </div>
+    )
+  }
+  {
+    description?.apiDocumentation && (
+      <div class="info-block border-t">
+        <h2 class="info-block__title">
+          {t("softwaredetail.apiDocumentation")}
+        </h2>
+        <div>
+          <a
+            target="_blank"
+            href={description.apiDocumentation}
+            rel="noreferrer"
+          >
+            {description.apiDocumentation}
+          </a>
+        </div>
+      </div>
+    )
+  }
+  {
+    description?.features && description.features.length > 0 && (
+      <div class="info-block border-t">
+        <h2 class="info-block__title">{t("softwaredetail.features")}</h2>
+        <div>
+          <ul class="list-disc ml-5">
+            {description.features.map((feature) => (
+              <li>{feature}</li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    )
+  }
+  {
+    description?.awards && description.awards.length > 0 && (
+      <div class="info-block border-t">
+        <h2 class="info-block__title">{t("softwaredetail.awards")}</h2>
+        <div>
+          <ul class="list-disc ml-5">
+            {description.awards.map((award) => (
+              <li>{award}</li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    )
+  }
+  {
+    screenshotUrls.length > 0 && (
+      <div class="info-block border-t">
+        <h2 class="info-block__title">{t("softwaredetail.screenshots")}</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {screenshotUrls.map((url) => (
+            <a
+              href={url}
+              target="_blank"
+              rel="noreferrer"
+              class="block border border-border rounded overflow-hidden"
+            >
+              <img
+                src={url}
+                alt=""
+                loading="lazy"
+                decoding="async"
+                class="w-full h-auto object-cover"
+              />
+            </a>
+          ))}
+        </div>
+      </div>
+    )
+  }
+  {
+    videoEmbeds.length > 0 && (
+      <div class="info-block border-t">
+        <h2 class="info-block__title">{t("softwaredetail.videos")}</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {videoEmbeds.map((embed) => (
+            <div class="aspect-video">
+              <iframe
+                src={embed.embedUrl}
+                title={t("softwaredetail.videos")}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen
+                loading="lazy"
+                class="w-full h-full border-0"
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+    )
+  }
+  {
+    software.publiccode?.developmentStatus && (
+      <div class="info-block border-t">
+        <h2 class="info-block__title">
+          {t("softwaredetail.developmentStatus")}
+        </h2>
+        <div>{software.publiccode.developmentStatus}</div>
+      </div>
+    )
+  }
+  {
+    software.publiccode?.softwareType && (
+      <div class="info-block border-t">
+        <h2 class="info-block__title">{t("softwaredetail.softwareType")}</h2>
+        <div>{software.publiccode.softwareType}</div>
+      </div>
+    )
+  }
+  {
+    software.publiccode?.softwareVersion && (
+      <div class="info-block border-t">
+        <h2 class="info-block__title">{t("softwaredetail.version")}</h2>
+        <div>{software.publiccode.softwareVersion}</div>
+      </div>
+    )
+  }
+  {
+    software.publiccode?.releaseDate && (
+      <div class="info-block border-t">
+        <h2 class="info-block__title">{t("softwaredetail.releaseDate")}</h2>
+        <div>{formatDate(software.publiccode.releaseDate)}</div>
+      </div>
+    )
+  }
+  {
+    software.publiccode?.platforms && software.publiccode.platforms.length > 0 && (
+      <div class="info-block border-t">
+        <h2 class="info-block__title">{t("softwaredetail.platforms")}</h2>
+        <div>{software.publiccode.platforms.join(", ")}</div>
+      </div>
+    )
+  }
+  {
+    software.publiccode?.categories && software.publiccode.categories.length > 0 && (
+      <div class="info-block border-t">
+        <h2 class="info-block__title">{t("softwaredetail.categories")}</h2>
+        <div>{software.publiccode.categories.join(", ")}</div>
+      </div>
+    )
+  }
+  {
+    software.publiccode?.usedBy && software.publiccode.usedBy.length > 0 && (
+      <div class="info-block border-t">
+        <h2 class="info-block__title">{t("softwaredetail.usedBy")}</h2>
+        <div>
+          <ul class="list-disc ml-5">
+            {software.publiccode.usedBy.map((user) => (
+              <li>{user}</li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    )
+  }
+  {
+    software.publiccode?.fundedBy && software.publiccode.fundedBy.length > 0 && (
+      <div class="info-block border-t">
+        <h2 class="info-block__title">{t("softwaredetail.fundedBy")}</h2>
+        <div>
+          <ul class="list-disc ml-5">
+            {software.publiccode.fundedBy.map((funder: FundingSource) => (
+              <li>
+                {funder.uri ? (
+                  <a target="_blank" href={funder.uri} rel="noreferrer">
+                    {funder.name}
+                  </a>
+                ) : (
+                  funder.name
+                )}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    )
+  }
+  {
+    software.publiccode?.roadmap && (
+      <div class="info-block border-t">
+        <h2 class="info-block__title">{t("softwaredetail.roadmap")}</h2>
+        <div>
+          <a target="_blank" href={software.publiccode.roadmap} rel="noreferrer">
+            {software.publiccode.roadmap}
+          </a>
+        </div>
+      </div>
+    )
+  }
+  {
+    software.publiccode?.supports && software.publiccode.supports.length > 0 && (
+      <div class="info-block border-t">
+        <h2 class="info-block__title">{t("softwaredetail.supports")}</h2>
+        <div>{software.publiccode.supports.join(", ")}</div>
+      </div>
+    )
+  }
+  {
+    software.publiccode?.intendedAudience && (
+      <div class="info-block border-t">
+        <h2 class="info-block__title">
+          {t("softwaredetail.intendedAudience")}
+        </h2>
+        <div>
+          {software.publiccode.intendedAudience.countries &&
+            software.publiccode.intendedAudience.countries.length > 0 && (
+              <div class="mb-2">
+                <strong>{t("softwaredetail.intendedAudience.countries")}:</strong>
+                <br />
+                {software.publiccode.intendedAudience.countries.join(", ")}
+              </div>
+            )}
+          {software.publiccode.intendedAudience.unsupportedCountries &&
+            software.publiccode.intendedAudience.unsupportedCountries.length >
+              0 && (
+              <div class="mb-2">
+                <strong>
+                  {t("softwaredetail.intendedAudience.unsupportedCountries")}:
+                </strong>
+                <br />
+                {software.publiccode.intendedAudience.unsupportedCountries.join(
+                  ", ",
+                )}
+              </div>
+            )}
+          {software.publiccode.intendedAudience.scope &&
+            software.publiccode.intendedAudience.scope.length > 0 && (
+              <div>
+                <strong>{t("softwaredetail.intendedAudience.scope")}:</strong>
+                <br />
+                {software.publiccode.intendedAudience.scope.join(", ")}
+              </div>
+            )}
+        </div>
+      </div>
+    )
+  }
   <div class="info-block border-t">
-    <h2 class="info-block__title">{t("softwaredetail.version")}</h2><div>
-      {software.publiccode.softwareVersion}
-    </div>
-  </div><div class="info-block border-t">
-    <h2 class="info-block__title">{t("softwaredetail.license")}</h2><div>
-      <div>{software.publiccode.legal.license}</div>
-    </div>
+    <h2 class="info-block__title">{t("softwaredetail.license")}</h2>
+    <div>{software.publiccode?.legal?.license}</div>
   </div>
+  {
+    software.publiccode?.legal?.mainCopyrightOwner && (
+      <div class="info-block border-t">
+        <h2 class="info-block__title">
+          {t("softwaredetail.mainCopyrightOwner")}
+        </h2>
+        <div>{software.publiccode.legal.mainCopyrightOwner}</div>
+      </div>
+    )
+  }
+  {
+    software.publiccode?.maintenance && (
+      <div class="info-block border-t">
+        <h2 class="info-block__title">{t("softwaredetail.maintenance")}</h2>
+        <div>
+          {software.publiccode.maintenance.type && (
+            <div class="mb-3">
+              <strong>{t("softwaredetail.maintenance.type")}:</strong>
+              <br />
+              {software.publiccode.maintenance.type}
+            </div>
+          )}
+          {software.publiccode.maintenance.contractors &&
+            software.publiccode.maintenance.contractors.length > 0 && (
+              <div class="mb-3">
+                <strong>{t("softwaredetail.maintenance.contractors")}:</strong>
+                <ul class="list-disc ml-5">
+                  {software.publiccode.maintenance.contractors.map(
+                    (contractor) => (
+                      <li>
+                        {contractor.name}
+                        {contractor.website && (
+                          <>
+                            {" "}
+                            <a
+                              target="_blank"
+                              href={contractor.website}
+                              rel="noreferrer"
+                            >
+                              {t("softwaredetail.website")}
+                            </a>
+                          </>
+                        )}
+                        {contractor.until && (
+                          <>
+                            {" "}
+                            ({t("softwaredetail.until")}: {formatDate(contractor.until)})
+                          </>
+                        )}
+                      </li>
+                    ),
+                  )}
+                </ul>
+              </div>
+            )}
+          {software.publiccode.maintenance.contacts &&
+            software.publiccode.maintenance.contacts.length > 0 && (
+              <div>
+                <strong>{t("softwaredetail.maintenance.contacts")}:</strong>
+                <ul class="list-disc ml-5">
+                  {software.publiccode.maintenance.contacts.map((contact) => (
+                    <li>
+                      {contact.name}
+                      {contact.email && (
+                        <>
+                          {" "}
+                          <a href={`mailto:${contact.email}`}>
+                            {t("softwaredetail.email")}
+                          </a>
+                        </>
+                      )}
+                      {contact.phone && (
+                        <>
+                          {" "}
+                          {t("softwaredetail.phone")}: {contact.phone}
+                        </>
+                      )}
+                      {contact.affiliation && (
+                        <>
+                          {" "}
+                          ({t("softwaredetail.affiliation")}: {contact.affiliation})
+                        </>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+        </div>
+      </div>
+    )
+  }
+  {
+    software.publiccode?.localisation && (
+      <div class="info-block border-t">
+        <h2 class="info-block__title">{t("softwaredetail.localisation")}</h2>
+        <div>
+          <div class="mb-2">
+            <strong>{t("softwaredetail.localisationReady")}:</strong>
+            <br />
+            {software.publiccode.localisation.localisationReady
+              ? t("softwaredetail.yes")
+              : t("softwaredetail.no")}
+          </div>
+          {software.publiccode.localisation.availableLanguages &&
+            software.publiccode.localisation.availableLanguages.length > 0 && (
+              <div>
+                <strong>{t("softwaredetail.availableLanguages")}:</strong>
+                <br />
+                {software.publiccode.localisation.availableLanguages.join(", ")}
+              </div>
+            )}
+        </div>
+      </div>
+    )
+  }
+  {
+    software.publiccode?.dependsOn?.open &&
+      software.publiccode.dependsOn.open.length > 0 && (
+        <div class="info-block border-t">
+          <h2 class="info-block__title">
+            {t("softwaredetail.dependsOn.open")}
+          </h2>
+          <div>
+            <ul class="list-disc ml-5">
+              {software.publiccode.dependsOn.open.map((dep) => (
+                <li>{formatDependency(dep)}</li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      )
+  }
+  {
+    software.publiccode?.dependsOn?.proprietary &&
+      software.publiccode.dependsOn.proprietary.length > 0 && (
+        <div class="info-block border-t">
+          <h2 class="info-block__title">
+            {t("softwaredetail.dependsOn.proprietary")}
+          </h2>
+          <div>
+            <ul class="list-disc ml-5">
+              {software.publiccode.dependsOn.proprietary.map((dep) => (
+                <li>{formatDependency(dep)}</li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      )
+  }
+  {
+    software.publiccode?.dependsOn?.hardware &&
+      software.publiccode.dependsOn.hardware.length > 0 && (
+        <div class="info-block border-t">
+          <h2 class="info-block__title">
+            {t("softwaredetail.dependsOn.hardware")}
+          </h2>
+          <div>
+            <ul class="list-disc ml-5">
+              {software.publiccode.dependsOn.hardware.map((dep) => (
+                <li>{formatDependency(dep)}</li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      )
+  }
   <div class="info-block border-t">
     <h2 class="info-block__title">
       {t("softwaredetail.publiccodeVersion")}
-    </h2><div>
-      <div>{software.publiccode.publiccodeYmlVersion}</div>
-    </div>
+    </h2>
+    <div>{software.publiccode?.publiccodeYmlVersion}</div>
   </div>
 </div>
