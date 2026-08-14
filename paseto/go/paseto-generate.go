@@ -6,7 +6,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/o1egl/paseto"
+	"github.com/o1egl/paseto/v2"
 )
 
 func main() {
