@@ -72,14 +72,25 @@ const softwareName = software.publiccode.name;
 
 <script>
   // Going back through the history preserves the filters the user had set on
-  // the catalog. Only do so when we actually came from this site, otherwise
-  // fall back to the plain catalog link in the href.
+  // the catalog. Only do so when we actually came from this site and the
+  // language has not changed, otherwise fall back to the plain catalog link
+  // in the href.
   const backLink = document.getElementById("back-to-catalog");
   const cameFromThisSite =
     document.referrer !== "" &&
     new URL(document.referrer).origin === location.origin;
 
-  if (backLink && cameFromThisSite && history.length > 1) {
+  const currentLocale = location.pathname.split("/")[1];
+  const referrerLocale = cameFromThisSite
+    ? new URL(document.referrer).pathname.split("/")[1]
+    : currentLocale;
+
+  if (
+    backLink &&
+    cameFromThisSite &&
+    history.length > 1 &&
+    currentLocale === referrerLocale
+  ) {
     backLink.addEventListener("click", (event) => {
       event.preventDefault();
       history.back();
