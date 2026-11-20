@@ -1,4 +1,4 @@
-FROM node:24.15.0 AS build
+FROM node:26.13.1 AS build
 
 #ARG API_BASEURL=http://localhost:3000
 
