@@ -1,0 +1,7 @@
+[tools]
+go = "1.23.12"
+just = "latest"
+
+[settings]
+# node is read from .node-version, pnpm from the packageManager field in package.json
+idiomatic_version_file_enable_tools = ["node", "pnpm"]

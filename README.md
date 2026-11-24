@@ -54,6 +54,15 @@ git clone git@github.com:swiss/oss-catalog.git
 cd oss-catalog/
 ```
 
+Install the required tools (Node.js, pnpm, Go, ...) with [mise](https://mise.jdx.dev/) (see [installation docs](https://mise.jdx.dev/getting-started.html)):
+
+```bash
+mise trust
+mise install
+```
+
+The Node.js version is defined in `.node-version` and the pnpm version in the `packageManager` field of `package.json`.
+
 The API uses a paseto key for authentication. Generate it with:
 
 ```bash
@@ -65,12 +74,6 @@ The crawler needs this token to access GitHub repositories.
 
 ```bash
 echo "GITHUB_TOKEN=<your access token>" >> .env
-```
-
-Install and enable pnpm (see [pnpm docs](https://pnpm.io/installation)):
-
-```bash
-curl -fsSL https://get.pnpm.io/install.sh | sh -
 ```
 
 ### API Service
