@@ -35,7 +35,7 @@
     "sanitize-html": "^2.18.2",
     "tailwind-merge": "^3.7.1",
     "tailwindcss": "^4.3.5",
-    "typescript": "^6.0.3"
+    "typescript": "^7.0.2"
   },
   "devDependencies": {
     "@types/js-yaml": "^4.0.9",
