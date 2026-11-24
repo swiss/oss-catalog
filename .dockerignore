@@ -1,6 +1,8 @@
 *
 !./client/
 !./pnpm-workspace.yaml
+!./package.json
+!./pnpm-lock.yaml
 
 ./client/node_modules
 ./client/dist

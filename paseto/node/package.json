@@ -10,7 +10,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "date-fns": "^4.1.0",
+    "date-fns": "^4.4.0",
     "paseto.js": "^0.1.7"
   }
 }
