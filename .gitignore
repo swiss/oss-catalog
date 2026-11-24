@@ -4,6 +4,3 @@ node_modules/
 # editor settings
 .idea
 .vscode
-
-# asdf config
-.tool-versions
