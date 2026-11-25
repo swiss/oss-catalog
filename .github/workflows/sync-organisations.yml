@@ -1,0 +1,84 @@
+name: Sync organisations from publiccode-editor
+on:
+  schedule:
+    - cron: "17 5 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: sync-organisations
+  cancel-in-progress: false
+
+env:
+  SOURCE_URL: https://raw.githubusercontent.com/swiss/publiccode-editor/cd-bund/src/app/data/organisations.json
+  HISTORY_URL: https://github.com/swiss/publiccode-editor/commits/cd-bund/src/app/data/organisations.json
+  TARGET: client/src/data/organisations.json
+  BRANCH: sync-organisations
+  LABEL: organisations-sync
+
+jobs:
+  sync:
+    name: Sync organisations.json
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v7
+
+      - name: Download organisations.json
+        run: |
+          curl -fsSL "$SOURCE_URL" -o "$TARGET"
+          jq -e 'type == "array" and length > 0' "$TARGET" > /dev/null
+
+      - name: Check for changes
+        id: diff
+        run: |
+          if git diff --quiet -- "$TARGET"; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Close pull request when up to date
+        if: steps.diff.outputs.changed == 'false'
+        run: |
+          pr=$(gh pr list --head "$BRANCH" --state open --json number --jq '.[0].number')
+          if [ -n "$pr" ]; then
+            gh pr close "$pr" --delete-branch --comment "organisations.json is up to date with the publiccode-editor."
+          fi
+
+      # PRs opened with GITHUB_TOKEN do not trigger build.yaml, so test here.
+      - uses: pnpm/setup@v3
+        if: steps.diff.outputs.changed == 'true'
+        with:
+          install: false
+      - if: steps.diff.outputs.changed == 'true'
+        run: pnpm install --frozen-lockfile --strict-peer-dependencies
+      - if: steps.diff.outputs.changed == 'true'
+        run: pnpm scope:client test
+
+      - name: Open or update pull request
+        if: steps.diff.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -C "$BRANCH"
+          git add "$TARGET"
+          git commit -m "chore: sync organisations.json from publiccode-editor"
+          git push --force origin "$BRANCH"
+
+          gh label create "$LABEL" --color 0e8a16 --description "Automatic sync of organisations.json" --force
+          body="Updates \`$TARGET\` from the publiccode-editor ([history of the file]($HISTORY_URL)).
+
+          Check whether the structure of the file changed: that needs catalog changes before merging."
+          pr=$(gh pr list --head "$BRANCH" --state open --json number --jq '.[0].number')
+          if [ -n "$pr" ]; then
+            gh pr edit "$pr" --body "$body"
+          else
+            gh pr create --base main --head "$BRANCH" --label "$LABEL" \
+              --title "chore: sync organisations.json from publiccode-editor" --body "$body"
+          fi

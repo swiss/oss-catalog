@@ -1,88 +1,101 @@
 import { useMemo } from "react";
 import { useStore } from "@nanostores/react";
+import type { WritableAtom } from "nanostores";
 import {
   Popover,
+  PopoverAnchor,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { type Department, type Locale } from "@/components/SoftwareFilters";
+import { type Locale } from "@/components/SoftwareFilters";
 import {
-  CANTON_URI_PREFIX,
   type OrganisationType,
+  clearSelectionsForType,
   organisationType,
   selectedCantons,
-  selectedOrganisations,
+  selectedMunicipalities,
 } from "@/stores/filters";
+import {
+  findOrganisation,
+  getCantonOfMunicipality,
+  getOrganisationKind,
+  isCantonGroup,
+  localizedName,
+  organisations,
+} from "@/lib/organisations";
 import { useTranslations } from "@/i18n/utils";
 import type { Software } from "@/lib/software.ts";
 
 type Props = {
   lang: Locale;
-  organisations: Department[];
   softwares: Software[];
 };
 
-export default function OrganisationTypeFilter({
-  lang,
-  organisations,
-  softwares,
-}: Props) {
+type Option = { id: string; label: string; count?: number };
+type Section = { id: string; title?: string; options: Option[] };
+
+export default function OrganisationTypeFilter({ lang, softwares }: Props) {
   const t = useTranslations(lang);
   const $type = useStore(organisationType);
-  const $selected = useStore(selectedCantons);
-
-  const cantons = useMemo(() => {
-    const departement = organisations.find((d) =>
-      d.id.startsWith(CANTON_URI_PREFIX),
-    );
-    if (!departement) return [];
-
-    return departement.organisations
-      .map((o) => ({
-        id: o.id,
-        label: o.name[lang] ?? o.name.de ?? o.id,
-      }))
-      .sort((a, b) => a.label.localeCompare(b.label, lang));
-  }, [organisations, lang]);
 
   const softwareCounts = useMemo(() => {
     return softwares.reduce((counts, software) => {
       const uri = software.publiccode?.organisation?.uri;
-      if (uri?.startsWith(CANTON_URI_PREFIX)) {
+      if (uri && getOrganisationKind(uri) !== "bund") {
         counts.set(uri, (counts.get(uri) ?? 0) + 1);
       }
       return counts;
     }, new Map<string, number>());
   }, [softwares]);
 
-  const selected = useMemo(
-    () => $selected.filter((s) => s.startsWith(CANTON_URI_PREFIX)),
-    [$selected],
-  );
+  const byLabel = (a: Option, b: Option) =>
+    a.label.localeCompare(b.label, lang);
+
+  const cantonSections = useMemo((): Section[] => {
+    const group = organisations.find(isCantonGroup);
+    if (!group) return [];
+    const options = group.organisations
+      .map((o) => ({
+        id: o.id,
+        label: localizedName(o.name, lang) ?? o.id,
+        count: softwareCounts.get(o.id),
+      }))
+      .sort(byLabel);
+    return [{ id: group.id, options }];
+  }, [lang, softwareCounts]);
+
+  // Only municipalities with software, grouped by canton: all 2110 would be unusable.
+  const municipalitySections = useMemo((): Section[] => {
+    const sections = new Map<string, Section>();
+    for (const [uri, count] of softwareCounts) {
+      const found = findOrganisation(uri);
+      const cantonUri = getCantonOfMunicipality(uri);
+      if (!found || !cantonUri) continue;
+      const section = sections.get(cantonUri) ?? {
+        id: cantonUri,
+        title: localizedName(
+          findOrganisation(cantonUri)?.organisation.name,
+          lang,
+        ),
+        options: [],
+      };
+      section.options.push({
+        id: uri,
+        label: localizedName(found.organisation.name, lang) ?? uri,
+        count,
+      });
+      sections.set(cantonUri, section);
+    }
+    return [...sections.values()]
+      .map((s) => ({ ...s, options: s.options.sort(byLabel) }))
+      .sort((a, b) => (a.title ?? "").localeCompare(b.title ?? "", lang));
+  }, [softwareCounts, lang]);
 
   const setType = (selected: OrganisationType) => {
     if (selected === $type) return;
     organisationType.set(selected);
-    if (selected === "cantons") {
-      selectedOrganisations.set([]);
-    }
-    if (selected === "bund" || selected === "all") {
-      selectedCantons.set([]);
-    }
+    clearSelectionsForType(selected);
   };
-
-  const toggleCanton = (canton: string) => {
-    const selected = selectedCantons.get();
-    const updated = selected.includes(canton)
-      ? selected.filter((s) => s !== canton)
-      : [...selected, canton];
-    selectedCantons.set(updated);
-  };
-
-  const cantonsButtonLabel =
-    selected.length > 0
-      ? `${t("index.filter.option.cantons")} (${selected.length})`
-      : t("index.filter.option.cantons");
 
   return (
     <div
@@ -107,26 +120,90 @@ export default function OrganisationTypeFilter({
       >
         <span className="btn__text">{t("index.filter.option.bund")}</span>
       </button>
-      <div className="flex items-stretch">
-        <button
-          type="button"
-          className={`btn btn--sm ${$type === "cantons" ? "btn--outline" : ""}`}
-          aria-pressed={$type === "cantons"}
-          onClick={() => setType("cantons")}
-          style={{ borderTopRightRadius: 0, borderBottomRightRadius: 0 }}
-        >
-          <span className="btn__text">{cantonsButtonLabel}</span>
-        </button>
+      <SelectionButton
+        type="cantons"
+        currentType={$type}
+        setType={setType}
+        store={selectedCantons}
+        sections={cantonSections}
+        label={t("index.filter.option.cantons")}
+        openLabel={t("index.filter.option.cantons.open")}
+        selectAllLabel={t("select.all")}
+        clearLabel={t("select.clear")}
+      />
+      <SelectionButton
+        type="municipalities"
+        currentType={$type}
+        setType={setType}
+        store={selectedMunicipalities}
+        sections={municipalitySections}
+        label={t("index.filter.option.municipalities")}
+        openLabel={t("index.filter.option.municipalities.open")}
+        emptyLabel={t("index.filter.option.municipalities.empty")}
+        selectAllLabel={t("select.all")}
+        clearLabel={t("select.clear")}
+      />
+    </div>
+  );
+}
 
-        <Popover>
+function SelectionButton({
+  type,
+  currentType,
+  setType,
+  store,
+  sections,
+  label,
+  openLabel,
+  selectAllLabel,
+  clearLabel,
+  emptyLabel,
+}: {
+  type: OrganisationType;
+  currentType: OrganisationType;
+  setType: (type: OrganisationType) => void;
+  store: WritableAtom<string[]>;
+  sections: Section[];
+  label: string;
+  openLabel: string;
+  selectAllLabel: string;
+  clearLabel: string;
+  emptyLabel?: string;
+}) {
+  const selected = useStore(store);
+  const active = currentType === type;
+  const allIds = sections.flatMap((s) => s.options.map((o) => o.id));
+
+  const toggle = (id: string) =>
+    store.set(
+      selected.includes(id)
+        ? selected.filter((s) => s !== id)
+        : [...selected, id],
+    );
+
+  // Anchored to the whole group, not the chevron: the label width changes with the selection count.
+  return (
+    <Popover>
+      <PopoverAnchor asChild>
+        <div className="flex items-stretch">
+          <button
+            type="button"
+            className={`btn btn--sm ${active ? "btn--outline" : ""}`}
+            aria-pressed={active}
+            onClick={() => setType(type)}
+            style={{ borderTopRightRadius: 0, borderBottomRightRadius: 0 }}
+          >
+            <span className="btn__text">
+              {selected.length > 0 ? `${label} (${selected.length})` : label}
+            </span>
+          </button>
+
           <PopoverTrigger asChild>
             <button
               type="button"
-              className={`btn btn--sm btn--icon-only ${$type === "cantons" ? "btn--outline" : ""}`}
-              aria-label={t("index.filter.option.cantons.open")}
-              onClick={() => {
-                if ($type !== "cantons") setType("cantons");
-              }}
+              className={`btn btn--sm btn--icon-only ${active ? "btn--outline" : ""}`}
+              aria-label={openLabel}
+              onClick={() => setType(type)}
               style={{
                 borderTopLeftRadius: 0,
                 borderBottomLeftRadius: 0,
@@ -143,55 +220,72 @@ export default function OrganisationTypeFilter({
               </svg>
             </button>
           </PopoverTrigger>
-          <PopoverContent className="w-[min(28rem,90vw)] p-0 bg-white">
-            <div className="flex items-center justify-between gap-2 px-3 py-2 border-b">
-              <span className="text--sm font-bold">
-                {t("index.filter.option.cantons.open")}
-              </span>
-              <div className="flex items-center gap-1">
-                <button
-                  type="button"
-                  className="btn btn--bare btn--sm"
-                  onClick={() => selectedCantons.set(cantons.map((c) => c.id))}
-                  disabled={selected.length === cantons.length}
-                >
-                  <span className="btn__text">{t("select.all")}</span>
-                </button>
-                <button
-                  type="button"
-                  className="btn btn--bare btn--sm"
-                  onClick={() => selectedCantons.set([])}
-                  disabled={selected.length === 0}
-                >
-                  <span className="btn__text">{t("select.clear")}</span>
-                </button>
-              </div>
+        </div>
+      </PopoverAnchor>
+      <PopoverContent className="w-[min(28rem,90vw)] p-0 bg-white">
+        <div className="flex items-center justify-between gap-2 px-3 py-2 border-b">
+          <span className="text--sm font-bold">{openLabel}</span>
+          {allIds.length > 0 && (
+            <div className="flex items-center gap-1">
+              <button
+                type="button"
+                className="btn btn--bare btn--sm"
+                onClick={() => store.set(allIds)}
+                disabled={selected.length === allIds.length}
+              >
+                <span className="btn__text">{selectAllLabel}</span>
+              </button>
+              <button
+                type="button"
+                className="btn btn--bare btn--sm"
+                onClick={() => store.set([])}
+                disabled={selected.length === 0}
+              >
+                <span className="btn__text">{clearLabel}</span>
+              </button>
             </div>
-            <fieldset className="max-h-80 overflow-y-auto py-2 border-0">
-              <legend className="sr-only">{t("index.filter.option.cantons.open")}</legend>
-              {cantons.map((c) => {
-                const checked = selected.includes(c.id);
-                const count = softwareCounts.get(c.id);
-                return (
-                  <div key={c.id} className="px-3 py-1 hover:bg-gray-50">
-                    <label className="flex items-center gap-2 cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={checked}
-                        onChange={() => toggleCanton(c.id)}
-                      />
-                      <span className="pr-0.5 py-1">{c.label}</span>
-                      {count && (
-                        <span className="badge badge--sm badge--gray">{count}</span>
-                      )}
-                    </label>
-                  </div>
-                );
-              })}
-            </fieldset>
-          </PopoverContent>
-        </Popover>
-      </div>
-    </div>
+          )}
+        </div>
+        {allIds.length === 0 && emptyLabel && (
+          <p className="px-3 py-3 text--sm">{emptyLabel}</p>
+        )}
+        <fieldset
+          hidden={allIds.length === 0}
+          className="max-h-80 overflow-y-auto py-2 border-0"
+        >
+          <legend className="sr-only">{openLabel}</legend>
+          {sections.map((section) => (
+            <div
+              key={section.id}
+              role={section.title ? "group" : undefined}
+              aria-label={section.title}
+            >
+              {section.title && (
+                <div className="px-3 pt-2 text--sm font-bold">
+                  {section.title}
+                </div>
+              )}
+              {section.options.map((o) => (
+                <div key={o.id} className="px-3 py-1 hover:bg-gray-50">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={selected.includes(o.id)}
+                      onChange={() => toggle(o.id)}
+                    />
+                    <span className="pr-0.5 py-1">{o.label}</span>
+                    {o.count && (
+                      <span className="badge badge--sm badge--gray">
+                        {o.count}
+                      </span>
+                    )}
+                  </label>
+                </div>
+              ))}
+            </div>
+          ))}
+        </fieldset>
+      </PopoverContent>
+    </Popover>
   );
 }

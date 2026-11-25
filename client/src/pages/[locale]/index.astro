@@ -1,7 +1,6 @@
 ---
 import Layout from "@/layouts/Layout.astro";
 import { type Lang, useTranslations } from "@/i18n/utils";
-import organisations from "@/data/organisations.json";
 import SoftwareCatalogIsland from "@/components/SoftwareCatalogIsland";
 import { type PubliccodeYml, type Software } from "@/lib/software";
 import { load } from "js-yaml";
@@ -47,16 +46,9 @@ export async function getStaticPaths() {
 <Layout>
   <section class="section section--default bg--secondary-50">
     <div class="container">
-      <h1 class="section__title">
-        {t("index.title")}
-      </h1>
+      <h1 class="section__title">{t("index.title")}</h1>
       <h2 class="section__subtitle">{t("index.subtitle")}</h2>
-      <SearchFiltersIsland
-        client:load
-        lang={lang}
-        organisations={organisations}
-        softwares={softwares}
-      />
+      <SearchFiltersIsland client:load lang={lang} softwares={softwares} />
     </div>
   </section>
   <section class="section section--default">

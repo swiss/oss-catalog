@@ -1,10 +1,7 @@
 import { useEffect, useState } from "react";
 import type { Lang } from "../i18n/utils";
 import { useTranslations } from "../i18n/utils";
-import {
-  type Department,
-  SoftwareFilters,
-} from "@/components/SoftwareFilters.tsx";
+import { SoftwareFilters } from "@/components/SoftwareFilters.tsx";
 import OrganisationTypeFilter from "@/components/OrganisationTypeFilter.tsx";
 import { useStore } from "@nanostores/react";
 import {
@@ -18,26 +15,21 @@ import type { Software } from "@/lib/software.ts";
 
 interface Props {
   lang: Lang;
-  organisations: Department[];
   softwares: Software[];
 }
 
-export default function SearchFiltersIsland({
-  lang,
-  organisations,
-  softwares,
-}: Props) {
+export default function SearchFiltersIsland({ lang, softwares }: Props) {
   const t = useTranslations(lang);
   const [isOpen, setIsOpen] = useState(false);
   const $searchTerm = useStore(searchTerm);
   const $organisationType = useStore(organisationType);
+  const showsDepartments =
+    $organisationType === "all" || $organisationType === "bund";
   const hasSelectedOrganisations = useStore(selectedOrganisations).length > 0;
 
   useEffect(() => {
-    if ($organisationType === "cantons") {
-      setIsOpen(false);
-    }
-  }, [$organisationType]);
+    if (!showsDepartments) setIsOpen(false);
+  }, [showsDepartments]);
 
   // Organisations can be preselected from the url (e.g. coming from a software
   // detail page), so reveal the drawer instead of hiding an active filter.
@@ -54,11 +46,7 @@ export default function SearchFiltersIsland({
 
   return (
     <>
-      <OrganisationTypeFilter
-        lang={lang}
-        organisations={organisations}
-        softwares={softwares}
-      />
+      <OrganisationTypeFilter lang={lang} softwares={softwares} />
       <div className="search search--large search--page-result">
         <div className="search__group">
           <input
@@ -95,7 +83,7 @@ export default function SearchFiltersIsland({
         </div>
       </div>
 
-      {$organisationType !== "cantons" && (
+      {showsDepartments && (
         <div className={`search__filters ${isOpen ? "filters--are-open" : ""}`}>
           <button
             type="button"
@@ -122,7 +110,7 @@ export default function SearchFiltersIsland({
 
           <div className="search__filters__drawer" hidden={!isOpen}>
             <div className="form__group__select">
-              <SoftwareFilters lang={lang} organisations={organisations} />
+              <SoftwareFilters lang={lang} />
             </div>
           </div>
         </div>
