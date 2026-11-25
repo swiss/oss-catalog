@@ -7,9 +7,7 @@ import {
   applyFiltersFromUrl,
   searchTerm,
   organisationType,
-  selectedCantons,
-  selectedMunicipalities,
-  selectedOrganisations,
+  selectionStore,
   syncFiltersToUrl,
 } from "@/stores/filters";
 import { buildSearchText } from "@/lib/searchText";
@@ -23,9 +21,7 @@ type Props = {
 
 export default function SoftwareCatalogIsland({ lang, softwares }: Props) {
   const $organisationType = useStore(organisationType);
-  const $selectedOrganisations = useStore(selectedOrganisations);
-  const $selectedCantons = useStore(selectedCantons);
-  const $selectedMunicipalities = useStore(selectedMunicipalities);
+  const selectedUris = useStore(selectionStore($organisationType));
   const $searchTerm = useStore(searchTerm);
   const t = useTranslations(lang);
 
@@ -47,13 +43,6 @@ export default function SoftwareCatalogIsland({ lang, softwares }: Props) {
   );
 
   const filteredSoftwares = useMemo(() => {
-    const selectedUris =
-      $organisationType === "cantons"
-        ? $selectedCantons
-        : $organisationType === "municipalities"
-          ? $selectedMunicipalities
-          : $selectedOrganisations;
-
     if (
       $organisationType === "all" &&
       !selectedUris.length &&
@@ -80,9 +69,7 @@ export default function SoftwareCatalogIsland({ lang, softwares }: Props) {
     });
   }, [
     softwares,
-    $selectedOrganisations,
-    $selectedCantons,
-    $selectedMunicipalities,
+    selectedUris,
     trimmedSearchTerm,
     queryTokens,
     $organisationType,

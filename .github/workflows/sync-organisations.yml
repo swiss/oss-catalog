@@ -31,9 +31,8 @@ jobs:
 
       - name: Download organisations.json
         run: |
-          curl -fsSL "$SOURCE_URL" -o /tmp/organisations.json
-          jq -e 'type == "array" and length > 0' /tmp/organisations.json > /dev/null
-          cp /tmp/organisations.json "$TARGET"
+          curl -fsSL "$SOURCE_URL" -o "$TARGET"
+          jq -e 'type == "array" and length > 0' "$TARGET" > /dev/null
 
       - name: Check for changes
         id: diff

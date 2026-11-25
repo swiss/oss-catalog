@@ -4,48 +4,35 @@ import { Combobox } from "@/components/Combobox.tsx";
 import { useTranslations } from "@/i18n/utils";
 import { selectedOrganisations } from "@/stores/filters.ts";
 import {
-  type Department,
-  type Organisation,
   isCantonGroup,
   isMunicipalityGroup,
-  localizedName,
+  organisationLabel,
+  organisations,
 } from "@/lib/organisations";
-
-export type { Department, Organisation };
 
 export type Locale = "en" | "de" | "fr" | "it";
 
 type Props = {
   lang: Locale;
-  organisations: Department[];
 };
 
-export function SoftwareFilters({ lang, organisations }: Props) {
+export function SoftwareFilters({ lang }: Props) {
   const t = useTranslations(lang);
   const $selectedOrganisations = useStore(selectedOrganisations);
-
-  const toLabel = (
-    unit: Organisation | Department,
-    suffix: Organisation["alternativeName"] | Department["abbreviation"],
-  ) => {
-    const name = localizedName(unit.name, lang) ?? "";
-    const suffixText = localizedName(suffix, lang);
-    return `${name}${suffixText ? ` (${suffixText})` : ""}`.trim();
-  };
 
   const groupedOptions = useMemo(() => {
     return organisations
       .filter((d) => !isCantonGroup(d) && !isMunicipalityGroup(d))
       .map((departement) => ({
         id: departement.id,
-        label: toLabel(departement, departement.abbreviation),
+        label: organisationLabel(departement, lang),
         organisations: departement.organisations.map((organisation) => ({
           value: organisation.id,
-          label: toLabel(organisation, organisation.alternativeName),
+          label: organisationLabel(organisation, lang),
         })),
       }))
       .filter((d) => d.organisations.length > 0);
-  }, [organisations, lang]);
+  }, [lang]);
 
   return (
     <>

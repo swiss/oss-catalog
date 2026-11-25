@@ -4,11 +4,12 @@ import { getRelativeLocaleUrl } from "astro:i18n";
 import { type Lang, resolveLanguage, useTranslations } from "../i18n/utils";
 import { renderMarkdown } from "../lib/markdown";
 import {
-  type LocalizedString,
+  ORGANISATION_TYPE_BY_KIND,
   findOrganisation,
   getOrganisationKind,
-  localizedName,
+  organisationLabel,
 } from "../lib/organisations";
+import { SELECTIONS } from "../stores/filters";
 import { resolveMediaUrl, getVideoEmbed } from "../lib/publiccodeMedia";
 import { getPubliccodeYmlUrl } from "../lib/repoUrl";
 import type { Dependency, FundingSource, Software } from "../lib/software";
@@ -28,29 +29,18 @@ const longDescriptionHtml = description?.longDescription
   ? renderMarkdown(description.longDescription)
   : undefined;
 
-const organisationEntry = findOrganisation(
-  software.publiccode?.organisation?.uri,
-)?.organisation;
-const suffix = (value: LocalizedString | undefined) => {
-  const text = localizedName(value, lang);
-  return text ? ` (${text})` : "";
-};
-const organisationName = organisationEntry
-  ? `${localizedName(organisationEntry.name, lang) ?? ""}${suffix("alternativeName" in organisationEntry ? organisationEntry.alternativeName : undefined)}${suffix("abbreviation" in organisationEntry ? organisationEntry.abbreviation : undefined)}`
-  : undefined;
+const orgUri = software.publiccode?.organisation?.uri;
+const organisationEntry = findOrganisation(orgUri)?.organisation;
+const organisationName =
+  organisationEntry && organisationLabel(organisationEntry, lang);
 
 const homeUrl = getRelativeLocaleUrl(lang, "");
-const orgUri = software.publiccode?.organisation?.uri;
 const orgFilterParams = new URLSearchParams();
-const orgKind = getOrganisationKind(orgUri);
-if (orgUri && orgKind === "canton") {
-  orgFilterParams.set("type", "cantons");
-  orgFilterParams.append("cantons", orgUri);
-} else if (orgUri && orgKind === "municipality") {
-  orgFilterParams.set("type", "municipalities");
-  orgFilterParams.append("municipalities", orgUri);
-} else if (orgUri) {
-  orgFilterParams.append("organisations", orgUri);
+if (orgUri) {
+  const orgType = ORGANISATION_TYPE_BY_KIND[getOrganisationKind(orgUri)];
+  // federal organisations keep the default "all" type, like the department filter
+  if (orgType !== "bund") orgFilterParams.set("type", orgType);
+  orgFilterParams.append(SELECTIONS[orgType].param, orgUri);
 }
 const organisationUrl = orgFilterParams.toString()
   ? `${homeUrl}?${orgFilterParams.toString()}`

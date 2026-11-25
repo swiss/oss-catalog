@@ -2,30 +2,14 @@ import type { Lang } from "@/i18n/utils";
 import type { Software } from "@/lib/software";
 import { renderMarkdown } from "@/lib/markdown";
 import {
-  type Department,
-  type Organisation,
   findOrganisation,
   getCantonOfMunicipality,
-  localizedName,
+  organisationLabel,
 } from "@/lib/organisations";
-
-function labelForEntry(entry: Department | Organisation, lang: Lang): string {
-  const name = localizedName(entry.name, lang) ?? "";
-  const alternativeName =
-    "alternativeName" in entry
-      ? localizedName(entry.alternativeName, lang)
-      : undefined;
-  const abbreviation =
-    "abbreviation" in entry
-      ? localizedName(entry.abbreviation, lang)
-      : undefined;
-  const suffix = alternativeName ?? abbreviation;
-  return suffix ? `${name} ${suffix}` : name;
-}
 
 function findOrganisationLabel(uri: string | undefined, lang: Lang): string {
   const found = findOrganisation(uri);
-  return found ? labelForEntry(found.organisation, lang) : "";
+  return found ? organisationLabel(found.organisation, lang) : "";
 }
 
 function stripHtml(html: string): string {

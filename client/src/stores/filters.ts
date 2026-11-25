@@ -14,14 +14,6 @@ export const selectedMunicipalities = atom<string[]>([]);
 export const searchTerm = atom<string>("");
 export const organisationType = atom<OrganisationType>("all");
 
-const PARAM_KEYS = {
-  type: "type",
-  organisations: "organisations",
-  cantons: "cantons",
-  municipalities: "municipalities",
-  q: "q",
-} as const;
-
 const ALLOWED_TYPES: OrganisationType[] = [
   "all",
   "bund",
@@ -33,11 +25,33 @@ function isOrganisationType(value: string): value is OrganisationType {
   return ALLOWED_TYPES.includes(value as OrganisationType);
 }
 
+/** Selection store, URL parameter and accepted URIs per organisation type. */
+export const SELECTIONS = {
+  bund: {
+    store: selectedOrganisations,
+    param: "organisations",
+    isValid: (uri: string) =>
+      !!findOrganisation(uri) && getOrganisationKind(uri) === "bund",
+  },
+  cantons: { store: selectedCantons, param: "cantons", isValid: isKnownCanton },
+  municipalities: {
+    store: selectedMunicipalities,
+    param: "municipalities",
+    isValid: isKnownMunicipality,
+  },
+};
+
+/** "all" filters by the federal organisation selection. */
+export function selectionStore(type: OrganisationType) {
+  return SELECTIONS[type === "all" ? "bund" : type].store;
+}
+
 /** Keeps only the selection that belongs to the given type. */
 export function clearSelectionsForType(type: OrganisationType) {
-  if (type !== "bund" && type !== "all") selectedOrganisations.set([]);
-  if (type !== "cantons") selectedCantons.set([]);
-  if (type !== "municipalities") selectedMunicipalities.set([]);
+  const kept = selectionStore(type);
+  for (const { store } of Object.values(SELECTIONS)) {
+    if (store !== kept) store.set([]);
+  }
 }
 
 let filtersAppliedFromUrl = false;
@@ -48,22 +62,14 @@ export function applyFiltersFromUrl() {
 
   const params = new URLSearchParams(window.location.search);
 
-  const type = params.get(PARAM_KEYS.type);
+  const type = params.get("type");
   organisationType.set(type && isOrganisationType(type) ? type : "all");
 
-  selectedOrganisations.set(
-    params
-      .getAll(PARAM_KEYS.organisations)
-      .filter(
-        (uri) => findOrganisation(uri) && getOrganisationKind(uri) === "bund",
-      ),
-  );
-  selectedCantons.set(params.getAll(PARAM_KEYS.cantons).filter(isKnownCanton));
-  selectedMunicipalities.set(
-    params.getAll(PARAM_KEYS.municipalities).filter(isKnownMunicipality),
-  );
+  for (const { store, param, isValid } of Object.values(SELECTIONS)) {
+    store.set(params.getAll(param).filter(isValid));
+  }
 
-  searchTerm.set(params.get(PARAM_KEYS.q) ?? "");
+  searchTerm.set(params.get("q") ?? "");
 
   clearSelectionsForType(organisationType.get());
 }
@@ -73,22 +79,16 @@ function buildUrlParams(): URLSearchParams {
   const type = organisationType.get();
 
   if (type !== "all") {
-    params.set(PARAM_KEYS.type, type);
+    params.set("type", type);
   }
 
-  selectedOrganisations
-    .get()
-    .forEach((uri) => params.append(PARAM_KEYS.organisations, uri));
-  selectedCantons
-    .get()
-    .forEach((uri) => params.append(PARAM_KEYS.cantons, uri));
-  selectedMunicipalities
-    .get()
-    .forEach((uri) => params.append(PARAM_KEYS.municipalities, uri));
+  for (const { store, param } of Object.values(SELECTIONS)) {
+    store.get().forEach((uri) => params.append(param, uri));
+  }
 
   const q = searchTerm.get();
   if (q) {
-    params.set(PARAM_KEYS.q, q);
+    params.set("q", q);
   }
 
   return params;
@@ -125,8 +125,8 @@ export function syncFiltersToUrl() {
   urlSyncInitialised = true;
 
   organisationType.subscribe(scheduleUrlUpdate);
-  selectedOrganisations.subscribe(scheduleUrlUpdate);
-  selectedCantons.subscribe(scheduleUrlUpdate);
-  selectedMunicipalities.subscribe(scheduleUrlUpdate);
+  for (const { store } of Object.values(SELECTIONS)) {
+    store.subscribe(scheduleUrlUpdate);
+  }
   searchTerm.subscribe(scheduleUrlUpdate);
 }

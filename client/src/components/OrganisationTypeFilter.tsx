@@ -16,30 +16,25 @@ import {
   selectedMunicipalities,
 } from "@/stores/filters";
 import {
-  type Department,
   findOrganisation,
   getCantonOfMunicipality,
   getOrganisationKind,
   isCantonGroup,
   localizedName,
+  organisations,
 } from "@/lib/organisations";
 import { useTranslations } from "@/i18n/utils";
 import type { Software } from "@/lib/software.ts";
 
 type Props = {
   lang: Locale;
-  organisations: Department[];
   softwares: Software[];
 };
 
 type Option = { id: string; label: string; count?: number };
 type Section = { id: string; title?: string; options: Option[] };
 
-export default function OrganisationTypeFilter({
-  lang,
-  organisations,
-  softwares,
-}: Props) {
+export default function OrganisationTypeFilter({ lang, softwares }: Props) {
   const t = useTranslations(lang);
   const $type = useStore(organisationType);
 
@@ -67,7 +62,7 @@ export default function OrganisationTypeFilter({
       }))
       .sort(byLabel);
     return [{ id: group.id, options }];
-  }, [organisations, lang, softwareCounts]);
+  }, [lang, softwareCounts]);
 
   // Only municipalities with software, grouped by canton: all 2110 would be unusable.
   const municipalitySections = useMemo((): Section[] => {

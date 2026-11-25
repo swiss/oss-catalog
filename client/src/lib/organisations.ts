@@ -90,6 +90,26 @@ export function localizedName(
   return name[lang] || name.de || Object.values(name).find(Boolean);
 }
 
+/** Catalog filter type that lists organisations of each kind. */
+export const ORGANISATION_TYPE_BY_KIND = {
+  bund: "bund",
+  canton: "cantons",
+  municipality: "municipalities",
+} as const satisfies Record<OrganisationKind, OrganisationType>;
+
+/** "Name (alternative name or abbreviation)". */
+export function organisationLabel(
+  entry: Organisation | Department,
+  lang: string,
+): string {
+  const name = localizedName(entry.name, lang) ?? "";
+  const suffix = localizedName(
+    "organisations" in entry ? entry.abbreviation : entry.alternativeName,
+    lang,
+  );
+  return suffix ? `${name} (${suffix})` : name;
+}
+
 /** Organisation type and selection of the catalog filter. */
 export function matchesOrganisationFilter(
   uri: string | undefined,
@@ -97,10 +117,9 @@ export function matchesOrganisationFilter(
   selection: Set<string> | null,
 ): boolean {
   const selected = !selection || (uri !== undefined && selection.has(uri));
-  if (type === "cantons")
-    return getOrganisationKind(uri) === "canton" && selected;
-  if (type === "municipalities")
-    return getOrganisationKind(uri) === "municipality" && selected;
-  if (type === "bund") return getOrganisationKind(uri) === "bund" && selected;
-  return selected;
+  return (
+    selected &&
+    (type === "all" ||
+      ORGANISATION_TYPE_BY_KIND[getOrganisationKind(uri)] === type)
+  );
 }

@@ -27,12 +27,7 @@ export function SoftwareCard({
 
   const uri = software.publiccode.organisation?.uri;
   const kind = getOrganisationKind(uri);
-  const cantonUri =
-    kind === "canton"
-      ? uri
-      : kind === "municipality"
-        ? getCantonOfMunicipality(uri)
-        : undefined;
+  const cantonUri = kind === "canton" ? uri : getCantonOfMunicipality(uri);
   const flag =
     kind === "bund" ? schweizFlag : cantonUri && getCantonFlag(cantonUri);
   const flagLabel =

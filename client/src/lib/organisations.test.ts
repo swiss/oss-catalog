@@ -9,6 +9,7 @@ import {
   isMunicipalityGroup,
   localizedName,
   matchesOrganisationFilter,
+  organisationLabel,
   organisations,
 } from "./organisations";
 
@@ -101,5 +102,34 @@ describe("organisations.json guard", () => {
         expect(getOrganisationKind(o.id), o.id).toBe("bund");
       }
     }
+  });
+});
+
+describe("organisationLabel", () => {
+  it("adds the abbreviation of a department or the alternative name of an organisation", () => {
+    expect(
+      organisationLabel(
+        {
+          id: "d",
+          name: { de: "Departement" },
+          abbreviation: { de: "D" },
+          organisations: [],
+        },
+        "fr",
+      ),
+    ).toBe("Departement (D)");
+    expect(
+      organisationLabel(
+        {
+          id: "o",
+          name: { de: "Amt", fr: "Office" },
+          alternativeName: { fr: "O" },
+        },
+        "fr",
+      ),
+    ).toBe("Office (O)");
+    expect(organisationLabel({ id: "o", name: { de: "Amt" } }, "de")).toBe(
+      "Amt",
+    );
   });
 });
