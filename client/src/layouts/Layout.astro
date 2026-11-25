@@ -2,7 +2,7 @@
 import TopHeader from "../components/TopHeader.astro";
 import TopBar from "../components/TopBar.astro";
 import OpenGraph from "../components/OpenGraph.astro";
-import { type Lang, toFullLocale, useTranslations } from "../i18n/utils";
+import { type Lang, useTranslations } from "../i18n/utils";
 import { getRelativeLocaleUrl } from "astro:i18n";
 import "../styles/global.css";
 
@@ -29,7 +29,7 @@ const commitHash = import.meta.env.GIT_COMMIT_HASH
   ? String(import.meta.env.GIT_COMMIT_HASH).slice(0, 7)
   : undefined;
 
-const dateLocale = toFullLocale(lang);
+const dateLocale = `${lang}-CH`;
 const buildDate = new Date();
 // the build runs in UTC on CI
 const timeZone = "Europe/Zurich";
