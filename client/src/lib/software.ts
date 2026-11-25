@@ -1,6 +1,17 @@
 import { type Lang, resolveLanguage } from "@/i18n/utils";
 
-export async function getSoftwares(): Promise<Software[]> {
+// One download per build: every page and route calls this.
+// shortcut: `astro dev` keeps the first result until restart, fine while the data changes only via the crawler.
+let softwares: Promise<Software[]> | undefined;
+
+export function getSoftwares(): Promise<Software[]> {
+  return (softwares ??= fetchSoftwares().catch((error) => {
+    softwares = undefined; // retry on the next call instead of caching the failure
+    throw error;
+  }));
+}
+
+async function fetchSoftwares(): Promise<Software[]> {
   const apiBaseUrl = import.meta.env.API_BASEURL || "http://localhost:3000/v1";
   const url = `${apiBaseUrl}/software?page[size]=10000`;
   const response = await fetch(url);
