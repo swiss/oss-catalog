@@ -7,7 +7,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { type Locale } from "@/components/SoftwareFilters";
 import {
   type OrganisationType,
   clearSelectionsForType,
@@ -23,11 +22,11 @@ import {
   localizedName,
   organisations,
 } from "@/lib/organisations";
-import { useTranslations } from "@/i18n/utils";
+import { type Lang, useTranslations } from "@/i18n/utils";
 import type { Software } from "@/lib/software.ts";
 
 type Props = {
-  lang: Locale;
+  lang: Lang;
   softwares: Software[];
 };
 

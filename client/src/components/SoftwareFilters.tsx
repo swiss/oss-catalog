@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { useStore } from "@nanostores/react";
 import { Combobox } from "@/components/Combobox.tsx";
-import { useTranslations } from "@/i18n/utils";
+import { type Lang, useTranslations } from "@/i18n/utils";
 import { selectedOrganisations } from "@/stores/filters.ts";
 import {
   isCantonGroup,
@@ -10,10 +10,8 @@ import {
   organisations,
 } from "@/lib/organisations";
 
-export type Locale = "en" | "de" | "fr" | "it";
-
 type Props = {
-  lang: Locale;
+  lang: Lang;
 };
 
 export function SoftwareFilters({ lang }: Props) {
