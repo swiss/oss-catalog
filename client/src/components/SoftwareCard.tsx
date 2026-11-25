@@ -1,7 +1,6 @@
 import { getDescription, type Software } from "@/lib/software";
 import { RepositoryPlatformLogo } from "./RepositoryPlatformLogo.tsx";
 import { safeHref } from "@/lib/repoUrl";
-import { getYear } from "date-fns";
 import { type Lang, useTranslations } from "@/i18n/utils";
 import { getCantonFlag } from "@/utils/cantonFlags";
 import schweizFlag from "@/images/Wappen-Schweiz.svg";
@@ -49,7 +48,7 @@ export function SoftwareCard({
             <p className="meta-info">
               {software.publiccode.releaseDate && (
                 <span className="meta-info__item">
-                  {getYear(software.publiccode.releaseDate)}
+                  {new Date(software.publiccode.releaseDate).getUTCFullYear()}
                 </span>
               )}
               {software.publiccode.legal?.license && (

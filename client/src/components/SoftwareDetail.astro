@@ -1,5 +1,4 @@
 ---
-import { format, parseISO } from "date-fns";
 import { getRelativeLocaleUrl } from "astro:i18n";
 import { type Lang, useTranslations } from "../i18n/utils";
 import { renderMarkdown } from "../lib/markdown";
@@ -51,11 +50,15 @@ const organisationUrl = orgFilterParams.toString()
 
 const formatDate = (value: string | undefined): string | undefined => {
   if (!value) return undefined;
-  try {
-    return format(parseISO(value), "dd.MM.yyyy");
-  } catch {
-    return value;
-  }
+  const date = new Date(value);
+  return isNaN(date.getTime())
+    ? value
+    : date.toLocaleDateString("de-CH", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        timeZone: "UTC",
+      });
 };
 
 const repoUrl = software.url;
