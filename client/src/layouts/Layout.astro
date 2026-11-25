@@ -31,13 +31,17 @@ const commitHash = import.meta.env.GIT_COMMIT_HASH
 
 const dateLocale = toFullLocale(lang);
 const buildDate = new Date();
+// the build runs in UTC on CI
+const timeZone = "Europe/Zurich";
 const buildDateFormatted = `${buildDate.toLocaleDateString(dateLocale, {
   day: "2-digit",
   month: "2-digit",
   year: "numeric",
+  timeZone,
 })} ${buildDate.toLocaleTimeString(dateLocale, {
   hour: "2-digit",
   minute: "2-digit",
+  timeZone,
 })}`;
 ---
 
