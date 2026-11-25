@@ -1,5 +1,5 @@
 import type { Lang } from "@/i18n/utils";
-import { getDescription, type Software } from "@/lib/software";
+import { type CatalogSoftware, getDescription } from "@/lib/software";
 import { renderMarkdown } from "@/lib/markdown";
 import {
   findOrganisation,
@@ -19,7 +19,7 @@ function stripHtml(html: string): string {
     .trim();
 }
 
-function uniqueCategoryCodes(software: Software): string[] {
+function uniqueCategoryCodes(software: CatalogSoftware): string[] {
   const codes = new Set<string>();
   for (const category of software.categories ?? []) {
     codes.add(category);
@@ -30,7 +30,7 @@ function uniqueCategoryCodes(software: Software): string[] {
   return Array.from(codes);
 }
 
-export function buildSearchText(software: Software, lang: Lang): string {
+export function buildSearchText(software: CatalogSoftware, lang: Lang): string {
   const parts: string[] = [];
   const publiccode = software.publiccode;
 

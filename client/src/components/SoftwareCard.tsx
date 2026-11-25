@@ -1,4 +1,4 @@
-import { getDescription, type Software } from "@/lib/software";
+import { type CatalogSoftware, getDescription } from "@/lib/software";
 import { RepositoryPlatformLogo } from "./RepositoryPlatformLogo.tsx";
 import { safeHref } from "@/lib/repoUrl";
 import { type Lang, useTranslations } from "@/i18n/utils";
@@ -16,7 +16,7 @@ export function SoftwareCard({
   detailUrl,
   lang,
 }: {
-  software: Software;
+  software: CatalogSoftware;
   detailUrl: string;
   lang: Lang;
 }) {

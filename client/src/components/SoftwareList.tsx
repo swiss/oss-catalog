@@ -1,12 +1,12 @@
 import { getRelativeLocaleUrl } from "astro:i18n";
-import type { Software } from "@/lib/software";
+import type { CatalogSoftware } from "@/lib/software";
 import { SoftwareCard } from "./SoftwareCard.tsx";
 import { type Lang, useTranslations } from "@/i18n/utils";
 import { hashUrl } from "@/utils/hash";
 
 type Props = {
   lang: Lang;
-  softwares: Software[];
+  softwares: CatalogSoftware[];
   t: ReturnType<typeof useTranslations>;
 };
 

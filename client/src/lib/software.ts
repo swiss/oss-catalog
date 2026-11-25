@@ -36,6 +36,9 @@ export type Software = {
   publiccode: PubliccodeYml;
 };
 
+/** Catalog page entry: the raw yml is dropped because island props are written into the page. */
+export type CatalogSoftware = Omit<Software, "publiccodeYml">;
+
 export type PubliccodeYml = {
   publiccodeYmlVersion?: string;
   name: string;
