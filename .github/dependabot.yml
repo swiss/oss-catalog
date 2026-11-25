@@ -12,16 +12,6 @@ updates:
       npm-minor-patch:
         update-types: ["minor", "patch"]
 
-  - package-ecosystem: "npm"
-    directory: "/paseto/node"
-    schedule:
-      interval: "monthly"
-    cooldown:
-      default-days: 1
-    groups:
-      paseto-node:
-        patterns: ["*"]
-
   - package-ecosystem: "gomod"
     directory: "/paseto/go"
     schedule:
