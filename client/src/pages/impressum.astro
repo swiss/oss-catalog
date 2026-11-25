@@ -1,55 +1,9 @@
 ---
-import { getRelativeLocaleUrl } from "astro:i18n";
-import OpenGraph from "../components/OpenGraph.astro";
+import LocaleRedirect from "../components/LocaleRedirect.astro";
 import { useTranslations } from "../i18n/utils";
-
-// DO NOT use Astro.request or Astro.preferredLocale here.
-// Instead, just generate the static URLs using the safe helpers:
-const lang = "de";
-const fallbackUrl = getRelativeLocaleUrl(lang, "impressum");
-
-const targetUrls = {
-  en: getRelativeLocaleUrl("en", "impressum"),
-  de: getRelativeLocaleUrl("de", "impressum"),
-  fr: getRelativeLocaleUrl("fr", "impressum"),
-  it: getRelativeLocaleUrl("it", "impressum"),
-};
-
-const t = useTranslations(lang);
-const title = t("impressum.title");
-const description = t("index.subtitle");
-const canonicalUrl = new URL(fallbackUrl, Astro.url).href;
 ---
 
-<html lang={lang}>
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
-    <title>{title}</title>
-    <OpenGraph
-      title={title}
-      description={description}
-      lang={lang}
-      url={canonicalUrl}
-    />
-    <noscript>
-      <meta http-equiv="refresh" content={`0;url=${fallbackUrl}`} />
-    </noscript>
-  </head>
-  <body>
-    <script is:inline define:vars={{ targetUrls, fallbackUrl }}>
-      const userLanguages = navigator.languages || [navigator.language];
-      let matchedUrl = null;
-
-      for (const lang of userLanguages) {
-        const shortLang = lang.split("-")[0].toLowerCase(); // e.g., 'de-CH' -> 'de'
-        if (targetUrls[shortLang]) {
-          matchedUrl = targetUrls[shortLang];
-          break;
-        }
-      }
-
-      window.location.replace(matchedUrl || fallbackUrl);
-    </script>
-  </body>
-</html>
+<LocaleRedirect
+  path="impressum"
+  title={useTranslations("de")("impressum.title")}
+/>
