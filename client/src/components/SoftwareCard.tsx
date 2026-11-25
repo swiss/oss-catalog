@@ -1,5 +1,6 @@
 import { getDescription, type Software } from "@/lib/software";
 import { RepositoryPlatformLogo } from "./RepositoryPlatformLogo.tsx";
+import { safeHref } from "@/lib/repoUrl";
 import { getYear } from "date-fns";
 import { type Lang, useTranslations } from "@/i18n/utils";
 import { getCantonFlag } from "@/utils/cantonFlags";
@@ -69,7 +70,7 @@ export function SoftwareCard({
         <div className="card__footer">
           <div className="card__footer__info">
             <a
-              href={software.url}
+              href={safeHref(software.url)}
               target="_blank"
               rel="noreferrer"
               aria-label={t("software.source")}

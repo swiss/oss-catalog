@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { getPubliccodeYmlUrl } from "./repoUrl";
+import { getPubliccodeYmlUrl, safeHref } from "./repoUrl";
 
 describe("getPubliccodeYmlUrl", () => {
   it("returns undefined when the repo URL is missing", () => {
@@ -38,5 +38,19 @@ describe("getPubliccodeYmlUrl", () => {
     expect(getPubliccodeYmlUrl("https://gitlab.com/owner/project.git")).toBe(
       "https://gitlab.com/owner/project/-/blob/HEAD/publiccode.yml",
     );
+  });
+});
+
+describe("safeHref", () => {
+  it("keeps http and https links", () => {
+    expect(safeHref("https://github.com/a/b")).toBe("https://github.com/a/b");
+    expect(safeHref("HTTP://example.ch")).toBe("HTTP://example.ch");
+  });
+
+  it("drops other schemes", () => {
+    expect(safeHref("javascript:alert(1)")).toBeUndefined();
+    expect(safeHref(" javascript:alert(1)")).toBeUndefined();
+    expect(safeHref("data:text/html,x")).toBeUndefined();
+    expect(safeHref(undefined)).toBeUndefined();
   });
 });

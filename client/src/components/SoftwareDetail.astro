@@ -11,7 +11,7 @@ import {
 } from "../lib/organisations";
 import { SELECTIONS } from "../stores/filters";
 import { resolveMediaUrl, getVideoEmbed } from "../lib/publiccodeMedia";
-import { getPubliccodeYmlUrl } from "../lib/repoUrl";
+import { getPubliccodeYmlUrl, safeHref } from "../lib/repoUrl";
 import {
   type Dependency,
   type FundingSource,
@@ -127,7 +127,7 @@ const formatDependency = (dep: Dependency): string => {
   <div class="info-block border-t">
     <h2 class="info-block__title">{t("softwaredetail.repositoryUrl")}</h2>
     <div>
-      <a target="_blank" href={software.url} rel="noreferrer">
+      <a target="_blank" href={safeHref(software.url)} rel="noreferrer">
         {software.url}
       </a>
       {publiccodeYmlUrl && (
@@ -162,7 +162,7 @@ const formatDependency = (dep: Dependency): string => {
         <ul class="list-disc ml-5">
           {isBasedOnUrls.map((url) => (
             <li>
-              <a target="_blank" href={url} rel="noreferrer">
+              <a target="_blank" href={safeHref(url)} rel="noreferrer">
                 {url}
               </a>
             </li>
