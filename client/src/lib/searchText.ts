@@ -1,5 +1,5 @@
 import type { Lang } from "@/i18n/utils";
-import type { Software } from "@/lib/software";
+import { getDescription, type Software } from "@/lib/software";
 import { renderMarkdown } from "@/lib/markdown";
 import {
   findOrganisation,
@@ -54,7 +54,7 @@ export function buildSearchText(software: Software, lang: Lang): string {
     parts.push(cantonLabel);
   }
 
-  const description = publiccode?.description?.[lang];
+  const description = getDescription(publiccode, lang);
   if (description?.shortDescription) {
     parts.push(description.shortDescription);
   }

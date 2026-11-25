@@ -1,7 +1,7 @@
 ---
 import { format, parseISO } from "date-fns";
 import { getRelativeLocaleUrl } from "astro:i18n";
-import { type Lang, resolveLanguage, useTranslations } from "../i18n/utils";
+import { type Lang, useTranslations } from "../i18n/utils";
 import { renderMarkdown } from "../lib/markdown";
 import {
   ORGANISATION_TYPE_BY_KIND,
@@ -12,7 +12,12 @@ import {
 import { SELECTIONS } from "../stores/filters";
 import { resolveMediaUrl, getVideoEmbed } from "../lib/publiccodeMedia";
 import { getPubliccodeYmlUrl } from "../lib/repoUrl";
-import type { Dependency, FundingSource, Software } from "../lib/software";
+import {
+  type Dependency,
+  type FundingSource,
+  type Software,
+  getDescription,
+} from "../lib/software";
 
 interface Props {
   software: Software;
@@ -21,9 +26,7 @@ interface Props {
 const { software } = Astro.props;
 const lang = Astro.currentLocale as Lang;
 const t = useTranslations(lang);
-const availableLanguages = Object.keys(software.publiccode?.description ?? {});
-const description =
-  software.publiccode?.description?.[resolveLanguage(lang, availableLanguages)];
+const description = getDescription(software.publiccode, lang);
 
 const longDescriptionHtml = description?.longDescription
   ? renderMarkdown(description.longDescription)

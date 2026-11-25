@@ -1,4 +1,4 @@
-import type { Software } from "@/lib/software";
+import { getDescription, type Software } from "@/lib/software";
 import { RepositoryPlatformLogo } from "./RepositoryPlatformLogo.tsx";
 import { getYear } from "date-fns";
 import { type Lang, useTranslations } from "@/i18n/utils";
@@ -64,7 +64,7 @@ export function SoftwareCard({
               {organisationName}
             </span>
           </div>
-          <p>{software.publiccode.description?.[lang]?.shortDescription}</p>
+          <p>{getDescription(software.publiccode, lang)?.shortDescription}</p>
         </div>
         <div className="card__footer">
           <div className="card__footer__info">

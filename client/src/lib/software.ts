@@ -1,3 +1,5 @@
+import { type Lang, resolveLanguage } from "@/i18n/utils";
+
 export async function getSoftwares(): Promise<Software[]> {
   const apiBaseUrl = import.meta.env.API_BASEURL || "http://localhost:3000/v1";
   const url = `${apiBaseUrl}/software?page[size]=10000`;
@@ -114,3 +116,13 @@ export type Dependency = {
   versionMax?: string;
   versionMin?: string;
 };
+
+/** Description in the page language, falling back like the detail page (e.g. "en" only, or "de-CH"). */
+export function getDescription(
+  publiccode: PubliccodeYml | undefined,
+  lang: Lang,
+): LocalizedDescription | undefined {
+  const descriptions = publiccode?.description ?? {};
+  const key = resolveLanguage(lang, Object.keys(descriptions));
+  return key ? descriptions[key] : undefined;
+}
