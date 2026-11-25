@@ -34,7 +34,10 @@ export default function SearchFiltersIsland({
   const hasSelectedOrganisations = useStore(selectedOrganisations).length > 0;
 
   useEffect(() => {
-    if ($organisationType === "cantons") {
+    if (
+      $organisationType === "cantons" ||
+      $organisationType === "municipalities"
+    ) {
       setIsOpen(false);
     }
   }, [$organisationType]);
@@ -95,7 +98,7 @@ export default function SearchFiltersIsland({
         </div>
       </div>
 
-      {$organisationType !== "cantons" && (
+      {($organisationType === "all" || $organisationType === "bund") && (
         <div className={`search__filters ${isOpen ? "filters--are-open" : ""}`}>
           <button
             type="button"

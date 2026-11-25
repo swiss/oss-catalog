@@ -1,48 +1,31 @@
 import type { Lang } from "@/i18n/utils";
 import type { Software } from "@/lib/software";
 import { renderMarkdown } from "@/lib/markdown";
-import organisations from "@/data/organisations.json";
+import {
+  type Department,
+  type Organisation,
+  findOrganisation,
+  getCantonOfMunicipality,
+  localizedName,
+} from "@/lib/organisations";
 
-type Department = (typeof organisations)[number];
-type Organisation = Department["organisations"][number];
-type OrgEntry = Department | Organisation;
-
-function pickLocalized(
-  value: Record<string, string> | undefined,
-  lang: Lang,
-): string | undefined {
-  return value?.[lang] ?? value?.de;
-}
-
-function labelForEntry(entry: OrgEntry, lang: Lang): string {
-  const name = pickLocalized(entry.name, lang) ?? "";
+function labelForEntry(entry: Department | Organisation, lang: Lang): string {
+  const name = localizedName(entry.name, lang) ?? "";
   const alternativeName =
     "alternativeName" in entry
-      ? pickLocalized(entry.alternativeName, lang)
+      ? localizedName(entry.alternativeName, lang)
       : undefined;
   const abbreviation =
     "abbreviation" in entry
-      ? pickLocalized(entry.abbreviation, lang)
+      ? localizedName(entry.abbreviation, lang)
       : undefined;
   const suffix = alternativeName ?? abbreviation;
   return suffix ? `${name} ${suffix}` : name;
 }
 
 function findOrganisationLabel(uri: string | undefined, lang: Lang): string {
-  if (!uri) return "";
-
-  for (const department of organisations) {
-    if (department.id === uri) {
-      return labelForEntry(department, lang);
-    }
-
-    const organisation = department.organisations?.find((o) => o.id === uri);
-    if (organisation) {
-      return labelForEntry(organisation, lang);
-    }
-  }
-
-  return "";
+  const found = findOrganisation(uri);
+  return found ? labelForEntry(found.organisation, lang) : "";
 }
 
 function stripHtml(html: string): string {
@@ -71,11 +54,20 @@ export function buildSearchText(software: Software, lang: Lang): string {
     parts.push(publiccode.name);
   }
 
+  const organisationUri = publiccode?.organisation?.uri;
   const organisationName =
     publiccode?.organisation?.name ||
-    findOrganisationLabel(publiccode?.organisation?.uri, lang);
+    findOrganisationLabel(organisationUri, lang);
   if (organisationName) {
     parts.push(organisationName);
+  }
+  // so "Bern" also finds software of Bernese municipalities
+  const cantonLabel = findOrganisationLabel(
+    getCantonOfMunicipality(organisationUri),
+    lang,
+  );
+  if (cantonLabel) {
+    parts.push(cantonLabel);
   }
 
   const description = publiccode?.description?.[lang];

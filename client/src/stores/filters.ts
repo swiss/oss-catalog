@@ -1,12 +1,16 @@
 import { atom } from "nanostores";
-import organisations from "@/data/organisations.json";
+import {
+  findOrganisation,
+  getOrganisationKind,
+  isKnownCanton,
+  isKnownMunicipality,
+} from "@/lib/organisations";
 
-export type OrganisationType = "all" | "bund" | "cantons";
-
-export const CANTON_URI_PREFIX = "https://ld.admin.ch/canton";
+export type OrganisationType = "all" | "bund" | "cantons" | "municipalities";
 
 export const selectedOrganisations = atom<string[]>([]);
 export const selectedCantons = atom<string[]>([]);
+export const selectedMunicipalities = atom<string[]>([]);
 export const searchTerm = atom<string>("");
 export const organisationType = atom<OrganisationType>("all");
 
@@ -14,33 +18,26 @@ const PARAM_KEYS = {
   type: "type",
   organisations: "organisations",
   cantons: "cantons",
+  municipalities: "municipalities",
   q: "q",
 } as const;
 
-const ALLOWED_TYPES: OrganisationType[] = ["all", "bund", "cantons"];
-
-const KNOWN_URIS = new Set(
-  organisations.flatMap((departement) => [
-    departement.id,
-    ...departement.organisations.map((organisation) => organisation.id),
-  ]),
-);
+const ALLOWED_TYPES: OrganisationType[] = [
+  "all",
+  "bund",
+  "cantons",
+  "municipalities",
+];
 
 function isOrganisationType(value: string): value is OrganisationType {
   return ALLOWED_TYPES.includes(value as OrganisationType);
 }
 
-function isCantonUri(uri: string) {
-  return uri.startsWith(`${CANTON_URI_PREFIX}/`);
-}
-
-function normaliseFilters() {
-  const type = organisationType.get();
-  if (type === "cantons") {
-    selectedOrganisations.set([]);
-  } else {
-    selectedCantons.set([]);
-  }
+/** Keeps only the selection that belongs to the given type. */
+export function clearSelectionsForType(type: OrganisationType) {
+  if (type !== "bund" && type !== "all") selectedOrganisations.set([]);
+  if (type !== "cantons") selectedCantons.set([]);
+  if (type !== "municipalities") selectedMunicipalities.set([]);
 }
 
 let filtersAppliedFromUrl = false;
@@ -57,17 +54,18 @@ export function applyFiltersFromUrl() {
   selectedOrganisations.set(
     params
       .getAll(PARAM_KEYS.organisations)
-      .filter((uri) => KNOWN_URIS.has(uri) && !isCantonUri(uri)),
+      .filter(
+        (uri) => findOrganisation(uri) && getOrganisationKind(uri) === "bund",
+      ),
   );
-  selectedCantons.set(
-    params
-      .getAll(PARAM_KEYS.cantons)
-      .filter((uri) => KNOWN_URIS.has(uri) && isCantonUri(uri)),
+  selectedCantons.set(params.getAll(PARAM_KEYS.cantons).filter(isKnownCanton));
+  selectedMunicipalities.set(
+    params.getAll(PARAM_KEYS.municipalities).filter(isKnownMunicipality),
   );
 
   searchTerm.set(params.get(PARAM_KEYS.q) ?? "");
 
-  normaliseFilters();
+  clearSelectionsForType(organisationType.get());
 }
 
 function buildUrlParams(): URLSearchParams {
@@ -84,6 +82,9 @@ function buildUrlParams(): URLSearchParams {
   selectedCantons
     .get()
     .forEach((uri) => params.append(PARAM_KEYS.cantons, uri));
+  selectedMunicipalities
+    .get()
+    .forEach((uri) => params.append(PARAM_KEYS.municipalities, uri));
 
   const q = searchTerm.get();
   if (q) {
@@ -126,5 +127,6 @@ export function syncFiltersToUrl() {
   organisationType.subscribe(scheduleUrlUpdate);
   selectedOrganisations.subscribe(scheduleUrlUpdate);
   selectedCantons.subscribe(scheduleUrlUpdate);
+  selectedMunicipalities.subscribe(scheduleUrlUpdate);
   searchTerm.subscribe(scheduleUrlUpdate);
 }

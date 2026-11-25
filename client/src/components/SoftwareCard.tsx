@@ -2,10 +2,14 @@ import type { Software } from "@/lib/software";
 import { RepositoryPlatformLogo } from "./RepositoryPlatformLogo.tsx";
 import { getYear } from "date-fns";
 import { type Lang, useTranslations } from "@/i18n/utils";
-import organisations from "@/data/organisations.json";
 import { getCantonFlag } from "@/utils/cantonFlags";
 import schweizFlag from "@/images/Wappen-Schweiz.svg";
-import { CANTON_URI_PREFIX } from "@/stores/filters";
+import {
+  findOrganisation,
+  getCantonOfMunicipality,
+  getOrganisationKind,
+  localizedName,
+} from "@/lib/organisations";
 
 export function SoftwareCard({
   software,
@@ -18,19 +22,25 @@ export function SoftwareCard({
 }) {
   const t = useTranslations(lang);
 
-  const toOrganisationName = (uri: string | undefined) => {
-    return organisations
-      .flatMap((o) => o.organisations ?? [])
-      .find((o) => o.id === uri)?.name?.[lang];
-  };
+  const toOrganisationName = (uri: string | undefined) =>
+    localizedName(findOrganisation(uri)?.organisation.name, lang);
 
   const uri = software.publiccode.organisation?.uri;
-  const flag = uri?.startsWith(CANTON_URI_PREFIX)
-    ? getCantonFlag(uri)
-    : schweizFlag;
-  const flagLabel = uri?.startsWith(CANTON_URI_PREFIX)
-    ? toOrganisationName(uri)
-    : t("index.filter.option.bund");
+  const kind = getOrganisationKind(uri);
+  const cantonUri =
+    kind === "canton"
+      ? uri
+      : kind === "municipality"
+        ? getCantonOfMunicipality(uri)
+        : undefined;
+  const flag =
+    kind === "bund" ? schweizFlag : cantonUri && getCantonFlag(cantonUri);
+  const flagLabel =
+    kind === "bund"
+      ? t("index.filter.option.bund")
+      : toOrganisationName(cantonUri);
+  const organisationName =
+    toOrganisationName(uri) ?? software.publiccode.organisation?.name;
 
   return (
     <div className="card card--default">
@@ -56,7 +66,7 @@ export function SoftwareCard({
           <div>
             <h2 className="card__title">{software.publiccode.name}</h2>
             <span className="meta-info meta-info__item">
-              {toOrganisationName(software.publiccode.organisation?.uri)}
+              {organisationName}
             </span>
           </div>
           <p>{software.publiccode.description?.[lang]?.shortDescription}</p>
