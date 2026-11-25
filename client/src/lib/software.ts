@@ -13,12 +13,18 @@ export function getSoftwares(): Promise<Software[]> {
 
 async function fetchSoftwares(): Promise<Software[]> {
   const apiBaseUrl = import.meta.env.API_BASEURL || "http://localhost:3000/v1";
-  const url = `${apiBaseUrl}/software?page[size]=10000`;
-  const response = await fetch(url);
-  if (!response.ok) throw new Error(`HTTP ${response.status}`);
-  const data = await response.json();
-  const rawSoftwares = data.data ?? [];
-  return rawSoftwares;
+  const softwares: Software[] = [];
+  // The API caps the page size, so follow links.next (a query string like "?page[after]=...").
+  let next: string | null = "?page[size]=10000";
+  while (next) {
+    const response: Response = await fetch(`${apiBaseUrl}/software${next}`);
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const data: { data?: Software[]; links?: { next?: string | null } } =
+      await response.json();
+    softwares.push(...(data.data ?? []));
+    next = data.links?.next ?? null;
+  }
+  return softwares;
 }
 
 export type Software = {
