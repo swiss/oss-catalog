@@ -1,0 +1,21 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import { type Lang, useTranslations } from "@/i18n/utils";
+import EditorIsland from "@/components/EditorIsland";
+import { locales } from "@/i18n/locales";
+
+export async function getStaticPaths() {
+  return Object.keys(locales).map((locale) => ({
+    params: { locale },
+  }));
+}
+
+const lang = Astro.currentLocale as Lang;
+const t = useTranslations(lang);
+---
+
+<Layout title={t("index.publiccode")}>
+  <section class="container section--default">
+    <EditorIsland lang={lang} client:only="react" />
+  </section>
+</Layout>
