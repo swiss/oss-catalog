@@ -95,5 +95,8 @@
   "footer.commit": "Commit",
   "impressum.title": "Impressum",
   "impressum.content": "Editore e redazione",
-  "impressum.design": "Concetto, design, usability e realizzazione tecnica"
+  "impressum.design": "Concetto, design, usability e realizzazione tecnica",
+  "editor.loading": "Caricamento dell’editor …",
+  "editor.error": "Impossibile caricare l’editor.",
+  "editor.open": "Aprire l’editor in una nuova finestra"
 }

@@ -1,0 +1,9 @@
+---
+import LocaleRedirect from "../components/LocaleRedirect.astro";
+import { useTranslations } from "../i18n/utils";
+---
+
+<LocaleRedirect
+  path="editor"
+  title={useTranslations("de")("index.publiccode")}
+/>

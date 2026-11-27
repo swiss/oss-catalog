@@ -7,6 +7,7 @@ import { getRelativeLocaleUrl } from "astro:i18n";
 const lang = Astro.currentLocale as Lang;
 const t = useTranslations(lang);
 const homeUrl = getRelativeLocaleUrl(lang);
+const editorUrl = getRelativeLocaleUrl(lang, "editor");
 const ossToolsUrl = `https://www.bk.admin.ch/bk/${Astro.currentLocale}/home/digitale-transformation-ikt-lenkung/bundesarchitektur/open_source_software/hilfsmittel_oss.html`;
 ---
 
@@ -33,7 +34,7 @@ const ossToolsUrl = `https://www.bk.admin.ch/bk/${Astro.currentLocale}/home/digi
         <nav class="meta-navigation meta-navigation--desktop" aria-label="Meta">
           <ul>
             <li>
-              <a class="meta-navigation__item" href="https://swiss.github.io/publiccode-editor/" target="_blank">
+              <a class="meta-navigation__item" href={editorUrl}>
                 {t("index.publiccode")}
               </a>
             </li>
@@ -66,8 +67,7 @@ const ossToolsUrl = `https://www.bk.admin.ch/bk/${Astro.currentLocale}/home/digi
       <nav class="meta-navigation meta-navigation--mobile" aria-label="Meta">
         <ul>
           <li>
-            <a class="meta-navigation__item" href="https://swiss.github.io/publiccode-editor/"
-               target="_blank">
+            <a class="meta-navigation__item" href={editorUrl}>
               {t("index.publiccode")}
             </a>
           </li>
