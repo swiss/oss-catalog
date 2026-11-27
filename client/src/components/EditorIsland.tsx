@@ -1,9 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { type Lang, useTranslations } from "@/i18n/utils";
 
-const EDITOR_URL =
-  import.meta.env.PUBLIC_EDITOR_URL ??
-  "https://swiss.github.io/publiccode-editor";
+// `||` so an empty value also falls back; strip a trailing slash before appending paths.
+const EDITOR_URL = (
+  import.meta.env.PUBLIC_EDITOR_URL ||
+  "https://swiss.github.io/publiccode-editor"
+).replace(/\/$/, "");
 
 // Contract with the publiccode-editor: embed.js exports mount(), which returns an unmount function.
 type Mount = (el: HTMLElement, options: { lang: Lang }) => () => void;
