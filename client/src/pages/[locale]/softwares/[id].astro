@@ -2,11 +2,11 @@
 import Layout from "@/layouts/Layout.astro";
 import SoftwareDetail from "@/components/SoftwareDetail.astro";
 import { getRelativeLocaleUrl } from "astro:i18n";
-import { type Lang, resolveLanguage, useTranslations } from "@/i18n/utils";
+import { type Lang, useTranslations } from "@/i18n/utils";
 import type { PubliccodeYml, Software } from "@/lib/software";
 import { load } from "js-yaml";
 import { hashUrl } from "@/utils/hash";
-import { getSoftwares } from "@/lib/software";
+import { getDescription, getSoftwares } from "@/lib/software";
 import { locales } from "@/i18n/locales";
 
 export async function getStaticPaths() {
@@ -36,9 +36,7 @@ const lang = Astro.currentLocale as Lang;
 const t = useTranslations(lang);
 const homeUrl = getRelativeLocaleUrl(lang);
 
-const availableLanguages = Object.keys(software.publiccode?.description ?? {});
-const softwareDescription =
-  software.publiccode?.description?.[resolveLanguage(lang, availableLanguages)];
+const softwareDescription = getDescription(software.publiccode, lang);
 const softwareName = software.publiccode.name;
 ---
 

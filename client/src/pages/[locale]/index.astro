@@ -2,7 +2,7 @@
 import Layout from "@/layouts/Layout.astro";
 import { type Lang, useTranslations } from "@/i18n/utils";
 import SoftwareCatalogIsland from "@/components/SoftwareCatalogIsland";
-import { type PubliccodeYml, type Software } from "@/lib/software";
+import { type CatalogSoftware, type PubliccodeYml } from "@/lib/software";
 import { load } from "js-yaml";
 import { getSoftwares } from "@/lib/software";
 import { locales } from "@/i18n/locales";
@@ -11,16 +11,15 @@ import SearchFiltersIsland from "@/components/SearchFiltersIsland";
 const lang = Astro.currentLocale as Lang;
 const t = useTranslations(lang);
 
-let softwares: Software[] = [];
+let softwares: CatalogSoftware[] = [];
 
 const rawSoftwares = await getSoftwares();
 
-softwares = rawSoftwares.map((software: Software) => {
-  return {
-    ...software,
-    publiccode: load(software.publiccodeYml) as PubliccodeYml,
-  };
-});
+softwares = rawSoftwares.map(({ publiccodeYml, ...software }) => ({
+  ...software,
+  publiccode: load(publiccodeYml) as PubliccodeYml,
+}));
+const organisationUris = softwares.map((s) => s.publiccode?.organisation?.uri);
 
 // Sort by name, then by organisation uri
 softwares.sort((a, b) => {
@@ -48,7 +47,11 @@ export async function getStaticPaths() {
     <div class="container">
       <h1 class="section__title">{t("index.title")}</h1>
       <h2 class="section__subtitle">{t("index.subtitle")}</h2>
-      <SearchFiltersIsland client:load lang={lang} softwares={softwares} />
+      <SearchFiltersIsland
+        client:load
+        lang={lang}
+        organisationUris={organisationUris}
+      />
     </div>
   </section>
   <section class="section section--default">

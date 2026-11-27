@@ -11,14 +11,13 @@ import {
   selectedOrganisations,
   syncFiltersToUrl,
 } from "@/stores/filters";
-import type { Software } from "@/lib/software.ts";
 
 interface Props {
   lang: Lang;
-  softwares: Software[];
+  organisationUris: (string | undefined)[];
 }
 
-export default function SearchFiltersIsland({ lang, softwares }: Props) {
+export default function SearchFiltersIsland({ lang, organisationUris }: Props) {
   const t = useTranslations(lang);
   const [isOpen, setIsOpen] = useState(false);
   const $searchTerm = useStore(searchTerm);
@@ -46,7 +45,7 @@ export default function SearchFiltersIsland({ lang, softwares }: Props) {
 
   return (
     <>
-      <OrganisationTypeFilter lang={lang} softwares={softwares} />
+      <OrganisationTypeFilter lang={lang} organisationUris={organisationUris} />
       <div className="search search--large search--page-result">
         <div className="search__group">
           <input

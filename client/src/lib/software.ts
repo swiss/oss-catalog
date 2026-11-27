@@ -1,11 +1,30 @@
-export async function getSoftwares(): Promise<Software[]> {
+import { type Lang, resolveLanguage } from "@/i18n/utils";
+
+// One download per build: every page and route calls this.
+// shortcut: `astro dev` keeps the first result until restart, fine while the data changes only via the crawler.
+let softwares: Promise<Software[]> | undefined;
+
+export function getSoftwares(): Promise<Software[]> {
+  return (softwares ??= fetchSoftwares().catch((error) => {
+    softwares = undefined; // retry on the next call instead of caching the failure
+    throw error;
+  }));
+}
+
+async function fetchSoftwares(): Promise<Software[]> {
   const apiBaseUrl = import.meta.env.API_BASEURL || "http://localhost:3000/v1";
-  const url = `${apiBaseUrl}/software?page[size]=10000`;
-  const response = await fetch(url);
-  if (!response.ok) throw new Error(`HTTP ${response.status}`);
-  const data = await response.json();
-  const rawSoftwares = data.data ?? [];
-  return rawSoftwares;
+  const softwares: Software[] = [];
+  // The API caps the page size, so follow links.next (a query string like "?page[after]=...").
+  let next: string | null = "?page[size]=10000";
+  while (next) {
+    const response: Response = await fetch(`${apiBaseUrl}/software${next}`);
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const data: { data?: Software[]; links?: { next?: string | null } } =
+      await response.json();
+    softwares.push(...(data.data ?? []));
+    next = data.links?.next ?? null;
+  }
+  return softwares;
 }
 
 export type Software = {
@@ -22,6 +41,9 @@ export type Software = {
   publiccodeYml: string;
   publiccode: PubliccodeYml;
 };
+
+/** Catalog page entry: the raw yml is dropped because island props are written into the page. */
+export type CatalogSoftware = Omit<Software, "publiccodeYml">;
 
 export type PubliccodeYml = {
   publiccodeYmlVersion?: string;
@@ -114,3 +136,13 @@ export type Dependency = {
   versionMax?: string;
   versionMin?: string;
 };
+
+/** Description in the page language, falling back like the detail page (e.g. "en" only, or "de-CH"). */
+export function getDescription(
+  publiccode: PubliccodeYml | undefined,
+  lang: Lang,
+): LocalizedDescription | undefined {
+  const descriptions = publiccode?.description ?? {};
+  const key = resolveLanguage(lang, Object.keys(descriptions));
+  return key ? descriptions[key] : undefined;
+}

@@ -7,7 +7,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { type Locale } from "@/components/SoftwareFilters";
 import {
   type OrganisationType,
   clearSelectionsForType,
@@ -23,30 +22,31 @@ import {
   localizedName,
   organisations,
 } from "@/lib/organisations";
-import { useTranslations } from "@/i18n/utils";
-import type { Software } from "@/lib/software.ts";
+import { type Lang, useTranslations } from "@/i18n/utils";
 
 type Props = {
-  lang: Locale;
-  softwares: Software[];
+  lang: Lang;
+  organisationUris: (string | undefined)[];
 };
 
 type Option = { id: string; label: string; count?: number };
 type Section = { id: string; title?: string; options: Option[] };
 
-export default function OrganisationTypeFilter({ lang, softwares }: Props) {
+export default function OrganisationTypeFilter({
+  lang,
+  organisationUris,
+}: Props) {
   const t = useTranslations(lang);
   const $type = useStore(organisationType);
 
   const softwareCounts = useMemo(() => {
-    return softwares.reduce((counts, software) => {
-      const uri = software.publiccode?.organisation?.uri;
+    return organisationUris.reduce((counts, uri) => {
       if (uri && getOrganisationKind(uri) !== "bund") {
         counts.set(uri, (counts.get(uri) ?? 0) + 1);
       }
       return counts;
     }, new Map<string, number>());
-  }, [softwares]);
+  }, [organisationUris]);
 
   const byLabel = (a: Option, b: Option) =>
     a.label.localeCompare(b.label, lang);

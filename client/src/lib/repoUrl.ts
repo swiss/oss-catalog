@@ -36,3 +36,8 @@ export function getPubliccodeYmlUrl(
 
   return `https://gitlab.com/${repo.owner}/${repo.repo}/-/blob/HEAD/publiccode.yml`;
 }
+
+/** Only http(s) links: publiccode.yml data may hold other schemes such as javascript:. */
+export function safeHref(url: string | undefined): string | undefined {
+  return url && /^https?:\/\//i.test(url) ? url : undefined;
+}

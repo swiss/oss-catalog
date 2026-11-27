@@ -1,8 +1,7 @@
 FROM node:26.13.1 AS build
 
-#ARG API_BASEURL=http://localhost:3000
-
-# Set as environment variable for the build process
+# The build fetches the software list; compose builds with the host network, so localhost reaches the API.
+ARG API_BASEURL=http://localhost:3000/v1
 ENV API_BASEURL=${API_BASEURL}
 
 WORKDIR /app

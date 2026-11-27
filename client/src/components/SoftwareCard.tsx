@@ -1,6 +1,6 @@
-import type { Software } from "@/lib/software";
+import { type CatalogSoftware, getDescription } from "@/lib/software";
 import { RepositoryPlatformLogo } from "./RepositoryPlatformLogo.tsx";
-import { getYear } from "date-fns";
+import { safeHref } from "@/lib/repoUrl";
 import { type Lang, useTranslations } from "@/i18n/utils";
 import { getCantonFlag } from "@/utils/cantonFlags";
 import schweizFlag from "@/images/Wappen-Schweiz.svg";
@@ -16,7 +16,7 @@ export function SoftwareCard({
   detailUrl,
   lang,
 }: {
-  software: Software;
+  software: CatalogSoftware;
   detailUrl: string;
   lang: Lang;
 }) {
@@ -48,7 +48,7 @@ export function SoftwareCard({
             <p className="meta-info">
               {software.publiccode.releaseDate && (
                 <span className="meta-info__item">
-                  {getYear(software.publiccode.releaseDate)}
+                  {new Date(software.publiccode.releaseDate).getUTCFullYear()}
                 </span>
               )}
               {software.publiccode.legal?.license && (
@@ -64,12 +64,12 @@ export function SoftwareCard({
               {organisationName}
             </span>
           </div>
-          <p>{software.publiccode.description?.[lang]?.shortDescription}</p>
+          <p>{getDescription(software.publiccode, lang)?.shortDescription}</p>
         </div>
         <div className="card__footer">
           <div className="card__footer__info">
             <a
-              href={software.url}
+              href={safeHref(software.url)}
               target="_blank"
               rel="noreferrer"
               aria-label={t("software.source")}

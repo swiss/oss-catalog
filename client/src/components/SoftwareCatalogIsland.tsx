@@ -1,5 +1,5 @@
 import { useEffect, useMemo } from "react";
-import type { Software } from "@/lib/software";
+import type { CatalogSoftware } from "@/lib/software";
 import { useTranslations } from "@/i18n/utils";
 import { SoftwareList } from "./SoftwareList";
 import { useStore } from "@nanostores/react";
@@ -16,7 +16,7 @@ import type { Lang } from "@/i18n/utils";
 
 type Props = {
   lang: Lang;
-  softwares: Software[];
+  softwares: CatalogSoftware[];
 };
 
 export default function SoftwareCatalogIsland({ lang, softwares }: Props) {

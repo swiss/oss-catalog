@@ -4,3 +4,4 @@ node_modules/
 # editor settings
 .idea
 .vscode
+paseto/go/pasteo-generate

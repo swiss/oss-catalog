@@ -44,8 +44,6 @@ services:
       context: .
       dockerfile: Dockerfile
       network: host
-      args:
-        - API_BASEURL=http://api:3000/v1
     depends_on:
       - api
     ports:

@@ -29,16 +29,6 @@ export function resolveLanguage(lang: Lang, availableLanguages: string[]) {
   );
 }
 
-export function toFullLocale(lang: Lang): string {
-  return lang === "de"
-    ? "de-CH"
-    : lang === "fr"
-      ? "fr-CH"
-      : lang === "it"
-        ? "it-CH"
-        : "de-CH";
-}
-
 export function toOpenGraphLocale(lang: Lang): string {
   return lang === "de"
     ? "de_CH"

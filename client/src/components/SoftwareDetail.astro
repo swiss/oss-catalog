@@ -1,7 +1,6 @@
 ---
-import { format, parseISO } from "date-fns";
 import { getRelativeLocaleUrl } from "astro:i18n";
-import { type Lang, resolveLanguage, useTranslations } from "../i18n/utils";
+import { type Lang, useTranslations } from "../i18n/utils";
 import { renderMarkdown } from "../lib/markdown";
 import {
   ORGANISATION_TYPE_BY_KIND,
@@ -11,8 +10,13 @@ import {
 } from "../lib/organisations";
 import { SELECTIONS } from "../stores/filters";
 import { resolveMediaUrl, getVideoEmbed } from "../lib/publiccodeMedia";
-import { getPubliccodeYmlUrl } from "../lib/repoUrl";
-import type { Dependency, FundingSource, Software } from "../lib/software";
+import { getPubliccodeYmlUrl, safeHref } from "../lib/repoUrl";
+import {
+  type Dependency,
+  type FundingSource,
+  type Software,
+  getDescription,
+} from "../lib/software";
 
 interface Props {
   software: Software;
@@ -21,9 +25,7 @@ interface Props {
 const { software } = Astro.props;
 const lang = Astro.currentLocale as Lang;
 const t = useTranslations(lang);
-const availableLanguages = Object.keys(software.publiccode?.description ?? {});
-const description =
-  software.publiccode?.description?.[resolveLanguage(lang, availableLanguages)];
+const description = getDescription(software.publiccode, lang);
 
 const longDescriptionHtml = description?.longDescription
   ? renderMarkdown(description.longDescription)
@@ -48,11 +50,15 @@ const organisationUrl = orgFilterParams.toString()
 
 const formatDate = (value: string | undefined): string | undefined => {
   if (!value) return undefined;
-  try {
-    return format(parseISO(value), "dd.MM.yyyy");
-  } catch {
-    return value;
-  }
+  const date = new Date(value);
+  return isNaN(date.getTime())
+    ? value
+    : date.toLocaleDateString("de-CH", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        timeZone: "UTC",
+      });
 };
 
 const repoUrl = software.url;
@@ -124,7 +130,7 @@ const formatDependency = (dep: Dependency): string => {
   <div class="info-block border-t">
     <h2 class="info-block__title">{t("softwaredetail.repositoryUrl")}</h2>
     <div>
-      <a target="_blank" href={software.url} rel="noreferrer">
+      <a target="_blank" href={safeHref(software.url)} rel="noreferrer">
         {software.url}
       </a>
       {publiccodeYmlUrl && (
@@ -159,7 +165,7 @@ const formatDependency = (dep: Dependency): string => {
         <ul class="list-disc ml-5">
           {isBasedOnUrls.map((url) => (
             <li>
-              <a target="_blank" href={url} rel="noreferrer">
+              <a target="_blank" href={safeHref(url)} rel="noreferrer">
                 {url}
               </a>
             </li>
